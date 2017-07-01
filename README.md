@@ -60,7 +60,7 @@ public void shouldSupplyExtractedListData(final User user1, final User user2) {
 
 #### Usage
 
-Add the following configuration into **build.gradle**:
+Add the following configuration into **build.gradle** as soon as it appears in bintray:
 
 ```groovy
 repositories {
@@ -69,7 +69,7 @@ repositories {
     
 dependencies {
     compile('org.testng:testng:6.10',
-            'io.github.sskorol:test-data-supplier:0.5.0'
+            'io.github.sskorol:test-data-supplier:0.5.1'
     )
 }
     

@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'io.github.sskorol'
-version '0.5.0'
+version '0.5.1'
 description 'Extended TestNG DataProvider'
 
 ext {
@@ -21,6 +21,7 @@ targetCompatibility = JavaVersion.VERSION_1_8
 
 repositories {
     jcenter()
+    mavenLocal()
 }
 
 dependencies {
