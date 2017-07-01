@@ -15,6 +15,7 @@ ext {
 apply plugin: 'java'
 apply from: "${gradleScriptDir}/bintray.gradle"
 apply from: "${gradleScriptDir}/release.gradle"
+apply from: "${gradleScriptDir}/maven-publish.gradle"
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -36,6 +37,25 @@ dependencies {
 
 task wrapper(type: Wrapper) {
     gradleVersion '4.0'
+}
+
+task sourceJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allJava
+}
+
+tasks.withType(Javadoc) {
+    options.addStringOption('Xdoclint:none', '-quiet')
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives sourceJar
+    archives javadocJar
 }
 
 test {
