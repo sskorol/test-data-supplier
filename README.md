@@ -60,7 +60,7 @@ public void shouldSupplyExtractedListData(final User user1, final User user2) {
 
 #### Usage
 
-Add the following configuration into **build.gradle** as soon as it appears in bintray:
+Add the following configuration into **build.gradle**:
 
 ```groovy
 repositories {
@@ -69,7 +69,7 @@ repositories {
     
 dependencies {
     compile('org.testng:testng:6.10',
-            'io.github.sskorol:test-data-supplier:0.5.1'
+            'io.github.sskorol:test-data-supplier:0.5.2'
     )
 }
     
@@ -117,4 +117,7 @@ You can find more examples in a **io.github.sskorol.testcases** package.
 #### Limitations
 
  - no custom names support (method name is used by default);
- - no parallel feature
+ - no parallel feature;
+ - missing DataProvider warning (affected by TestNG inspections);
+ - unused method warning (could be suppressed in IDE):
+ ![image](https://user-images.githubusercontent.com/6638780/27763889-13dd0b5e-5e95-11e7-8c19-719c6a3a15d9.png)
