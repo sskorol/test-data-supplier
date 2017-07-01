@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'io.github.sskorol'
-version '0.5.1'
+version = version
 description 'Extended TestNG DataProvider'
 
 ext {
