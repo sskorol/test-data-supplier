@@ -60,7 +60,7 @@ public void shouldSupplyExtractedListData(final User user1, final User user2) {
 
 #### Usage
 
-Add the following configuration into **build.gradle** as soon as it's published to bintray.
+Add the following configuration into **build.gradle**:
 
 ```groovy
 repositories {

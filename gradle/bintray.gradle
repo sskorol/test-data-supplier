@@ -8,7 +8,7 @@ bintray {
 
     publish = true
     pkg {
-        repo = 'maven'
+        repo = 'test-data-supplier'
         name = 'test-data-supplier'
         desc = 'Extended TestNG DataProvider'
         websiteUrl = 'https://github.com/sskorol/test-data-supplier'
