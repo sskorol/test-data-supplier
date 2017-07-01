@@ -42,7 +42,7 @@ public List<User> getExtractedData() {
 }
         
 @Test(dataProvider = "getExtractedData")
-public void shouldSupplyExtractedListData(final User user1, final User user2) {
+public void shouldSupplyExtractedListData(final User... users) {
     // ...
 }
 ```

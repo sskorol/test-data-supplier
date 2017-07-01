@@ -34,7 +34,7 @@ public class DataSupplierTests extends SimpleBaseTest {
                 .containsExactly(
                         "supplyCommonListData(data1)",
                         "supplyCommonListData(data2)",
-                        "supplyCustomListData(null,User(name=username, password=password))",
+                        "supplyCustomListData([null,User(name=username, password=password)])",
                         "supplyExternalCollectionData(data1)",
                         "supplyExternalCollectionData(data2)"
                 );

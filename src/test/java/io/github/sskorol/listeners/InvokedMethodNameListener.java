@@ -97,7 +97,7 @@ public class InvokedMethodNameListener implements IInvokedMethodListener, ITestL
     private static StreamEx<String> getParameterNames(final Object[] parameters) {
         return StreamEx.of(parameters)
                 .map(p -> p instanceof Object[]
-                        ? StreamEx.of((Object[]) p).prepend("[").append("]").joining(",")
+                        ? "[" + StreamEx.of((Object[]) p).joining(",") + "]"
                         : Objects.toString(p));
     }
 

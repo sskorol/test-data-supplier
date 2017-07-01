@@ -33,7 +33,7 @@ public class CollectionsDataSupplierTests {
     }
 
     @Test(dataProvider = "extractCustomListData")
-    public void supplyCustomListData(final User user1, final User user2) {
+    public void supplyCustomListData(final User... users) {
         // not implemented
     }
 
