@@ -60,6 +60,8 @@ public void shouldSupplyExtractedListData(final User... users) {
 
 #### Usage
 
+##### Gradle
+
 Add the following configuration into **build.gradle**:
 
 ```groovy
@@ -78,6 +80,43 @@ test {
         listeners << 'io.github.sskorol.dataprovider.DataProviderTransformer'
     }
 }
+```
+
+##### Maven
+
+Add the following configuration into **pom.xml**:
+
+```xml
+<dependencies>
+    <dependency>
+        <groupId>org.testng</groupId>
+        <artifactId>testng</artifactId>
+        <version>6.10</version>
+    </dependency>
+    <dependency>
+        <groupId>io.github.sskorol</groupId>
+        <artifactId>test-data-supplier</artifactId>
+        <version>0.6.0</version>
+    </dependency>
+</dependencies>
+    
+<build>
+    <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>2.20</version>
+            <configuration>
+                <properties>
+                    <property>
+                        <name>listener</name>
+                        <value>io.github.sskorol.dataprovider.DataProviderTransformer</value>
+                    </property>
+                </properties>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
 ```
 
 Instead of a common **DataProvider** annotation use one of the following:
@@ -118,6 +157,8 @@ You can find more examples in a **io.github.sskorol.testcases** package.
 
  - no custom names support (method name is used by default);
  - no parallel feature;
+ - only ITestContext / Method injections are supported;
  - missing DataProvider warning (affected by TestNG inspections);
  - unused method warning (could be suppressed in IDE):
+ 
  ![image](https://user-images.githubusercontent.com/6638780/27763889-13dd0b5e-5e95-11e7-8c19-719c6a3a15d9.png)
