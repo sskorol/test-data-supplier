@@ -69,7 +69,7 @@ repositories {
     
 dependencies {
     compile('org.testng:testng:6.10',
-            'io.github.sskorol:test-data-supplier:0.5.2'
+            'io.github.sskorol:test-data-supplier:0.5.5'
     )
 }
     
