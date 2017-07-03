@@ -5,7 +5,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@SuppressWarnings("JavadocType")
+/**
+ * Key annotation which replaces common DataProvider.
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface DataSupplier {

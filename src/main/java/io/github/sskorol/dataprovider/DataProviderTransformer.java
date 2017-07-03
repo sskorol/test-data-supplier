@@ -28,7 +28,9 @@ import static java.util.Collections.singletonList;
 import static java.util.Optional.ofNullable;
 import static org.joor.Reflect.on;
 
-@SuppressWarnings("JavadocType")
+/**
+ * Core listener which transforms custom DataSupplier format to common TestNG DataProvider.
+ */
 public class DataProviderTransformer implements IAnnotationTransformer {
 
     @Override
