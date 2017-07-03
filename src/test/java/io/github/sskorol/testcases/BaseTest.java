@@ -5,7 +5,7 @@ import io.github.sskorol.listeners.InvokedMethodNameListener;
 import org.testng.ITestNGListener;
 import org.testng.TestNG;
 
-class SimpleBaseTest {
+class BaseTest {
 
     static InvokedMethodNameListener run(final Class<?>... testClasses) {
         final TestNG tng = create(testClasses);
@@ -14,6 +14,7 @@ class SimpleBaseTest {
 
         tng.addListener((ITestNGListener) listener);
         tng.addListener(dataProviderTransformer);
+        tng.setDefaultTestName("DataSupplier tests");
         tng.run();
 
         return listener;

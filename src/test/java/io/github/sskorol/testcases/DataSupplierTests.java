@@ -7,7 +7,7 @@ import org.testng.annotations.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class DataSupplierTests extends SimpleBaseTest {
+public class DataSupplierTests extends BaseTest {
 
     @Test
     public void arraysDataSuppliersShouldWork() {
@@ -100,6 +100,19 @@ public class DataSupplierTests extends SimpleBaseTest {
                         "java.lang.IllegalArgumentException: Nothing to return from data supplier. The following test will be skipped: NullObjectsDataSupplierTests.extractNullObjectData.",
                         "java.lang.IllegalArgumentException: Nothing to return from data supplier. The following test will be skipped: NullObjectsDataSupplierTests.getNullArrayData.",
                         "java.lang.IllegalArgumentException: Nothing to return from data supplier. The following test will be skipped: NullObjectsDataSupplierTests.getNullObjectData."
+                );
+    }
+
+    @Test
+    public void dataSuppliersWithInjectedArgsShouldWork() {
+        final InvokedMethodNameListener listener = run(InjectedArgsDataSupplierTests.class);
+
+        assertThat(listener.getSucceedMethodNames())
+                .hasSize(3)
+                .containsExactly(
+                        "supplyContextMetaData(DataSupplier tests)",
+                        "supplyFullMetaData(DataSupplier tests,supplyFullMetaData)",
+                        "supplyMethodMetaData(supplyMethodMetaData)"
                 );
     }
 }
