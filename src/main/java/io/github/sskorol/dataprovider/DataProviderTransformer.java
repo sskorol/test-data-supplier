@@ -39,8 +39,8 @@ public class DataProviderTransformer implements IAnnotationTransformer {
     @Override
     public void transform(final ITestAnnotation annotation, final Class testClass,
                           final Constructor testConstructor, final Method testMethod) {
-        final Tuple4<Class<?>, String, ITestContext, Method> metaData = extractTestMetaData(null, testMethod);
-        if (!annotation.getDataProvider().isEmpty() && isDataSupplierAnnotationPresent(metaData._1, metaData._2)) {
+        if (!annotation.getDataProvider().isEmpty()
+                && isDataSupplierAnnotationPresent(extractTestMetaData(null, testMethod))) {
             annotation.setDataProviderClass(getClass());
             annotation.setDataProvider("supplyData");
         }
@@ -49,30 +49,29 @@ public class DataProviderTransformer implements IAnnotationTransformer {
     @DataProvider
     public Iterator<Object[]> supplyData(final ITestContext context, final Method testMethod) {
         final Tuple4<Class<?>, String, ITestContext, Method> testMetaData = extractTestMetaData(context, testMethod);
-        return extractDataSupplierAnnotation(testMetaData._1, testMetaData._2)
+        return extractDataSupplierAnnotation(testMetaData)
                 .map(ds -> extractTestData(testMetaData, ds.extractValues()))
                 .map(t -> t._2 ? singletonList(t._1.toArray()).iterator() : t._1.map(ob -> new Object[]{ob}).iterator())
                 .orElseGet(Collections::emptyIterator);
     }
 
-    private boolean isDataSupplierAnnotationPresent(final Class<?> dataSupplierClass, final String method) {
-        return Try.run(() -> extractDataSupplierAnnotation(dataSupplierClass, method)).isSuccess();
+    private boolean isDataSupplierAnnotationPresent(final Tuple4<Class<?>, String, ITestContext, Method> metaData) {
+        return Try.run(() -> extractDataSupplierAnnotation(metaData)).isSuccess();
     }
 
-    private Optional<DataSupplier> extractDataSupplierAnnotation(final Class<?> dataSupplierClass,
-                                                                 final String method) {
-        return ofNullable(extractDataSupplierMetaData(dataSupplierClass, method)
-                .getDeclaredAnnotation(DataSupplier.class));
+    private Optional<DataSupplier> extractDataSupplierAnnotation(
+            final Tuple4<Class<?>, String, ITestContext, Method> metaData) {
+        return ofNullable(extractDataSupplierMetaData(metaData).getDeclaredAnnotation(DataSupplier.class));
     }
 
     @SneakyThrows(NoSuchMethodException.class)
-    private Method extractDataSupplierMetaData(final Class<?> dataSupplierClass, final String method) {
-        final Class[] parameters = StreamEx.of(dataSupplierClass.getMethods())
-                                           .findFirst(m -> m.getName().equals(method))
-                                           .map(m -> Arrays.stream(m.getParameterTypes()).toArray(Class[]::new))
-                                           .orElseGet(() -> new Class[0]);
+    private Method extractDataSupplierMetaData(final Tuple4<Class<?>, String, ITestContext, Method> metaData) {
+        final Class[] types = StreamEx.of(metaData._1.getMethods())
+                                      .findFirst(m -> m.getName().equals(metaData._2))
+                                      .map(Method::getParameterTypes)
+                                      .orElseGet(() -> new Class[0]);
 
-        return dataSupplierClass.getMethod(method, parameters);
+        return metaData._1.getMethod(metaData._2, types);
     }
 
     private Object invokeDataSupplier(final Tuple4<Class<?>, String, ITestContext, Method> metaData) {
@@ -87,9 +86,9 @@ public class DataProviderTransformer implements IAnnotationTransformer {
                     throw new IllegalArgumentException(pt + " cannot be injected into DataSupplier signature");
                 }));
 
-        return StreamEx.of(extractDataSupplierMetaData(metaData._1, metaData._2).getParameterTypes())
-                       .map(argsMatcher)
-                       .toArray();
+        return Arrays.stream(extractDataSupplierMetaData(metaData).getParameterTypes())
+                     .map(argsMatcher)
+                     .toArray();
     }
 
     private Tuple4<Class<?>, String, ITestContext, Method> extractTestMetaData(final ITestContext context,
