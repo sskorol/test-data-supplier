@@ -18,6 +18,7 @@ import org.testng.annotations.Test;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static io.vavr.API.$;
@@ -79,18 +80,20 @@ public class DataProviderTransformer implements IAnnotationTransformer {
     }
 
     private Object[] extractDataSupplierArgs(final Tuple4<Class<?>, String, ITestContext, Method> metaData) {
+        final Function<Class, Object> argsMatcher = t -> Match(t).of(
+                Case($(ITestContext.class), () -> metaData._3),
+                Case($(Method.class), () -> metaData._4),
+                Case($(), pt -> {
+                    throw new IllegalArgumentException(pt + " cannot be injected into DataSupplier signature");
+                }));
+
         return StreamEx.of(extractDataSupplierMetaData(metaData._1, metaData._2).getParameterTypes())
-                       .map(t -> Match((Class) t).of(
-                               Case($(ITestContext.class), () -> metaData._3),
-                               Case($(Method.class), () -> metaData._4),
-                               Case($(), p -> {
-                                   throw new IllegalArgumentException(p + " cannot be injected into DataSupplier signature");
-                               })
-                       ))
+                       .map(argsMatcher)
                        .toArray();
     }
 
-    private Tuple4<Class<?>, String, ITestContext, Method> extractTestMetaData(final ITestContext context, final Method testMethod) {
+    private Tuple4<Class<?>, String, ITestContext, Method> extractTestMetaData(final ITestContext context,
+                                                                               final Method testMethod) {
         return Match(testMethod.getDeclaredAnnotation(Test.class)).of(
                 Case($(t -> t.dataProviderClass() != Object.class), t ->
                         Tuple.of(t.dataProviderClass(), t.dataProvider(), context, testMethod)),
