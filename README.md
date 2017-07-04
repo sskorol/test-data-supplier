@@ -82,6 +82,8 @@ test {
 }
 ```
 
+Check a separate [project](https://github.com/sskorol/test-data-supplier-gradle-example) with usage examples.
+
 ##### Maven
 
 Add the following configuration into **pom.xml**:
@@ -118,6 +120,10 @@ Add the following configuration into **pom.xml**:
     </plugins>
 </build>
 ```
+
+Check a separate [project](https://github.com/sskorol/test-data-supplier-maven-example) with usage examples.
+
+##### API
 
 Instead of a common **DataProvider** annotation use one of the following:
  
