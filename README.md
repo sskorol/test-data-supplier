@@ -3,6 +3,7 @@
 [![Maven Central](https://img.shields.io/badge/Maven%20Central-0.6.0-blue.svg?style=flat)](https://goo.gl/bjRqkT)
 [![Bintray](https://img.shields.io/badge/Bintray-0.6.0-brightgreen.svg?style=flat)](https://goo.gl/5b5R5a)
 [![GitHub license](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://goo.gl/9GLmMZ)
+[![Twitter](https://img.shields.io/twitter/url/https/github.com/sskorol/test-data-supplier.svg?style=social)](https://twitter.com/intent/tweet?text=Wow:&url=%5Bobject%20Object%5D)
 
 This repository contains TestNG **DataProvider** wrapper which helps to supply test data in a more flexible way.
 
