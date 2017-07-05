@@ -3,7 +3,7 @@
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.sskorol/test-data-supplier.svg?style=flat)](https://goo.gl/AM9Vsh)
 [![Bintray](https://img.shields.io/bintray/v/sskorol/test-data-supplier/test-data-supplier.svg?style=flat)](https://goo.gl/FU8iwV)
 [![GitHub license](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://goo.gl/9GLmMZ)
-[![Twitter](https://img.shields.io/twitter/url/https/github.com/sskorol/test-data-supplier.svg?style=social)](https://twitter.com/intent/tweet?text=Wow:&url=%5Bobject%20Object%5D)
+[![Twitter](https://img.shields.io/twitter/url/https/github.com/sskorol/test-data-supplier.svg?style=social)](https://twitter.com/intent/tweet?text=Check%20new%20Test%20Data%20Supplier%20library:&url=https://github.com/sskorol/test-data-supplier)
 
 This repository contains TestNG **DataProvider** wrapper which helps to supply test data in a more flexible way.
 
