@@ -1,15 +1,28 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath group: 'org.twitter4j', name: 'twitter4j-core', version: '4.0.6'
+    }
+}
+
 plugins {
     id 'ru.vyarus.quality' version '2.2.0'
     id 'com.jfrog.bintray' version '1.7.3'
     id 'net.researchgate.release' version '2.6.0'
 }
 
+import twitter4j.TwitterFactory
+import twitter4j.conf.ConfigurationBuilder
+
 group 'io.github.sskorol'
 version = version
-description 'Extended TestNG DataProvider'
+description 'Test Data Supplier is an extended version of common TestNG DataProvider.'
 
 ext {
     gradleScriptDir = "${rootProject.projectDir}/gradle"
+    projectUrl = "https://github.com/sskorol/test-data-supplier"
 }
 
 apply plugin: 'java'
@@ -61,5 +74,39 @@ artifacts {
 test {
     useTestNG() {
         suites 'src/test/resources/smoke-suite.xml'
+    }
+}
+
+task tweet(type: Tweet)
+tweet.mustRunAfter release
+
+class Tweet extends DefaultTask {
+
+    String consumerKey = project.hasProperty('consumerKey') ? project.property('consumerKey') : System.getenv('CONSUMER_KEY')
+    String consumerSecret = project.hasProperty('consumerSecret') ? project.property('consumerSecret') : System.getenv('CONSUMER_SECRET')
+    String accessToken = project.hasProperty('accessToken') ? project.property('accessToken') : System.getenv('ACCESS_TOKEN')
+    String accessTokenSecret = project.hasProperty('accessTokenSecret') ? project.property('accessTokenSecret') : System.getenv('ACCESS_TOKEN')
+    String releaseVersion = project.hasProperty('release.releaseVersion') ? project.property('release.releaseVersion') : System.getenv('RELEASE_VERSION')
+
+    @TaskAction
+    def updateStatus() {
+        if (consumerKey != null && consumerSecret != null && accessToken != null && accessTokenSecret != null && releaseVersion != null) {
+            String tweet = "Test Data Supplier ${releaseVersion} has been released: ${project.projectUrl} #testng #testdatasupplier #java"
+
+            ConfigurationBuilder builder = new ConfigurationBuilder()
+            builder.setDebugEnabled(true)
+                    .setOAuthConsumerKey(consumerKey)
+                    .setOAuthConsumerSecret(consumerSecret)
+                    .setOAuthAccessToken(accessToken)
+                    .setOAuthAccessTokenSecret(accessTokenSecret)
+
+            new TwitterFactory(builder.build())
+                    .getInstance()
+                    .updateStatus(tweet)
+
+            println "Release tweet has been published."
+        } else {
+            println "You should provide Twitter keys / secrets to perform status update."
+        }
     }
 }
