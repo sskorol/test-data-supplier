@@ -1,4 +1,4 @@
-### Extended TestNG DataProvider 
+# Test Data Supplier 
 
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.sskorol/test-data-supplier.svg?style=flat)](https://goo.gl/AM9Vsh)
 [![Bintray](https://img.shields.io/bintray/v/sskorol/test-data-supplier/test-data-supplier.svg?style=flat)](https://goo.gl/FU8iwV)
