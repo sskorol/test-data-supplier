@@ -78,7 +78,7 @@ test {
 }
 
 task tweet(type: Tweet)
-tweet.mustRunAfter release
+afterReleaseBuild.dependsOn tweet
 
 class Tweet extends DefaultTask {
 
