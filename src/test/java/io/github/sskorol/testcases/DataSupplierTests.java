@@ -115,4 +115,24 @@ public class DataSupplierTests extends BaseTest {
                         "supplyMethodMetaData(supplyMethodMetaData)"
                 );
     }
+
+    @Test
+    public void missingDataSuppliersShouldNotWork() {
+        final InvokedMethodNameListener listener = run(MissingDataSupplierTests.class);
+
+        assertThat(listener.getFailedBeforeInvocationMethodNames())
+                .hasSize(2)
+                .containsExactly(
+                        "failOnDataSupplying()",
+                        "failOnExternalDataSupplying()"
+                );
+
+        assertThat(EntryStream.of(listener.getResults()).values().toList())
+                .extracting(ITestResult::getThrowable)
+                .extracting(t -> t.getMessage().trim())
+                .containsExactly(
+                        "Method public void io.github.sskorol.testcases.MissingDataSupplierTests.failOnDataSupplying() requires a @DataProvider named : missingDataSupplier",
+                        "Method public void io.github.sskorol.testcases.MissingDataSupplierTests.failOnExternalDataSupplying() requires a @DataProvider named : missingExternalDataSupplier in class io.github.sskorol.datasuppliers.ExternalDataSuppliers"
+                );
+    }
 }

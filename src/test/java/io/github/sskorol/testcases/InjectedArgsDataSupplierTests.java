@@ -1,7 +1,6 @@
 package io.github.sskorol.testcases;
 
 import io.github.sskorol.dataprovider.DataSupplier;
-import io.github.sskorol.model.User;
 import org.testng.ITestContext;
 import org.testng.annotations.Test;
 
