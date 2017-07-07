@@ -1,0 +1,17 @@
+# Test Data Supplier Changelog
+
+{{#tags}}
+## {{name}}
+    {{#issues}}
+        {{#commits}}
+**{{{messageTitle}}}**
+
+            {{#messageBodyItems}}
+ * {{.}}
+            {{/messageBodyItems}}
+
+[{{hash}}](https://github.com/sskorol/test-data-supplier/commit/{{hash}}) {{authorName}} *{{commitTime}}*
+
+        {{/commits}}
+    {{/issues}}
+{{/tags}}
