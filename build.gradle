@@ -4,6 +4,7 @@ buildscript {
     }
     dependencies {
         classpath group: 'org.twitter4j', name: 'twitter4j-core', version: '4.0.6'
+        classpath group: 'gradle.plugin.se.bjurr.gitchangelog', name: 'git-changelog-gradle-plugin', version: '1.47'
     }
 }
 
@@ -15,6 +16,7 @@ plugins {
 
 import twitter4j.TwitterFactory
 import twitter4j.conf.ConfigurationBuilder
+import se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask
 
 group 'io.github.sskorol'
 version = version
@@ -27,6 +29,7 @@ ext {
 
 apply plugin: 'java'
 apply plugin: 'jacoco'
+apply plugin: 'se.bjurr.gitchangelog.git-changelog-gradle-plugin'
 apply from: "${gradleScriptDir}/bintray.gradle"
 apply from: "${gradleScriptDir}/release.gradle"
 apply from: "${gradleScriptDir}/maven-publish.gradle"
@@ -90,6 +93,11 @@ jacocoTestReport {
         html.enabled = true
         html.destination file("${buildDir}/reports/jacocoHtml")
     }
+}
+
+task gitChangelog(type: GitChangelogTask) {
+    filePath = "CHANGELOG.md"
+    templateContent = file('changelog.mustache').getText('UTF-8')
 }
 
 task tweet(type: Tweet)
