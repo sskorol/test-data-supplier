@@ -2,7 +2,9 @@ package io.github.sskorol.datasuppliers;
 
 import io.github.sskorol.dataprovider.DataSupplier;
 import io.github.sskorol.model.User;
+import org.testng.annotations.DataProvider;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
@@ -34,5 +36,10 @@ public class ExternalDataSuppliers {
     @DataSupplier
     public double getExternalObjectData() {
         return 0.1;
+    }
+
+    @DataProvider
+    public static Iterator<Object[]> getCommonData() {
+        return Stream.of("data").map(d -> new Object[]{d}).iterator();
     }
 }

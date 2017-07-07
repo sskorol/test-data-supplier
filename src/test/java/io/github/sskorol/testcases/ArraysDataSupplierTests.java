@@ -18,11 +18,27 @@ public class ArraysDataSupplierTests {
     }
 
     @DataSupplier
-    public double[] getPrimitiveArrayData() {
+    public double[] getPrimitiveDoubleArrayData() {
         final double[] doubles = new double[2];
         doubles[0] = 0.1;
         doubles[1] = 0.3;
         return doubles;
+    }
+
+    @DataSupplier
+    public int[] getPrimitiveIntArrayData() {
+        final int[] ints = new int[1];
+        ints[0] = 5;
+        return ints;
+    }
+
+    @DataSupplier
+    public long[] getPrimitiveLongArrayData() {
+        final long[] longs = new long[3];
+        longs[0] = 2L;
+        longs[1] = 6L;
+        longs[2] = 100L;
+        return longs;
     }
 
     @Test(dataProvider = "extractCommonArrayData")
@@ -30,8 +46,18 @@ public class ArraysDataSupplierTests {
         // not implemented
     }
 
-    @Test(dataProvider = "getPrimitiveArrayData")
-    public void supplyPrimitiveArrayData(final double ob) {
+    @Test(dataProvider = "getPrimitiveDoubleArrayData")
+    public void supplyPrimitiveDoubleArrayData(final double ob) {
+        // not implemented
+    }
+
+    @Test(dataProvider = "getPrimitiveIntArrayData")
+    public void supplyPrimitiveIntArrayData(final int ob) {
+        // not implemented
+    }
+
+    @Test(dataProvider = "getPrimitiveLongArrayData")
+    public void supplyPrimitiveLongArrayData(final long ob) {
         // not implemented
     }
 

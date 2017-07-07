@@ -22,7 +22,6 @@ public class DataProviderTransformer implements IAnnotationTransformer {
                           final Constructor testConstructor, final Method testMethod) {
         final boolean isDataSupplierAnnotationPresent = isAnnotationPresent(
                 ofNullable(annotation.getDataProviderClass())
-                        .filter(dpc -> dpc != Object.class)
                         .map(dpc -> (Class) dpc)
                         .orElseGet(testMethod::getDeclaringClass),
                 annotation.getDataProvider(),

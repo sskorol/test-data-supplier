@@ -19,7 +19,7 @@ public final class ReflectionUtils {
         throw new UnsupportedOperationException("Illegal access to private constructor");
     }
 
-    @SneakyThrows({NoSuchMethodException.class, SecurityException.class})
+    @SneakyThrows(NoSuchMethodException.class)
     public static Method getMethod(final Class<?> targetClass, final String targetMethodName) {
         final Class<?>[] argTypes = StreamEx.of(targetClass.getMethods())
                                             .findFirst(m -> m.getName().equals(targetMethodName))

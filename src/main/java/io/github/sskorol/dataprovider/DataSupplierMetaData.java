@@ -55,8 +55,8 @@ class DataSupplierMetaData {
                 Case($(isNull()), () -> {
                     throw new IllegalArgumentException(format(
                             "Nothing to return from data supplier. The following test will be skipped: %s.%s.",
-                            dataSupplierMethod.getDeclaringClass().getSimpleName(),
-                            dataSupplierMethod.getName()));
+                            testMethod.getDeclaringClass().getSimpleName(),
+                            testMethod.getName()));
                 }),
                 Case($(instanceOf(Collection.class)), d -> StreamEx.of((Collection<?>) d)),
                 Case($(instanceOf(Object[].class)), d -> StreamEx.of((Object[]) d)),
@@ -64,7 +64,6 @@ class DataSupplierMetaData {
                 Case($(instanceOf(int[].class)), d -> IntStreamEx.of((int[]) d).boxed()),
                 Case($(instanceOf(long[].class)), d -> LongStreamEx.of((long[]) d).boxed()),
                 Case($(instanceOf(Stream.class)), d -> StreamEx.of((Stream<?>) d)),
-                Case($(instanceOf(StreamEx.class)), d -> (StreamEx<?>) d),
                 Case($(), d -> StreamEx.of(d)));
 
         return isExtractable
@@ -74,10 +73,10 @@ class DataSupplierMetaData {
 
     private Object obtainReturnValue() {
         return invoke(dataSupplierMethod, () -> stream(dataSupplierMethod.getParameterTypes())
-                .filter(t -> t == ITestContext.class || t == Method.class)
                 .map(t -> Match((Class) t).of(
                         Case($(ITestContext.class), () -> context),
-                        Case($(Method.class), () -> testMethod)))
+                        Case($(Method.class), () -> testMethod),
+                        Case($(), () -> null)))
                 .toArray());
     }
 }

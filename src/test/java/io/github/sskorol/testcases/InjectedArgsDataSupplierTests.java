@@ -27,6 +27,16 @@ public class InjectedArgsDataSupplierTests {
         return method.getName();
     }
 
+    @DataSupplier
+    public String getWrongArgTypeMetaData(final String ob) {
+        return "data";
+    }
+
+    @DataSupplier
+    public String getNullArgTypeMetaData(final String ob) {
+        return ob;
+    }
+
     @Test(dataProvider = "getFullMetaData")
     public void supplyFullMetaData(final String contextName, final String methodName) {
         assertThat(contextName).isEqualTo("DataSupplier tests");
@@ -41,5 +51,15 @@ public class InjectedArgsDataSupplierTests {
     @Test(dataProvider = "getMethodMetaData")
     public void supplyMethodMetaData(final String methodName) {
         assertThat(methodName).isEqualTo("supplyMethodMetaData");
+    }
+
+    @Test(dataProvider = "getWrongArgTypeMetaData")
+    public void supplyWrongArgTypeMethodMetaData(final String ob) {
+        assertThat(ob).isEqualTo("data");
+    }
+
+    @Test(dataProvider = "getNullArgTypeMetaData")
+    public void supplyNullArgTypeMethodMetaData(final String ob) {
+        // body won't be ever reached
     }
 }

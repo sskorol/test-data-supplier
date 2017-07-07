@@ -26,6 +26,7 @@ ext {
 }
 
 apply plugin: 'java'
+apply plugin: 'jacoco'
 apply from: "${gradleScriptDir}/bintray.gradle"
 apply from: "${gradleScriptDir}/release.gradle"
 apply from: "${gradleScriptDir}/maven-publish.gradle"
@@ -74,6 +75,20 @@ artifacts {
 test {
     useTestNG() {
         suites 'src/test/resources/smoke-suite.xml'
+    }
+}
+
+jacoco {
+    toolVersion = '0.7.6.201602180812'
+}
+
+jacocoTestReport {
+    executionData = files("${project.buildDir}/jacoco/test.exec")
+    reports {
+        xml.enabled = true
+        xml.destination file("${buildDir}/reports/jacoco/report.xml")
+        html.enabled = true
+        html.destination file("${buildDir}/reports/jacocoHtml")
     }
 }
 

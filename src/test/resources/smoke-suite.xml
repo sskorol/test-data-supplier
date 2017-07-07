@@ -3,6 +3,7 @@
 	<test name="DataSupplier tests">
 		<classes>
 			<class name="io.github.sskorol.testcases.DataSupplierTests"/>
+			<class name="io.github.sskorol.testcases.ReflectionUtilsTests"/>
 		</classes>
 	</test>
 </suite>
