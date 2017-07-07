@@ -14,14 +14,18 @@ public class DataSupplierTests extends BaseTest {
         final InvokedMethodNameListener listener = run(ArraysDataSupplierTests.class);
 
         assertThat(listener.getSucceedMethodNames())
-                .hasSize(6)
+                .hasSize(10)
                 .containsExactly(
                         "supplyCustomArrayData(User(name=username, password=password))",
                         "supplyCustomArrayData(null)",
                         "supplyExternalArrayData(User(name=user1, password=password1),User(name=user2, password=password2))",
                         "supplyExtractedArrayData(data1,data2)",
-                        "supplyPrimitiveArrayData(0.1)",
-                        "supplyPrimitiveArrayData(0.3)"
+                        "supplyPrimitiveDoubleArrayData(0.1)",
+                        "supplyPrimitiveDoubleArrayData(0.3)",
+                        "supplyPrimitiveIntArrayData(5)",
+                        "supplyPrimitiveLongArrayData(2)",
+                        "supplyPrimitiveLongArrayData(6)",
+                        "supplyPrimitiveLongArrayData(100)"
                 );
     }
 
@@ -95,11 +99,11 @@ public class DataSupplierTests extends BaseTest {
                 .extracting(ITestResult::getThrowable)
                 .extracting(Throwable::getMessage)
                 .containsExactly(
-                        "java.lang.IllegalArgumentException: Nothing to return from data supplier. The following test will be skipped: NullObjectsDataSupplierTests.getNullCollectionData.",
-                        "java.lang.IllegalArgumentException: Nothing to return from data supplier. The following test will be skipped: NullObjectsDataSupplierTests.getNullStreamData.",
-                        "java.lang.IllegalArgumentException: Nothing to return from data supplier. The following test will be skipped: NullObjectsDataSupplierTests.extractNullObjectData.",
-                        "java.lang.IllegalArgumentException: Nothing to return from data supplier. The following test will be skipped: NullObjectsDataSupplierTests.getNullArrayData.",
-                        "java.lang.IllegalArgumentException: Nothing to return from data supplier. The following test will be skipped: NullObjectsDataSupplierTests.getNullObjectData."
+                        "java.lang.IllegalArgumentException: Nothing to return from data supplier. The following test will be skipped: NullObjectsDataSupplierTests.supplyNullCollectionData.",
+                        "java.lang.IllegalArgumentException: Nothing to return from data supplier. The following test will be skipped: NullObjectsDataSupplierTests.supplyNullStreamData.",
+                        "java.lang.IllegalArgumentException: Nothing to return from data supplier. The following test will be skipped: NullObjectsDataSupplierTests.supplyExtractedNullObject.",
+                        "java.lang.IllegalArgumentException: Nothing to return from data supplier. The following test will be skipped: NullObjectsDataSupplierTests.supplyNullArrayData.",
+                        "java.lang.IllegalArgumentException: Nothing to return from data supplier. The following test will be skipped: NullObjectsDataSupplierTests.supplyNullObjectData."
                 );
     }
 
@@ -108,12 +112,23 @@ public class DataSupplierTests extends BaseTest {
         final InvokedMethodNameListener listener = run(InjectedArgsDataSupplierTests.class);
 
         assertThat(listener.getSucceedMethodNames())
-                .hasSize(3)
+                .hasSize(4)
                 .containsExactly(
                         "supplyContextMetaData(DataSupplier tests)",
                         "supplyFullMetaData(DataSupplier tests,supplyFullMetaData)",
-                        "supplyMethodMetaData(supplyMethodMetaData)"
+                        "supplyMethodMetaData(supplyMethodMetaData)",
+                        "supplyWrongArgTypeMethodMetaData(data)"
                 );
+
+        assertThat(listener.getSkippedBeforeInvocationMethodNames())
+                .hasSize(1)
+                .containsExactly("supplyNullArgTypeMethodMetaData()");
+
+        assertThat(EntryStream.of(listener.getResults()).values().toList())
+                .filteredOn(r -> r.getStatus() == ITestResult.SKIP)
+                .extracting(ITestResult::getThrowable)
+                .extracting(Throwable::getMessage)
+                .containsExactly("java.lang.IllegalArgumentException: Nothing to return from data supplier. The following test will be skipped: InjectedArgsDataSupplierTests.supplyNullArgTypeMethodMetaData.");
     }
 
     @Test
@@ -133,6 +148,19 @@ public class DataSupplierTests extends BaseTest {
                 .containsExactly(
                         "Method public void io.github.sskorol.testcases.MissingDataSupplierTests.failOnDataSupplying() requires a @DataProvider named : missingDataSupplier",
                         "Method public void io.github.sskorol.testcases.MissingDataSupplierTests.failOnExternalDataSupplying() requires a @DataProvider named : missingExternalDataSupplier in class io.github.sskorol.datasuppliers.ExternalDataSuppliers"
+                );
+    }
+
+    @Test
+    public void commonDataProviderTestsShouldWork() {
+        final InvokedMethodNameListener listener = run(CommonDataProviderTests.class);
+
+        assertThat(listener.getSucceedMethodNames())
+                .hasSize(3)
+                .containsExactly(
+                        "shouldPassWithCommonDataProvider(data)",
+                        "shouldPassWithExternalDataProvider(data)",
+                        "shouldPassWithoutDataProvider()"
                 );
     }
 }
