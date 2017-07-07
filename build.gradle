@@ -97,11 +97,11 @@ jacocoTestReport {
 
 task gitChangelog(type: GitChangelogTask) {
     filePath = "CHANGELOG.md"
-    templateContent = file('changelog.mustache').getText('UTF-8')
+    templateContent = file('gradle/changelog.mustache').getText('UTF-8')
 }
 
 task tweet(type: Tweet)
-afterReleaseBuild.dependsOn tweet
+afterReleaseBuild.dependsOn tweet, gitChangelog
 
 class Tweet extends DefaultTask {
 
