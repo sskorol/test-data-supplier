@@ -38,6 +38,11 @@ public class ExternalDataSuppliers {
         return 0.1;
     }
 
+    @DataSupplier(name = "Password supplier")
+    public String getPasswordFromNamedDataSupplier() {
+        return "qwerty";
+    }
+
     @DataProvider
     public static Iterator<Object[]> getCommonData() {
         return Stream.of("data").map(d -> new Object[]{d}).iterator();

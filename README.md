@@ -1,9 +1,11 @@
 # Test Data Supplier 
 
 [![Build Status](https://travis-ci.org/sskorol/test-data-supplier.svg?branch=master)](https://travis-ci.org/sskorol/test-data-supplier)
+[![codebeat badge](https://codebeat.co/badges/2d4e3080-1ec0-4747-b81e-06fa7d95e955)](https://codebeat.co/projects/github-com-sskorol-test-data-supplier-master)
 [![codecov](https://codecov.io/gh/sskorol/test-data-supplier/branch/master/graph/badge.svg)](https://codecov.io/gh/sskorol/test-data-supplier)
-[![Maven Central](https://img.shields.io/maven-central/v/io.github.sskorol/test-data-supplier.svg?style=flat)](https://goo.gl/AM9Vsh)
-[![Bintray](https://api.bintray.com/packages/sskorol/test-data-supplier/test-data-supplier/images/download.svg)](https://goo.gl/k2xHHh)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.sskorol/test-data-supplier/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/io.github.sskorol/test-data-supplier)
+[![Bintray](https://api.bintray.com/packages/sskorol/test-data-supplier/test-data-supplier/images/download.svg)](https://bintray.com/sskorol/test-data-supplier/test-data-supplier/_latestVersion)
+[![Dependency Status](https://www.versioneye.com/user/projects/59615dee6725bd0048edfa2f/badge.svg?style=flat)](https://www.versioneye.com/user/projects/59615dee6725bd0048edfa2f)
 [![GitHub license](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://goo.gl/9GLmMZ)
 [![Twitter](https://img.shields.io/twitter/url/https/github.com/sskorol/test-data-supplier.svg?style=social)](https://twitter.com/intent/tweet?text=Check%20new%20Test%20Data%20Supplier%20library:&url=https://github.com/sskorol/test-data-supplier)
 
@@ -54,7 +56,7 @@ public void shouldSupplyExtractedListData(final User... users) {
 }
 ```
 
-#### Supported return types
+## Supported return types
 
  - Collection
  - Object[]
@@ -65,9 +67,9 @@ public void shouldSupplyExtractedListData(final User... users) {
  - StreamEx
  - A single Object of any common or custom type
 
-#### Usage
+## Usage
 
-##### Gradle
+### Gradle
 
 Add the following configuration into **build.gradle**:
 
@@ -77,8 +79,8 @@ repositories {
 }
     
 dependencies {
-    compile('org.testng:testng:6.10',
-            'io.github.sskorol:test-data-supplier:0.8.0'
+    compile('org.testng:testng:6.11',
+            'io.github.sskorol:test-data-supplier:0.9.0'
     )
 }
     
@@ -91,7 +93,7 @@ test {
 
 Check a separate [project](https://github.com/sskorol/test-data-supplier-gradle-example) with usage examples.
 
-##### Maven
+### Maven
 
 Add the following configuration into **pom.xml**:
 
@@ -100,12 +102,12 @@ Add the following configuration into **pom.xml**:
     <dependency>
         <groupId>org.testng</groupId>
         <artifactId>testng</artifactId>
-        <version>6.10</version>
+        <version>6.11</version>
     </dependency>
     <dependency>
         <groupId>io.github.sskorol</groupId>
         <artifactId>test-data-supplier</artifactId>
-        <version>0.8.0</version>
+        <version>0.9.0</version>
     </dependency>
 </dependencies>
     
@@ -130,25 +132,20 @@ Add the following configuration into **pom.xml**:
 
 Check a separate [project](https://github.com/sskorol/test-data-supplier-maven-example) with usage examples.
 
-##### API
+### API
 
-Instead of a common **DataProvider** annotation use one of the following:
+Instead of a common **DataProvider** annotation use the following:
  
 ```java
 @DataSupplier
 public T getData() {
     //...
 }
-    
-// or
-    
-@DataSupplier(extractValues = true)
-public T getData() {
-    //...
-}
 ```
 
-Now you can refer **DataSupplier** the same way as with TestNG **DataProvider**:
+Currently there're only 2 **DataSupplier** args available: **name** and **extractValues**. 
+
+You can refer **DataSupplier** the same way as with TestNG **DataProvider**:
 
 ```java
 @Test(dataProvider = "getData")
@@ -164,13 +161,12 @@ public void supplyExternalData(final T data) {
 }
 ```
 
-You can find more examples in a **io.github.sskorol.testcases** package.
+Check **io.github.sskorol.testcases** package for more examples.
 
-#### Limitations
+### Limitations
 
- - no custom names support (method name is used by default);
- - no parallel feature;
- - only ITestContext / Method injections are supported;
+ - no **parallel** / **indices** args support;
+ - only **ITestContext** / **Method** injections are supported;
  - missing DataProvider warning (affected by TestNG inspections);
  - unused method warning (could be suppressed in IDE):
  

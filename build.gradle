@@ -1,17 +1,18 @@
 buildscript {
     repositories {
         jcenter()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
     }
-    dependencies {
-        classpath group: 'org.twitter4j', name: 'twitter4j-core', version: '4.0.6'
-        classpath group: 'gradle.plugin.se.bjurr.gitchangelog', name: 'git-changelog-gradle-plugin', version: '1.47'
-    }
-}
 
-plugins {
-    id 'ru.vyarus.quality' version '2.2.0'
-    id 'com.jfrog.bintray' version '1.7.3'
-    id 'net.researchgate.release' version '2.6.0'
+    dependencies {
+        classpath 'ru.vyarus:gradle-quality-plugin:2.2.0'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
+        classpath 'net.researchgate:gradle-release:2.4.0'
+        classpath 'org.twitter4j:twitter4j-core:4.0.6'
+        classpath 'gradle.plugin.se.bjurr.gitchangelog:git-changelog-gradle-plugin:1.47'
+    }
 }
 
 import twitter4j.TwitterFactory
@@ -29,6 +30,7 @@ ext {
 
 apply plugin: 'java'
 apply plugin: 'jacoco'
+apply plugin: 'ru.vyarus.quality'
 apply plugin: 'se.bjurr.gitchangelog.git-changelog-gradle-plugin'
 apply from: "${gradleScriptDir}/bintray.gradle"
 apply from: "${gradleScriptDir}/release.gradle"
@@ -39,14 +41,13 @@ targetCompatibility = JavaVersion.VERSION_1_8
 
 repositories {
     jcenter()
-    mavenLocal()
 }
 
 dependencies {
-    compile('org.testng:testng:6.10',
+    compile('org.testng:testng:6.11',
             'org.jooq:joor:0.9.6',
             'one.util:streamex:0.6.5',
-            'org.projectlombok:lombok:1.16.16',
+            'org.projectlombok:lombok:1.16.18',
             'io.vavr:vavr:0.9.0'
     )
     testCompile 'org.assertj:assertj-core:3.6.2'

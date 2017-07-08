@@ -24,8 +24,7 @@ public class DataProviderTransformer implements IAnnotationTransformer {
                 ofNullable(annotation.getDataProviderClass())
                         .map(dpc -> (Class) dpc)
                         .orElseGet(testMethod::getDeclaringClass),
-                annotation.getDataProvider(),
-                DataSupplier.class);
+                annotation.getDataProvider());
 
         if (!annotation.getDataProvider().isEmpty() && isDataSupplierAnnotationPresent) {
             annotation.setDataProviderClass(getClass());
