@@ -1,5 +1,43 @@
 # Test Data Supplier Changelog
 
+## Unreleased
+**Dependencies update:**
+
+ * assertj core was outdated and caused version eye warnings;
+
+[7de84ff77c8075a](https://github.com/sskorol/test-data-supplier/commit/7de84ff77c8075a) Sergey Korol *2017-07-08 23:00:41*
+
+**Core updates:**
+
+ * added custom DataSupplier name specification support;
+ * increased coverage;
+ * revised reflection utils to support custom names;
+ * minor refactoring;
+
+[103998744c9ef66](https://github.com/sskorol/test-data-supplier/commit/103998744c9ef66) Sergey Korol *2017-07-08 22:46:51*
+
+**Changelog updates:**
+
+ * added release dependency;
+ * moved template to gradle folder;
+
+[a158dffeb4d8d7b](https://github.com/sskorol/test-data-supplier/commit/a158dffeb4d8d7b) Sergey Korol *2017-07-07 11:22:25*
+
+**removed redundant items from template**
+
+
+[3242e0d3ccf2622](https://github.com/sskorol/test-data-supplier/commit/3242e0d3ccf2622) Sergey Korol *2017-07-07 11:10:45*
+
+**- fixed template markdown**
+
+
+[6ee781245f79986](https://github.com/sskorol/test-data-supplier/commit/6ee781245f79986) Sergey Korol *2017-07-07 11:03:25*
+
+**- added changelog template and generator plugin;**
+
+
+[98c07f9300ebbb4](https://github.com/sskorol/test-data-supplier/commit/98c07f9300ebbb4) Sergey Korol *2017-07-07 10:54:02*
+
 ## 0.8.0
 **- added missing badges;**
 
