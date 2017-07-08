@@ -163,4 +163,16 @@ public class DataSupplierTests extends BaseTest {
                         "shouldPassWithoutDataProvider()"
                 );
     }
+
+    @Test
+    public void namedDataSupplierTestsShouldWork() {
+        final InvokedMethodNameListener listener = run(DataSupplierWithCustomNamesTests.class);
+
+        assertThat(listener.getSucceedMethodNames())
+                .hasSize(2)
+                .containsExactly(
+                        "supplyExternalPasswordFromNamedDataSupplier(qwerty)",
+                        "supplyUserFromNamedDataSupplier(User(name=userFromNamedDataSupplier, password=password))"
+                );
+    }
 }

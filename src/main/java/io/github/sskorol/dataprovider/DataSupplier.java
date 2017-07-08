@@ -12,5 +12,7 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface DataSupplier {
 
+    String name() default "";
+
     boolean extractValues() default false;
 }
