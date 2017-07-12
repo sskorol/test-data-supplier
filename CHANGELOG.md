@@ -1,5 +1,19 @@
 # Test Data Supplier Changelog
 
+## Unreleased
+**New features:**
+
+ * added Tuple return type support from vavr library to extend flexibility;
+ * added runInParallel feature as an alternative to common parallel flag;
+
+[30c94e775d5078f](https://github.com/sskorol/test-data-supplier/commit/30c94e775d5078f) Sergey Korol *2017-07-12 19:37:32*
+
+**Update CHANGELOG.md**
+
+ * Replaced confusing Unversioned tag with actual 0.9.0
+
+[fab62c5a35c3f9d](https://github.com/sskorol/test-data-supplier/commit/fab62c5a35c3f9d) Sergey Korol *2017-07-08 23:19:32*
+
 ## 0.9.0
 **Dependencies update:**
 
