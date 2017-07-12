@@ -2,6 +2,7 @@ package io.github.sskorol.datasuppliers;
 
 import io.github.sskorol.dataprovider.DataSupplier;
 import io.github.sskorol.model.User;
+import io.vavr.Tuple;
 import org.testng.annotations.DataProvider;
 
 import java.util.Iterator;
@@ -41,6 +42,11 @@ public class ExternalDataSuppliers {
     @DataSupplier(name = "Password supplier")
     public String getPasswordFromNamedDataSupplier() {
         return "qwerty";
+    }
+
+    @DataSupplier(extractValues = true)
+    public Tuple getExternalTupleData() {
+        return Tuple.of("1", 2, 3.0);
     }
 
     @DataProvider

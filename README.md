@@ -65,6 +65,7 @@ public void shouldSupplyExtractedListData(final User... users) {
  - long[]
  - Stream
  - StreamEx
+ - Tuple
  - A single Object of any common or custom type
 
 ## Usage
@@ -80,7 +81,7 @@ repositories {
     
 dependencies {
     compile('org.testng:testng:6.11',
-            'io.github.sskorol:test-data-supplier:0.9.0'
+            'io.github.sskorol:test-data-supplier:1.0.0'
     )
 }
     
@@ -107,7 +108,7 @@ Add the following configuration into **pom.xml**:
     <dependency>
         <groupId>io.github.sskorol</groupId>
         <artifactId>test-data-supplier</artifactId>
-        <version>0.9.0</version>
+        <version>1.0.0</version>
     </dependency>
 </dependencies>
     
@@ -143,7 +144,7 @@ public T getData() {
 }
 ```
 
-Currently there're only 2 **DataSupplier** args available: **name** and **extractValues**. 
+**DataSupplier** supports the following args: **name**, **extractValues** and **runInParallel**. 
 
 You can refer **DataSupplier** the same way as with TestNG **DataProvider**:
 
@@ -165,7 +166,7 @@ Check **io.github.sskorol.testcases** package for more examples.
 
 ### Limitations
 
- - no **parallel** / **indices** args support;
+ - no **indices** arg support (could be achieved by Stream API usage);
  - only **ITestContext** / **Method** injections are supported;
  - missing DataProvider warning (affected by TestNG inspections);
  - unused method warning (could be suppressed in IDE):

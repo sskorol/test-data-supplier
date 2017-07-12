@@ -35,10 +35,11 @@ public final class ReflectionUtils {
         return targetClass.getMethod(metaData._1, metaData._2);
     }
 
-    public static boolean isAnnotationPresent(final Class<?> targetClass, final String targetMethodName) {
+    public static DataSupplier getDataSupplierAnnotation(final Class<?> targetClass, final String targetMethodName) {
         return Try.of(() -> getMethod(targetClass, targetMethodName))
-                  .map(m -> m.isAnnotationPresent(DataSupplier.class))
-                  .getOrElse(false);
+                  .map(m -> m.getDeclaredAnnotation(DataSupplier.class))
+                  .filter(Objects::nonNull)
+                  .getOrElse((DataSupplier) null);
     }
 
     public static Object invoke(final Method method, final Supplier<Object[]> argsSupplier) {
