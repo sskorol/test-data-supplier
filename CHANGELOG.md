@@ -1,6 +1,6 @@
 # Test Data Supplier Changelog
 
-## Unreleased
+## 1.0.0
 **New features:**
 
  * added Tuple return type support from vavr library to extend flexibility;
