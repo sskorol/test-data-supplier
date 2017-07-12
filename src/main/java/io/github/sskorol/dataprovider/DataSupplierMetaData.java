@@ -1,5 +1,6 @@
 package io.github.sskorol.dataprovider;
 
+import io.vavr.Tuple;
 import one.util.streamex.DoubleStreamEx;
 import one.util.streamex.IntStreamEx;
 import one.util.streamex.LongStreamEx;
@@ -64,6 +65,7 @@ class DataSupplierMetaData {
                 Case($(instanceOf(int[].class)), d -> IntStreamEx.of((int[]) d).boxed()),
                 Case($(instanceOf(long[].class)), d -> LongStreamEx.of((long[]) d).boxed()),
                 Case($(instanceOf(Stream.class)), d -> StreamEx.of((Stream<?>) d)),
+                Case($(instanceOf(Tuple.class)), d -> StreamEx.of(((Tuple) d).toSeq().toJavaArray())),
                 Case($(), d -> StreamEx.of(d)));
 
         return isExtractable

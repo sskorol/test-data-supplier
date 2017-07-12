@@ -15,4 +15,6 @@ public @interface DataSupplier {
     String name() default "";
 
     boolean extractValues() default false;
+
+    boolean runInParallel() default false;
 }

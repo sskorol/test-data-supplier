@@ -5,6 +5,8 @@ import one.util.streamex.EntryStream;
 import org.testng.ITestResult;
 import org.testng.annotations.Test;
 
+import java.util.Collection;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class DataSupplierTests extends BaseTest {
@@ -128,7 +130,8 @@ public class DataSupplierTests extends BaseTest {
                 .filteredOn(r -> r.getStatus() == ITestResult.SKIP)
                 .extracting(ITestResult::getThrowable)
                 .extracting(Throwable::getMessage)
-                .containsExactly("java.lang.IllegalArgumentException: Nothing to return from data supplier. The following test will be skipped: InjectedArgsDataSupplierTests.supplyNullArgTypeMethodMetaData.");
+                .containsExactly(
+                        "java.lang.IllegalArgumentException: Nothing to return from data supplier. The following test will be skipped: InjectedArgsDataSupplierTests.supplyNullArgTypeMethodMetaData.");
     }
 
     @Test
@@ -174,5 +177,40 @@ public class DataSupplierTests extends BaseTest {
                         "supplyExternalPasswordFromNamedDataSupplier(qwerty)",
                         "supplyUserFromNamedDataSupplier(User(name=userFromNamedDataSupplier, password=password))"
                 );
+    }
+
+    @Test
+    public void tupleDataSupplierTestsShouldWork() {
+        final InvokedMethodNameListener listener = run(TupleDataSupplierTests.class);
+
+        assertThat(listener.getSucceedMethodNames())
+                .hasSize(4)
+                .containsExactly(
+                        "supplyCommonTupleData(data1)",
+                        "supplyCommonTupleData(data2)",
+                        "supplyExternalTupleData(1,2,3.0)",
+                        "supplyExtractedTupleData(1,User(name=name, password=password))"
+                );
+    }
+
+    @Test
+    public void parallelDataSupplierTestsShouldWork() {
+        final InvokedMethodNameListener listener = run(ParallelDataSupplierTests.class);
+
+        assertThat(listener.getSucceedMethodNames())
+                .hasSize(4)
+                .containsExactlyInAnyOrder(
+                        "supplyParallelData(data1)",
+                        "supplyParallelData(data2)",
+                        "supplySeqData(data1)",
+                        "supplySeqData(data2)"
+                );
+
+        assertThat(EntryStream.of(listener.getThreads())
+                              .values()
+                              .flatMap(Collection::stream)
+                              .distinct()
+                              .toList())
+                .hasSize(3);
     }
 }
