@@ -1,6 +1,6 @@
 # Test Data Supplier Changelog
 
-## Unreleased
+## 0.9.0
 **Dependencies update:**
 
  * assertj core was outdated and caused version eye warnings;
