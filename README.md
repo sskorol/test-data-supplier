@@ -164,11 +164,13 @@ public void supplyExternalData(final T data) {
 
 Check **io.github.sskorol.testcases** package for more examples.
 
+### IntelliJ IDEA support
+
+**Test Data Supplier** is integrated with IntelliJ IDEA in a form of plugin. Just install **test-data-supplier-plugin** from the official JetBrains repository.
+
+More information about its features could be found on the related [GitHub](https://github.com/sskorol/test-data-supplier-plugin) page. 
+
 ### Limitations
 
  - no **indices** arg support (could be achieved by Stream API usage);
  - only **ITestContext** / **Method** injections are supported;
- - missing DataProvider warning (affected by TestNG inspections);
- - unused method warning (could be suppressed in IDE):
- 
- ![image](https://user-images.githubusercontent.com/6638780/27763889-13dd0b5e-5e95-11e7-8c19-719c6a3a15d9.png)
