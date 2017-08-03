@@ -1,12 +1,18 @@
 package io.github.sskorol.testcases;
 
-import io.github.sskorol.listeners.InvokedMethodNameListener;
+import io.github.sskorol.core.DataProviderTransformer;
+import io.github.sskorol.core.DataSupplierInterceptor;
+import io.github.sskorol.core.InvokedMethodNameListener;
+import io.github.sskorol.model.DataSupplierMetaData;
 import one.util.streamex.EntryStream;
+import one.util.streamex.StreamEx;
 import org.testng.ITestResult;
 import org.testng.annotations.Test;
 
 import java.util.Collection;
+import java.util.List;
 
+import static io.github.sskorol.core.DataSupplierAspect.getInterceptors;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class DataSupplierTests extends BaseTest {
@@ -212,5 +218,26 @@ public class DataSupplierTests extends BaseTest {
                               .distinct()
                               .toList())
                 .hasSize(3);
+    }
+
+    @Test
+    public void dataSupplierListenerShouldCollectMetaData() {
+        run(DataProviderTransformer.class.getName(),
+                ArraysDataSupplierTests.class,
+                CollectionsDataSupplierTests.class,
+                StreamsDataSupplierTests.class,
+                SingleObjectsDataSupplierTests.class,
+                TupleDataSupplierTests.class);
+
+        final List<DataSupplierInterceptor> interceptors = getInterceptors();
+
+        assertThat(interceptors).hasSize(2);
+
+        assertThat(StreamEx.of(interceptors)
+                           .map(DataSupplierInterceptor::getMetaData)
+                           .flatMap(StreamEx::of)
+                           .toList())
+                .extracting(DataSupplierMetaData::getDataSupplierMethod)
+                .hasSize(20);
     }
 }

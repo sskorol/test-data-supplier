@@ -1,4 +1,4 @@
-package io.github.sskorol.listeners;
+package io.github.sskorol.core;
 
 import one.util.streamex.StreamEx;
 import org.testng.IInvokedMethod;
@@ -64,7 +64,7 @@ public class InvokedMethodNameListener implements IInvokedMethodListener, ITestL
 
     @Override
     public void onTestSuccess(final ITestResult result) {
-        String name = getName(result);
+        final String name = getName(result);
         results.put(name, result);
         if (!succeedMethodNames.contains(name)) {
             throw new IllegalStateException("A succeed test is supposed to be invoked");
@@ -73,7 +73,7 @@ public class InvokedMethodNameListener implements IInvokedMethodListener, ITestL
 
     @Override
     public void onTestFailure(final ITestResult result) {
-        String name = getName(result);
+        final String name = getName(result);
         results.put(name, result);
         if (!failedMethodNames.contains(name)) {
             failedBeforeInvocationMethodNames.add(name);
@@ -82,7 +82,7 @@ public class InvokedMethodNameListener implements IInvokedMethodListener, ITestL
 
     @Override
     public void onTestSkipped(final ITestResult result) {
-        String name = getName(result);
+        final String name = getName(result);
         results.put(name, result);
         if (!skippedMethodNames.contains(name)) {
             skippedBeforeInvocationMethodNames.add(name);

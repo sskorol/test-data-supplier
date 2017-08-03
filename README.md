@@ -81,13 +81,13 @@ repositories {
     
 dependencies {
     compile('org.testng:testng:6.11',
-            'io.github.sskorol:test-data-supplier:1.0.0'
+            'io.github.sskorol:test-data-supplier:1.1.0'
     )
 }
     
 test {
     useTestNG() {
-        listeners << 'io.github.sskorol.dataprovider.DataProviderTransformer'
+        listeners << 'io.github.sskorol.core.DataProviderTransformer'
     }
 }
 ```
@@ -108,7 +108,7 @@ Add the following configuration into **pom.xml**:
     <dependency>
         <groupId>io.github.sskorol</groupId>
         <artifactId>test-data-supplier</artifactId>
-        <version>1.0.0</version>
+        <version>1.1.0</version>
     </dependency>
 </dependencies>
     
@@ -122,7 +122,7 @@ Add the following configuration into **pom.xml**:
                 <properties>
                     <property>
                         <name>listener</name>
-                        <value>io.github.sskorol.dataprovider.DataProviderTransformer</value>
+                        <value>io.github.sskorol.core.DataProviderTransformer</value>
                     </property>
                 </properties>
             </configuration>
@@ -164,13 +164,43 @@ public void supplyExternalData(final T data) {
 
 Check **io.github.sskorol.testcases** package for more examples.
 
-### IntelliJ IDEA support
+### Tracking meta-data
+
+**DataSupplierInterceptor** interface allows tracking original **DataProvider** method calls for accessing additional meta-data. You can use the following snippet for getting required info:
+```java
+public class DataSupplierInterceptorImpl implements DataSupplierInterceptor {
+    
+    private static final Map<Method, DataSupplierMetaData> META_DATA = new ConcurrentHashMap<>();
+    
+    @Override
+    public void beforeDataPreparation(final ITestContext context, final Method method) {
+    }
+    
+    @Override
+    public void afterDataPreparation(final ITestContext context, final Method method) {
+    }
+    
+    @Override
+    public void onDataPreparation(final DataSupplierMetaData testMetaData) {
+        META_DATA.putIfAbsent(testMetaData.getTestMethod(), testMetaData);
+    }
+    
+    @Override
+    public Collection<DataSupplierMetaData> getMetaData() {
+        return META_DATA.values();
+    }
+}
+```
+
+This class should be then loaded via SPI mechanism. Just create **META-INF/services** folder in **resources** root, and add a new file **io.github.sskorol.core.DataSupplierInterceptor** with a full path to implementation class.
+
+## IntelliJ IDEA support
 
 **Test Data Supplier** is integrated with IntelliJ IDEA in a form of plugin. Just install **test-data-supplier-plugin** from the official JetBrains repository.
 
 More information about its features could be found on the related [GitHub](https://github.com/sskorol/test-data-supplier-plugin) page. 
 
-### Limitations
+## Limitations
 
  - no **indices** arg support (could be achieved by Stream API usage);
  - only **ITestContext** / **Method** injections are supported;

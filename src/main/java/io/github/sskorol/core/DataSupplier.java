@@ -1,9 +1,6 @@
-package io.github.sskorol.dataprovider;
+package io.github.sskorol.core;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
  * Key annotation which replaces common DataProvider.

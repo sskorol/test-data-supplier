@@ -1,6 +1,8 @@
-package io.github.sskorol.dataprovider;
+package io.github.sskorol.model;
 
+import io.github.sskorol.core.DataSupplier;
 import io.vavr.Tuple;
+import lombok.Getter;
 import one.util.streamex.DoubleStreamEx;
 import one.util.streamex.IntStreamEx;
 import one.util.streamex.LongStreamEx;
@@ -10,11 +12,11 @@ import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
 import java.util.Collection;
-import java.util.Iterator;
+import java.util.List;
 import java.util.stream.Stream;
 
-import static io.github.sskorol.dataprovider.ReflectionUtils.getMethod;
-import static io.github.sskorol.dataprovider.ReflectionUtils.invoke;
+import static io.github.sskorol.utils.ReflectionUtils.getMethod;
+import static io.github.sskorol.utils.ReflectionUtils.invoke;
 import static io.vavr.API.$;
 import static io.vavr.API.Case;
 import static io.vavr.API.Match;
@@ -28,14 +30,18 @@ import static java.util.Optional.ofNullable;
 /**
  * Base container for DataSupplier meta data.
  */
-class DataSupplierMetaData {
+public class DataSupplierMetaData {
 
-    private final ITestContext context;
+    @Getter
     private final Method testMethod;
+    @Getter
     private final Method dataSupplierMethod;
+    @Getter
+    private final List<Object[]> testData;
     private final boolean isExtractable;
+    private final ITestContext context;
 
-    DataSupplierMetaData(final ITestContext context, final Method testMethod) {
+    public DataSupplierMetaData(final ITestContext context, final Method testMethod) {
         this.context = context;
         this.testMethod = testMethod;
 
@@ -49,9 +55,10 @@ class DataSupplierMetaData {
         this.isExtractable = ofNullable(dataSupplierMethod.getDeclaredAnnotation(DataSupplier.class))
                 .map(DataSupplier::extractValues)
                 .orElse(false);
+        this.testData = transform();
     }
 
-    public Iterator<Object[]> transform() {
+    private List<Object[]> transform() {
         final StreamEx<?> wrappedDataSupplierReturnValue = Match(obtainReturnValue()).of(
                 Case($(isNull()), () -> {
                     throw new IllegalArgumentException(format(
@@ -69,8 +76,8 @@ class DataSupplierMetaData {
                 Case($(), d -> StreamEx.of(d)));
 
         return isExtractable
-                ? singletonList(wrappedDataSupplierReturnValue.toArray()).iterator()
-                : wrappedDataSupplierReturnValue.map(ob -> new Object[]{ob}).iterator();
+                ? singletonList(wrappedDataSupplierReturnValue.toArray())
+                : wrappedDataSupplierReturnValue.map(ob -> new Object[]{ob}).toList();
     }
 
     private Object obtainReturnValue() {

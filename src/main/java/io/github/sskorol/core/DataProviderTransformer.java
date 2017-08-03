@@ -1,7 +1,7 @@
-package io.github.sskorol.dataprovider;
+package io.github.sskorol.core;
 
-import org.testng.IAnnotationTransformer;
-import org.testng.ITestContext;
+import io.github.sskorol.model.DataSupplierMetaData;
+import org.testng.*;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.ITestAnnotation;
 
@@ -9,7 +9,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.*;
 
-import static io.github.sskorol.dataprovider.ReflectionUtils.getDataSupplierAnnotation;
+import static io.github.sskorol.utils.ReflectionUtils.getDataSupplierAnnotation;
 import static java.util.Objects.nonNull;
 import static java.util.Optional.ofNullable;
 
@@ -20,12 +20,12 @@ public class DataProviderTransformer implements IAnnotationTransformer {
 
     @DataProvider
     public Iterator<Object[]> supplySeqData(final ITestContext context, final Method testMethod) {
-        return transform(context, testMethod);
+        return getMetaData(context, testMethod).getTestData().iterator();
     }
 
     @DataProvider(parallel = true)
     public Iterator<Object[]> supplyParallelData(final ITestContext context, final Method testMethod) {
-        return transform(context, testMethod);
+        return getMetaData(context, testMethod).getTestData().iterator();
     }
 
     @Override
@@ -43,7 +43,7 @@ public class DataProviderTransformer implements IAnnotationTransformer {
         }
     }
 
-    private Iterator<Object[]> transform(final ITestContext context, final Method testMethod) {
-        return new DataSupplierMetaData(context, testMethod).transform();
+    private DataSupplierMetaData getMetaData(final ITestContext context, final Method testMethod) {
+        return new DataSupplierMetaData(context, testMethod);
     }
 }
