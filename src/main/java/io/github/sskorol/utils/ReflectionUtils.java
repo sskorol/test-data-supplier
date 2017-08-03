@@ -1,5 +1,6 @@
-package io.github.sskorol.dataprovider;
+package io.github.sskorol.utils;
 
+import io.github.sskorol.core.DataSupplier;
 import io.vavr.Tuple;
 import io.vavr.Tuple2;
 import io.vavr.control.Try;

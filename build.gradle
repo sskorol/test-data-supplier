@@ -29,7 +29,6 @@ ext {
 }
 
 apply plugin: 'java'
-apply plugin: 'jacoco'
 apply plugin: 'ru.vyarus.quality'
 apply plugin: 'se.bjurr.gitchangelog.git-changelog-gradle-plugin'
 apply from: "${gradleScriptDir}/bintray.gradle"
@@ -43,18 +42,31 @@ repositories {
     jcenter()
 }
 
+configurations {
+    jacoco
+    jacocoRuntime
+    agent
+}
+
 dependencies {
+    agent 'org.aspectj:aspectjweaver:1.8.10'
     compile('org.testng:testng:6.11',
             'org.jooq:joor:0.9.6',
             'one.util:streamex:0.6.5',
             'org.projectlombok:lombok:1.16.18',
-            'io.vavr:vavr:0.9.0'
+            'io.vavr:vavr:0.9.0',
+            'org.aspectj:aspectjrt:1.8.10',
+            'org.slf4j:slf4j-simple:1.7.25'
     )
     testCompile 'org.assertj:assertj-core:3.8.0'
+    jacoco group: 'org.jacoco', name: 'org.jacoco.ant', version: '0.7.9', classifier: 'nodeps'
+    jacocoRuntime group: 'org.jacoco', name: 'org.jacoco.agent', version: '0.7.9', classifier: 'runtime'
 }
 
+sourceSets.main.output.classesDir = new File(buildDir, "classes/main")
+
 task wrapper(type: Wrapper) {
-    gradleVersion '4.0.1'
+    gradleVersion '4.0.2'
 }
 
 task sourceJar(type: Jar, dependsOn: classes) {
@@ -77,28 +89,63 @@ artifacts {
 }
 
 test {
+    doFirst {
+        jvmArgs "-javaagent:${configurations.agent.singleFile}"
+    }
+
     useTestNG() {
         suites 'src/test/resources/smoke-suite.xml'
-    }
-}
-
-jacoco {
-    toolVersion = '0.7.6.201602180812'
-}
-
-jacocoTestReport {
-    executionData = files("${project.buildDir}/jacoco/test.exec")
-    reports {
-        xml.enabled = true
-        xml.destination file("${buildDir}/reports/jacoco/report.xml")
-        html.enabled = true
-        html.destination file("${buildDir}/reports/jacocoHtml")
     }
 }
 
 task gitChangelog(type: GitChangelogTask) {
     filePath = "CHANGELOG.md"
     templateContent = file('gradle/changelog.mustache').getText('UTF-8')
+}
+
+task instrument(dependsOn: ['classes']) {
+    ext.outputDir = buildDir.path + '/classes-instrumented'
+    doLast {
+        ant.taskdef(name: 'instrument',
+                classname: 'org.jacoco.ant.InstrumentTask',
+                classpath: configurations.jacoco.asPath)
+        ant.instrument(destdir: outputDir) {
+            fileset(dir: sourceSets.main.output.classesDir)
+        }
+    }
+}
+
+gradle.taskGraph.whenReady { graph ->
+    if (graph.hasTask(instrument)) {
+        tasks.withType(Test) {
+            doFirst {
+                systemProperty 'jacoco-agent.destfile', buildDir.path + '/jacoco/tests.exec'
+                classpath = files(instrument.outputDir) + classpath + configurations.jacocoRuntime
+            }
+        }
+    }
+}
+
+task report(dependsOn: ['instrument', 'test']) {
+    doLast {
+        ant.taskdef(name: 'report',
+                classname: 'org.jacoco.ant.ReportTask',
+                classpath: configurations.jacoco.asPath)
+        ant.report() {
+            executiondata {
+                ant.file(file: buildDir.path + '/jacoco/tests.exec')
+            }
+            structure(name: 'Coverage Report') {
+                classfiles {
+                    fileset(dir: sourceSets.main.output.classesDir)
+                }
+                sourcefiles {
+                    fileset(dir: 'src/main/java')
+                }
+            }
+            html(destdir: buildDir.path + '/reports/jacoco')
+        }
+    }
 }
 
 task tweet(type: Tweet)

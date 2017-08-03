@@ -1,13 +1,18 @@
 package io.github.sskorol.testcases;
 
-import io.github.sskorol.dataprovider.DataProviderTransformer;
-import io.github.sskorol.listeners.InvokedMethodNameListener;
+import io.github.sskorol.core.DataProviderTransformer;
+import io.github.sskorol.core.InvokedMethodNameListener;
 import org.testng.ITestNGListener;
 import org.testng.TestNG;
 
 class BaseTest {
 
     static InvokedMethodNameListener run(final Class<?>... testClasses) {
+        return run(InvokedMethodNameListener.class.getName(), testClasses);
+    }
+
+    @SuppressWarnings("unchecked")
+    static <T> T run(final String listenerClass, final Class<?>... testClasses) {
         final TestNG tng = create(testClasses);
         final InvokedMethodNameListener listener = new InvokedMethodNameListener();
         final DataProviderTransformer dataProviderTransformer = new DataProviderTransformer();
@@ -17,7 +22,7 @@ class BaseTest {
         tng.setDefaultTestName("DataSupplier tests");
         tng.run();
 
-        return listener;
+        return (T) (listenerClass.equals(InvokedMethodNameListener.class.getName()) ? listener : dataProviderTransformer);
     }
 
     private static TestNG create() {

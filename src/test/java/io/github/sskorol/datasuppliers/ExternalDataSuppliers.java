@@ -1,6 +1,6 @@
 package io.github.sskorol.datasuppliers;
 
-import io.github.sskorol.dataprovider.DataSupplier;
+import io.github.sskorol.core.DataSupplier;
 import io.github.sskorol.model.User;
 import io.vavr.Tuple;
 import org.testng.annotations.DataProvider;
