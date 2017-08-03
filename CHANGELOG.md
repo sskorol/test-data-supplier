@@ -1,6 +1,6 @@
 # Test Data Supplier Changelog
 
-## Unreleased
+## 1.1.0
 **Jacoco xml support:**
 
  * added xml report generation for online checks;
