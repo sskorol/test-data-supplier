@@ -144,6 +144,7 @@ task report(dependsOn: ['instrument', 'test']) {
                 }
             }
             html(destdir: buildDir.path + '/reports/jacoco')
+            xml(destfile: buildDir.path + '/reports/jacoco/report.xml')
         }
     }
 }
