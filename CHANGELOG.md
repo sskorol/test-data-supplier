@@ -1,5 +1,37 @@
 # Test Data Supplier Changelog
 
+## Unreleased
+**Jacoco xml support:**
+
+ * added xml report generation for online checks;
+
+[362cdaa068239ee](https://github.com/sskorol/test-data-supplier/commit/362cdaa068239ee) Sergey Korol *2017-08-03 18:38:38*
+
+**fixed travis config due to jacoco refactoring;**
+
+
+[4698cdf5bcebaf1](https://github.com/sskorol/test-data-supplier/commit/4698cdf5bcebaf1) Sergey Korol *2017-08-03 18:10:22*
+
+**DataSupplier interceptor:**
+
+ * added SPI loading helper;
+ * added DataSupplier interceptor for tacking useful meta-data;
+ * revised key structures for better support in future;
+ * updated gradle version, revised jacoco configuration to live with aspectj without instrumentation conflicts;
+
+[0fcd4f35cbe1672](https://github.com/sskorol/test-data-supplier/commit/0fcd4f35cbe1672) Sergey Korol *2017-08-03 18:06:21*
+
+**Added IDEA plugin support documentation.**
+
+
+[95a48ddf0fb5a29](https://github.com/sskorol/test-data-supplier/commit/95a48ddf0fb5a29) Sergey Korol *2017-07-28 16:04:52*
+
+**Update CHANGELOG.md**
+
+ * Updated release version
+
+[aeeebd6dc5b9e21](https://github.com/sskorol/test-data-supplier/commit/aeeebd6dc5b9e21) Sergey Korol *2017-07-12 19:51:12*
+
 ## 1.0.0
 **New features:**
 
