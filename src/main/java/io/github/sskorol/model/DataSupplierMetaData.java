@@ -3,16 +3,16 @@ package io.github.sskorol.model;
 import io.github.sskorol.core.DataSupplier;
 import io.vavr.Tuple;
 import lombok.Getter;
-import one.util.streamex.DoubleStreamEx;
-import one.util.streamex.IntStreamEx;
-import one.util.streamex.LongStreamEx;
-import one.util.streamex.StreamEx;
+import one.util.streamex.*;
 import org.testng.ITestContext;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static io.github.sskorol.utils.ReflectionUtils.getMethod;
@@ -38,7 +38,8 @@ public class DataSupplierMetaData {
     private final Method dataSupplierMethod;
     @Getter
     private final List<Object[]> testData;
-    private final boolean isExtractable;
+    private final boolean transpose;
+    private final boolean flatMap;
     private final ITestContext context;
 
     public DataSupplierMetaData(final ITestContext context, final Method testMethod) {
@@ -52,14 +53,24 @@ public class DataSupplierMetaData {
         final String dataSupplierName = testAnnotation.dataProvider();
 
         this.dataSupplierMethod = getMethod(dataSupplierClass, dataSupplierName);
-        this.isExtractable = ofNullable(dataSupplierMethod.getDeclaredAnnotation(DataSupplier.class))
-                .map(DataSupplier::extractValues)
-                .orElse(false);
+        final Optional<DataSupplier> dataSupplier =
+                ofNullable(dataSupplierMethod.getDeclaredAnnotation(DataSupplier.class));
+        this.transpose = dataSupplier.map(DataSupplier::transpose).orElse(false);
+        this.flatMap = dataSupplier.map(DataSupplier::flatMap).orElse(false);
         this.testData = transform();
     }
 
     private List<Object[]> transform() {
-        final StreamEx<?> wrappedDataSupplierReturnValue = Match(obtainReturnValue()).of(
+        final StreamEx<?> wrappedDataSupplierReturnValue = wrap(obtainReturnValue());
+        return transpose
+                ? singletonList(flatMap ? wrappedDataSupplierReturnValue.flatMap(this::wrap).toArray()
+                : wrappedDataSupplierReturnValue.toArray())
+                : wrappedDataSupplierReturnValue.map(ob -> flatMap ? wrap(ob).toArray()
+                : new Object[]{ob}).toList();
+    }
+
+    private StreamEx<?> wrap(final Object value) {
+        return Match(value).of(
                 Case($(isNull()), () -> {
                     throw new IllegalArgumentException(format(
                             "Nothing to return from data supplier. The following test will be skipped: %s.%s.",
@@ -67,6 +78,8 @@ public class DataSupplierMetaData {
                             testMethod.getName()));
                 }),
                 Case($(instanceOf(Collection.class)), d -> StreamEx.of((Collection<?>) d)),
+                Case($(instanceOf(Map.class)), d -> EntryStream.of((Map<?, ?>) d).mapKeyValue(SimpleEntry::new)),
+                Case($(instanceOf(Map.Entry.class)), d -> StreamEx.of(d.getKey(), d.getValue())),
                 Case($(instanceOf(Object[].class)), d -> StreamEx.of((Object[]) d)),
                 Case($(instanceOf(double[].class)), d -> DoubleStreamEx.of((double[]) d).boxed()),
                 Case($(instanceOf(int[].class)), d -> IntStreamEx.of((int[]) d).boxed()),
@@ -74,10 +87,6 @@ public class DataSupplierMetaData {
                 Case($(instanceOf(Stream.class)), d -> StreamEx.of((Stream<?>) d)),
                 Case($(instanceOf(Tuple.class)), d -> StreamEx.of(((Tuple) d).toSeq().toJavaArray())),
                 Case($(), d -> StreamEx.of(d)));
-
-        return isExtractable
-                ? singletonList(wrappedDataSupplierReturnValue.toArray())
-                : wrappedDataSupplierReturnValue.map(ob -> new Object[]{ob}).toList();
     }
 
     private Object obtainReturnValue() {

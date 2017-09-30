@@ -22,12 +22,15 @@ public class DataSupplierTests extends BaseTest {
         final InvokedMethodNameListener listener = run(ArraysDataSupplierTests.class);
 
         assertThat(listener.getSucceedMethodNames())
-                .hasSize(10)
+                .hasSize(13)
                 .containsExactly(
                         "supplyCustomArrayData(User(name=username, password=password))",
                         "supplyCustomArrayData(null)",
                         "supplyExternalArrayData(User(name=user1, password=password1),User(name=user2, password=password2))",
                         "supplyExtractedArrayData(data1,data2)",
+                        "supplyNestedArrayData(data3,data3)",
+                        "supplyNestedArrayData(data4,data4)",
+                        "supplyNestedArrayData(data5,data5)",
                         "supplyPrimitiveDoubleArrayData(0.1)",
                         "supplyPrimitiveDoubleArrayData(0.3)",
                         "supplyPrimitiveIntArrayData(5)",
@@ -42,13 +45,19 @@ public class DataSupplierTests extends BaseTest {
         final InvokedMethodNameListener listener = run(CollectionsDataSupplierTests.class);
 
         assertThat(listener.getSucceedMethodNames())
-                .hasSize(5)
+                .hasSize(11)
                 .containsExactly(
                         "supplyCommonListData(data1)",
                         "supplyCommonListData(data2)",
+                        "supplyCommonMapData(0=user1)",
+                        "supplyCommonMapData(1=user2)",
                         "supplyCustomListData([null,User(name=username, password=password)])",
                         "supplyExternalCollectionData(data1)",
-                        "supplyExternalCollectionData(data2)"
+                        "supplyExternalCollectionData(data2)",
+                        "supplyInternallyExtractedMapData(0,user3)",
+                        "supplyInternallyExtractedMapData(1,user4)",
+                        "supplyTransposedInternallyExtractedMapData(0,user7,1,user8)",
+                        "supplyTransposedMapData(0=user5,1=user6)"
                 );
     }
 
@@ -57,7 +66,7 @@ public class DataSupplierTests extends BaseTest {
         final InvokedMethodNameListener listener = run(StreamsDataSupplierTests.class);
 
         assertThat(listener.getSucceedMethodNames())
-                .hasSize(13)
+                .hasSize(15)
                 .containsExactly(
                         "supplyCustomStreamData(user2)",
                         "supplyCustomStreamData(user3)",
@@ -67,6 +76,8 @@ public class DataSupplierTests extends BaseTest {
                         "supplyExternalStreamData(7)",
                         "supplyExternalStreamData(9)",
                         "supplyExtractedCustomStreamData(User(name=Mark, password=password1),User(name=Petya, password=password2))",
+                        "supplyInternallyExtractedStreamData(name1,password1)",
+                        "supplyInternallyExtractedStreamData(name2,password2)",
                         "supplyPrimitiveStreamData(0)",
                         "supplyPrimitiveStreamData(2)",
                         "supplyPrimitiveStreamData(4)",
@@ -190,12 +201,14 @@ public class DataSupplierTests extends BaseTest {
         final InvokedMethodNameListener listener = run(TupleDataSupplierTests.class);
 
         assertThat(listener.getSucceedMethodNames())
-                .hasSize(4)
+                .hasSize(6)
                 .containsExactly(
                         "supplyCommonTupleData(data1)",
                         "supplyCommonTupleData(data2)",
                         "supplyExternalTupleData(1,2,3.0)",
-                        "supplyExtractedTupleData(1,User(name=name, password=password))"
+                        "supplyExtractedTupleData(1,User(name=name, password=password))",
+                        "supplyInternallyExtractedTupleData(data1,data3)",
+                        "supplyInternallyExtractedTupleData(data2,data4)"
                 );
     }
 
@@ -238,6 +251,6 @@ public class DataSupplierTests extends BaseTest {
                            .flatMap(StreamEx::of)
                            .toList())
                 .extracting(DataSupplierMetaData::getDataSupplierMethod)
-                .hasSize(20);
+                .hasSize(27);
     }
 }

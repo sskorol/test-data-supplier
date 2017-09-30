@@ -9,6 +9,7 @@ import org.testng.annotations.Test;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import static java.util.Arrays.asList;
 import static java.util.Comparator.comparing;
 
 public class StreamsDataSupplierTests {
@@ -20,7 +21,7 @@ public class StreamsDataSupplierTests {
                         .boxed();
     }
 
-    @DataSupplier(extractValues = true)
+    @DataSupplier(transpose = true)
     public Stream<User> extractCustomStreamData() {
         return Stream.of(
                 new User("Petya", "password2"),
@@ -41,6 +42,11 @@ public class StreamsDataSupplierTests {
                        .skip(1);
     }
 
+    @DataSupplier(flatMap = true)
+    public StreamEx getInternallyExtractedStreamData() {
+        return StreamEx.of(asList("name1", "password1"), asList("name2", "password2"));
+    }
+
     @Test(dataProvider = "getPrimitiveStreamData")
     public void supplyPrimitiveStreamData(final int ob) {
         // not implemented
@@ -58,6 +64,11 @@ public class StreamsDataSupplierTests {
 
     @Test(dataProviderClass = ExternalDataSuppliers.class, dataProvider = "getExternalStreamData")
     public void supplyExternalStreamData(final long ob) {
+        // not implemented
+    }
+
+    @Test(dataProvider = "getInternallyExtractedStreamData")
+    public void supplyInternallyExtractedStreamData(final String ob1, String ob2) {
         // not implemented
     }
 }

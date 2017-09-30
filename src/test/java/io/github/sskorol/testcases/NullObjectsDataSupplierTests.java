@@ -9,7 +9,7 @@ import java.util.stream.Stream;
 
 public class NullObjectsDataSupplierTests {
 
-    @DataSupplier(extractValues = true)
+    @DataSupplier(transpose = true)
     public String extractNullObjectData() {
         return null;
     }
@@ -29,7 +29,7 @@ public class NullObjectsDataSupplierTests {
         return null;
     }
 
-    @DataSupplier(extractValues = true)
+    @DataSupplier(transpose = true)
     public Stream<String> getNullStreamData() {
         return null;
     }

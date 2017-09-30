@@ -3,13 +3,19 @@ package io.github.sskorol.testcases;
 import io.github.sskorol.core.DataSupplier;
 import io.github.sskorol.datasuppliers.ExternalDataSuppliers;
 import io.github.sskorol.model.User;
+import one.util.streamex.StreamEx;
 import org.testng.annotations.Test;
 
 public class ArraysDataSupplierTests {
 
-    @DataSupplier(extractValues = true)
+    @DataSupplier(transpose = true)
     public String[] extractCommonArrayData() {
         return new String[]{"data1", "data2"};
+    }
+
+    @DataSupplier(flatMap = true)
+    public StreamEx extractNestedArrayData() {
+        return StreamEx.of("data3", "data4", "data5").map(ob -> new String[]{ob, ob});
     }
 
     @DataSupplier
@@ -68,6 +74,11 @@ public class ArraysDataSupplierTests {
 
     @Test(dataProviderClass = ExternalDataSuppliers.class, dataProvider = "getExternalArrayData")
     public void supplyExternalArrayData(final User user1, final User user2) {
+        // not implemented
+    }
+
+    @Test(dataProvider = "extractNestedArrayData")
+    public void supplyNestedArrayData(final String ob1, final String ob2) {
         // not implemented
     }
 }

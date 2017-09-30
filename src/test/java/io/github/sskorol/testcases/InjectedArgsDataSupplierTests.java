@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class InjectedArgsDataSupplierTests {
 
-    @DataSupplier(extractValues = true)
+    @DataSupplier(transpose = true)
     public List<String> getFullMetaData(final ITestContext context, final Method method) {
         return asList(context.getCurrentXmlTest().getName(), method.getName());
     }

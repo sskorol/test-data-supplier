@@ -11,7 +11,9 @@ public @interface DataSupplier {
 
     String name() default "";
 
-    boolean extractValues() default false;
+    boolean transpose() default false;
+
+    boolean flatMap() default false;
 
     boolean runInParallel() default false;
 }

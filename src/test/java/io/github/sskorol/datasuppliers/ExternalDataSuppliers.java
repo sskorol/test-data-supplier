@@ -14,7 +14,7 @@ import static java.util.Arrays.asList;
 
 public class ExternalDataSuppliers {
 
-    @DataSupplier(extractValues = true)
+    @DataSupplier(transpose = true)
     public User[] getExternalArrayData() {
         return new User[]{
                 new User("user1", "password1"),
@@ -44,7 +44,7 @@ public class ExternalDataSuppliers {
         return "qwerty";
     }
 
-    @DataSupplier(extractValues = true)
+    @DataSupplier(transpose = true)
     public Tuple getExternalTupleData() {
         return Tuple.of("1", 2, 3.0);
     }
