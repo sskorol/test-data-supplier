@@ -1,5 +1,25 @@
 # Test Data Supplier Changelog
 
+## Unreleased
+**New features:**
+
+ * added Map / Entry return types support;
+ * Map should be transposed into list of Entry;
+ * added new flatMap operation support for collections / tuple / streams / entries / map;
+
+[ad93692c88f02da](https://github.com/sskorol/test-data-supplier/commit/ad93692c88f02da) Sergey Korol *2017-09-30 20:27:56*
+
+**Gradle update:**
+
+ * wrapper migration to 4.1 version;
+
+[11d7a2a6a046cbb](https://github.com/sskorol/test-data-supplier/commit/11d7a2a6a046cbb) Sergey Korol *2017-08-11 07:55:23*
+
+**Fixed release version**
+
+
+[47df2a94dfa2266](https://github.com/sskorol/test-data-supplier/commit/47df2a94dfa2266) Sergey Korol *2017-08-03 18:52:50*
+
 ## 1.1.0
 **Jacoco xml support:**
 
