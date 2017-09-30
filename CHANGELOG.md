@@ -1,6 +1,6 @@
 # Test Data Supplier Changelog
 
-## Unreleased
+## 1.2.0
 **New features:**
 
  * added Map / Entry return types support;
