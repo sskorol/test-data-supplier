@@ -42,7 +42,7 @@ Much better and flexible than two-dimensional arrays or iterators, isn't it?
 And what if we don't want to iterate the same test N times depending on collection size? What if we want to extract its values and inject into test's signature like the following?
 
 ```java
-@DataSupplier(extractValues = true)
+@DataSupplier(transpose = true)
 public List<User> getExtractedData() {
     return StreamEx.of(
         new User("username1", "password1"),
@@ -56,15 +56,30 @@ public void shouldSupplyExtractedListData(final User... users) {
 }
 ```
 
+You can do even more, if you want to perform a Java-like **flatMap** operation for each row:
+
+```java
+@DataSupplier(flatMap = true)
+public Map<Integer, String> getInternallyExtractedMapData() {
+    return EntryStream.of(asList("user3", "user4")).toMap();
+}
+    
+@Test(dataProvider = "getInternallyExtractedMapData")
+public void supplyInternallyExtractedMapData(final Integer key, final String value) {
+    // not implemented
+}
+```   
+
 ## Supported return types
 
  - Collection
+ - Map
+ - Entry
  - Object[]
  - double[]
  - int[]
  - long[]
- - Stream
- - StreamEx
+ - Stream / StreamEx 
  - Tuple
  - A single Object of any common or custom type
 
@@ -81,7 +96,7 @@ repositories {
     
 dependencies {
     compile('org.testng:testng:6.11',
-            'io.github.sskorol:test-data-supplier:1.1.0'
+            'io.github.sskorol:test-data-supplier:1.2.0'
     )
 }
     
@@ -108,7 +123,7 @@ Add the following configuration into **pom.xml**:
     <dependency>
         <groupId>io.github.sskorol</groupId>
         <artifactId>test-data-supplier</artifactId>
-        <version>1.1.0</version>
+        <version>1.2.0</version>
     </dependency>
 </dependencies>
     
@@ -144,7 +159,7 @@ public T getData() {
 }
 ```
 
-**DataSupplier** supports the following args: **name**, **extractValues** and **runInParallel**. 
+**DataSupplier** supports the following args: **name**, **transpose**, **flatMap** and **runInParallel**. 
 
 You can refer **DataSupplier** the same way as with TestNG **DataProvider**:
 
