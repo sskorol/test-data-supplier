@@ -4,11 +4,10 @@ import io.github.sskorol.core.DataSupplier;
 import io.github.sskorol.datasuppliers.ExternalDataSuppliers;
 import io.github.sskorol.model.User;
 import io.vavr.Tuple;
-import one.util.streamex.IntStreamEx;
+import lombok.val;
+import one.util.streamex.EntryStream;
 import one.util.streamex.StreamEx;
 import org.testng.annotations.Test;
-
-import java.util.List;
 
 import static java.util.Arrays.asList;
 
@@ -26,11 +25,13 @@ public class TupleDataSupplierTests {
 
     @DataSupplier(flatMap = true)
     public StreamEx getInternallyExtractedTupleData() {
-        final List<String> list1 = asList("data1", "data2");
-        final List<String> list2 = asList("data3", "data4");
-        return IntStreamEx.range(0, Math.min(list1.size(), list2.size()))
-                          .boxed()
-                          .map(i -> Tuple.of(list1.get(i), list2.get(i)));
+        val list1 = asList("data1", "data2");
+        val list2 = asList("data3", "data4", "data5");
+        val minSize = Math.min(list1.size(), list2.size());
+
+        return EntryStream.of(list1)
+                          .limit(minSize)
+                          .mapKeyValue((i, val) -> Tuple.of(val, list2.get(i)));
     }
 
     @Test(dataProvider = "getCommonTupleData")
