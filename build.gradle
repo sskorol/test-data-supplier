@@ -54,7 +54,7 @@ dependencies {
             'org.jooq:joor:0.9.6',
             'one.util:streamex:0.6.5',
             'org.projectlombok:lombok:1.16.18',
-            'io.vavr:vavr:0.9.0',
+            'io.vavr:vavr:0.9.1',
             'org.aspectj:aspectjrt:1.8.10',
             'org.slf4j:slf4j-simple:1.7.25'
     )
