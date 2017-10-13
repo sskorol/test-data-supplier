@@ -49,13 +49,13 @@ configurations {
 }
 
 dependencies {
-    agent 'org.aspectj:aspectjweaver:1.8.10'
+    agent 'org.aspectj:aspectjweaver:1.8.11'
     compile('org.testng:testng:6.11',
             'org.jooq:joor:0.9.6',
             'one.util:streamex:0.6.5',
             'org.projectlombok:lombok:1.16.18',
             'io.vavr:vavr:0.9.1',
-            'org.aspectj:aspectjrt:1.8.10',
+            'org.aspectj:aspectjrt:1.8.11',
             'org.slf4j:slf4j-simple:1.7.25'
     )
     testCompile 'org.assertj:assertj-core:3.8.0'
