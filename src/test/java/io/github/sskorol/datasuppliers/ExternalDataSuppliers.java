@@ -53,4 +53,14 @@ public class ExternalDataSuppliers {
     public static Iterator<Object[]> getCommonData() {
         return Stream.of("data").map(d -> new Object[]{d}).iterator();
     }
+
+    @DataSupplier
+    public String getClassLevelGlobalData() {
+        return "data1";
+    }
+
+    @DataSupplier
+    public String getClassLevelLocalData() {
+        return "data2";
+    }
 }

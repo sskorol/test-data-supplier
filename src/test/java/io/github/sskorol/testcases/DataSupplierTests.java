@@ -253,4 +253,21 @@ public class DataSupplierTests extends BaseTest {
                 .extracting(DataSupplierMetaData::getDataSupplierMethod)
                 .hasSize(27);
     }
+
+    @Test
+    public void dataSupplierWithClassLevelAnnotationsShouldWork() {
+        final InvokedMethodNameListener listener = run(
+                ClassLevelAnnotationWithLocalDataSupplierTests.class,
+                ClassLevelAnnotationWithDataSuppliersTests.class
+        );
+
+        assertThat(listener.getSucceedMethodNames())
+                .hasSize(4)
+                .containsExactly(
+                        "shouldBeExecutedWithClassLevelAnnotationWithoutDataSupplier()",
+                        "shouldBeExecutedWithLocalDataSupplier(data)",
+                        "shouldBeExecutedWithClassLevelAnnotationWithDataSupplier(data1)",
+                        "shouldBeExecutedWithExternalDataSupplier(data2)"
+                );
+    }
 }

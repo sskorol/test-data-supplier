@@ -50,7 +50,7 @@ configurations {
 
 dependencies {
     agent 'org.aspectj:aspectjweaver:1.8.11'
-    compile('org.testng:testng:6.11',
+    compile('org.testng:testng:6.12',
             'org.jooq:joor:0.9.6',
             'one.util:streamex:0.6.5',
             'org.projectlombok:lombok:1.16.18',
@@ -66,7 +66,7 @@ dependencies {
 sourceSets.main.output.classesDir = new File(buildDir, "classes/main")
 
 task wrapper(type: Wrapper) {
-    gradleVersion '4.2'
+    gradleVersion '4.3'
 }
 
 task sourceJar(type: Jar, dependsOn: classes) {
