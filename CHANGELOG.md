@@ -1,5 +1,33 @@
 # Test Data Supplier Changelog
 
+## Unreleased
+**Class level annotations support:**
+
+ * Fixed NPEs with class level Test annotation usage. TestNG sends nulls to transformer in this case.
+ * Added a possibility to specify DataSupplier on class level Test annotation. In this case it&#39;ll be applied to all public methods, which don&#39;t have Test annotations.
+ * Minor improvements:
+ * Updated Gradle and TestNG versions.
+ * Added new details regarding running from IDE via TestNG run config into README.
+
+[c658bef37e6283c](https://github.com/sskorol/test-data-supplier/commit/c658bef37e6283c) Sergey Korol *2017-11-02 15:57:50*
+
+**Migrated to new AspectJ version to avoid version eye warnings.**
+
+
+[e35144cede6be21](https://github.com/sskorol/test-data-supplier/commit/e35144cede6be21) Sergey Korol *2017-10-13 06:54:51*
+
+**Dependencies update:**
+
+ * - vavr version had an outdated version which caused warnings on versioneye.
+ * - revised tuple transformation test;
+
+[81e086661723bba](https://github.com/sskorol/test-data-supplier/commit/81e086661723bba) Sergey Korol *2017-10-02 07:46:29*
+
+**Update CHANGELOG.md**
+
+
+[12540d978710d0b](https://github.com/sskorol/test-data-supplier/commit/12540d978710d0b) Sergey Korol *2017-09-30 20:51:39*
+
 ## 1.2.0
 **New features:**
 
