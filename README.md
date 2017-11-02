@@ -5,7 +5,6 @@
 [![codecov](https://codecov.io/gh/sskorol/test-data-supplier/branch/master/graph/badge.svg)](https://codecov.io/gh/sskorol/test-data-supplier)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.sskorol/test-data-supplier/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/io.github.sskorol/test-data-supplier)
 [![Bintray](https://api.bintray.com/packages/sskorol/test-data-supplier/test-data-supplier/images/download.svg)](https://bintray.com/sskorol/test-data-supplier/test-data-supplier/_latestVersion)
-[![Dependency Status](https://www.versioneye.com/user/projects/59615dee6725bd0048edfa2f/badge.svg?style=flat)](https://www.versioneye.com/user/projects/59615dee6725bd0048edfa2f)
 [![GitHub license](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://goo.gl/9GLmMZ)
 [![Twitter](https://img.shields.io/twitter/url/https/github.com/sskorol/test-data-supplier.svg?style=social)](https://twitter.com/intent/tweet?text=Check%20new%20Test%20Data%20Supplier%20library:&url=https://github.com/sskorol/test-data-supplier)
 
@@ -95,8 +94,8 @@ repositories {
 }
     
 dependencies {
-    compile('org.testng:testng:6.11',
-            'io.github.sskorol:test-data-supplier:1.2.0'
+    compile('org.testng:testng:6.12',
+            'io.github.sskorol:test-data-supplier:1.2.5'
     )
 }
     
@@ -123,7 +122,7 @@ Add the following configuration into **pom.xml**:
     <dependency>
         <groupId>io.github.sskorol</groupId>
         <artifactId>test-data-supplier</artifactId>
-        <version>1.2.0</version>
+        <version>1.2.5</version>
     </dependency>
 </dependencies>
     
@@ -147,6 +146,17 @@ Add the following configuration into **pom.xml**:
 ```
 
 Check a separate [project](https://github.com/sskorol/test-data-supplier-maven-example) with usage examples.
+
+### TestNG
+
+If you're going to run tests directly from IDE via TestNG run configuration, you have to explicitly set 
+**io.github.sskorol.core.DataProviderTransformer** into Listeners section:
+
+![image](https://user-images.githubusercontent.com/6638780/32335197-fc3978ea-bff4-11e7-840b-01508615526d.png) 
+
+Otherwise, you'll get an exception about missing **DataProvider**, as test listeners' specified in Gradle / Maven settings  
+are ignored while using TestNG run configuration. And TestNG itself will try to locate methods with a common annotation, 
+instead of **DataSupplier**. 
 
 ### API
 

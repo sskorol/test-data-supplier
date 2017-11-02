@@ -29,12 +29,13 @@ public class DataProviderTransformer implements IAnnotationTransformer {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void transform(final ITestAnnotation annotation, final Class testClass,
                           final Constructor testConstructor, final Method testMethod) {
         final DataSupplier dataSupplierAnnotation = getDataSupplierAnnotation(
                 ofNullable(annotation.getDataProviderClass())
                         .map(dpc -> (Class) dpc)
-                        .orElseGet(testMethod::getDeclaringClass),
+                        .orElseGet(() -> ofNullable(testMethod).map(Method::getDeclaringClass).orElse(testClass)),
                 annotation.getDataProvider());
 
         if (!annotation.getDataProvider().isEmpty() && nonNull(dataSupplierAnnotation)) {

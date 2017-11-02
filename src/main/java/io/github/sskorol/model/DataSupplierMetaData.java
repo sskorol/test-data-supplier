@@ -46,8 +46,10 @@ public class DataSupplierMetaData {
         this.context = context;
         this.testMethod = testMethod;
 
-        final Test testAnnotation = testMethod.getDeclaredAnnotation(Test.class);
-        final Class<?> dataSupplierClass = testAnnotation.dataProviderClass() != Object.class
+        final Test testAnnotation = ofNullable(testMethod.getDeclaredAnnotation(Test.class))
+                .orElseGet(() -> testMethod.getDeclaringClass().getDeclaredAnnotation(Test.class));
+        final Class<?> dataSupplierClass =
+                ofNullable(testAnnotation).map(Test::dataProviderClass).filter(dp -> dp != Object.class).isPresent()
                 ? testAnnotation.dataProviderClass()
                 : testMethod.getDeclaringClass();
         final String dataSupplierName = testAnnotation.dataProvider();
