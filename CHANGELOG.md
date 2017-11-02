@@ -1,6 +1,6 @@
 # Test Data Supplier Changelog
 
-## Unreleased
+## 1.2.5
 **Class level annotations support:**
 
  * Fixed NPEs with class level Test annotation usage. TestNG sends nulls to transformer in this case.
