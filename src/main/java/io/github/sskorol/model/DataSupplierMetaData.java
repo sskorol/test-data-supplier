@@ -3,6 +3,7 @@ package io.github.sskorol.model;
 import io.github.sskorol.core.DataSupplier;
 import io.vavr.Tuple;
 import lombok.Getter;
+import lombok.val;
 import one.util.streamex.*;
 import org.testng.ITestContext;
 import org.testng.annotations.Test;
@@ -12,7 +13,6 @@ import java.util.AbstractMap.SimpleEntry;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import static io.github.sskorol.utils.ReflectionUtils.getMethod;
@@ -30,6 +30,7 @@ import static java.util.Optional.ofNullable;
 /**
  * Base container for DataSupplier meta data.
  */
+@SuppressWarnings("FinalLocalVariable")
 public class DataSupplierMetaData {
 
     @Getter
@@ -40,34 +41,43 @@ public class DataSupplierMetaData {
     private final List<Object[]> testData;
     private final boolean transpose;
     private final boolean flatMap;
+    private final int[] indices;
     private final ITestContext context;
 
     public DataSupplierMetaData(final ITestContext context, final Method testMethod) {
         this.context = context;
         this.testMethod = testMethod;
+        this.dataSupplierMethod = findDataSupplier();
 
-        final Test testAnnotation = ofNullable(testMethod.getDeclaredAnnotation(Test.class))
-                .orElseGet(() -> testMethod.getDeclaringClass().getDeclaredAnnotation(Test.class));
-        final Class<?> dataSupplierClass =
-                ofNullable(testAnnotation).map(Test::dataProviderClass).filter(dp -> dp != Object.class).isPresent()
-                ? testAnnotation.dataProviderClass()
-                : testMethod.getDeclaringClass();
-        final String dataSupplierName = testAnnotation.dataProvider();
-
-        this.dataSupplierMethod = getMethod(dataSupplierClass, dataSupplierName);
-        final Optional<DataSupplier> dataSupplier =
-                ofNullable(dataSupplierMethod.getDeclaredAnnotation(DataSupplier.class));
+        val dataSupplier = ofNullable(dataSupplierMethod.getDeclaredAnnotation(DataSupplier.class));
         this.transpose = dataSupplier.map(DataSupplier::transpose).orElse(false);
         this.flatMap = dataSupplier.map(DataSupplier::flatMap).orElse(false);
+        this.indices = dataSupplier.map(DataSupplier::indices).orElse(new int[0]);
         this.testData = transform();
     }
 
+    private Method findDataSupplier() {
+        val testAnnotation = ofNullable(testMethod.getDeclaredAnnotation(Test.class))
+                .orElseGet(() -> testMethod.getDeclaringClass().getDeclaredAnnotation(Test.class));
+        final Class<?> dataSupplierClass =
+                ofNullable(testAnnotation).map(Test::dataProviderClass).filter(dp -> dp != Object.class).isPresent()
+                        ? testAnnotation.dataProviderClass()
+                        : testMethod.getDeclaringClass();
+        val dataSupplierName = testAnnotation.dataProvider();
+        return getMethod(dataSupplierClass, dataSupplierName);
+    }
+
     private List<Object[]> transform() {
-        final StreamEx<?> wrappedDataSupplierReturnValue = wrap(obtainReturnValue());
+        val data = wrap(obtainReturnValue()).toList();
+        val indicesList = indices.length > 0
+                ? IntStreamEx.of(indices).boxed().toList()
+                : IntStreamEx.range(0, data.size()).boxed().toList();
+        val wrappedReturnValue = EntryStream.of(data).filterKeys(indicesList::contains).values();
+
         return transpose
-                ? singletonList(flatMap ? wrappedDataSupplierReturnValue.flatMap(this::wrap).toArray()
-                : wrappedDataSupplierReturnValue.toArray())
-                : wrappedDataSupplierReturnValue.map(ob -> flatMap ? wrap(ob).toArray()
+                ? singletonList(flatMap ? wrappedReturnValue.flatMap(this::wrap).toArray()
+                : wrappedReturnValue.toArray())
+                : wrappedReturnValue.map(ob -> flatMap ? wrap(ob).toArray()
                 : new Object[]{ob}).toList();
     }
 

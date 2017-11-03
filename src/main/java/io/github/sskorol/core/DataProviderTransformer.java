@@ -1,6 +1,7 @@
 package io.github.sskorol.core;
 
 import io.github.sskorol.model.DataSupplierMetaData;
+import lombok.val;
 import org.testng.*;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.ITestAnnotation;
@@ -29,10 +30,10 @@ public class DataProviderTransformer implements IAnnotationTransformer {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "FinalLocalVariable"})
     public void transform(final ITestAnnotation annotation, final Class testClass,
                           final Constructor testConstructor, final Method testMethod) {
-        final DataSupplier dataSupplierAnnotation = getDataSupplierAnnotation(
+        val dataSupplierAnnotation = getDataSupplierAnnotation(
                 ofNullable(annotation.getDataProviderClass())
                         .map(dpc -> (Class) dpc)
                         .orElseGet(() -> ofNullable(testMethod).map(Method::getDeclaringClass).orElse(testClass)),

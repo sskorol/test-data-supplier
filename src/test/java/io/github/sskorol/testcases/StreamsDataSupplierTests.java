@@ -3,6 +3,7 @@ package io.github.sskorol.testcases;
 import io.github.sskorol.core.DataSupplier;
 import io.github.sskorol.datasuppliers.ExternalDataSuppliers;
 import io.github.sskorol.model.User;
+import one.util.streamex.IntStreamEx;
 import one.util.streamex.StreamEx;
 import org.testng.annotations.Test;
 
@@ -47,6 +48,11 @@ public class StreamsDataSupplierTests {
         return StreamEx.of(asList("name1", "password1"), asList("name2", "password2"));
     }
 
+    @DataSupplier(indices = {-1, 0, 2, 4, 6, 8, 10})
+    public StreamEx getFilteredByIndicesData() {
+        return IntStreamEx.range(0, 10).boxed();
+    }
+
     @Test(dataProvider = "getPrimitiveStreamData")
     public void supplyPrimitiveStreamData(final int ob) {
         // not implemented
@@ -69,6 +75,11 @@ public class StreamsDataSupplierTests {
 
     @Test(dataProvider = "getInternallyExtractedStreamData")
     public void supplyInternallyExtractedStreamData(final String ob1, String ob2) {
+        // not implemented
+    }
+
+    @Test(dataProvider = "getFilteredByIndicesData")
+    public void supplyFilteredByIndicesData(final int ob) {
         // not implemented
     }
 }
