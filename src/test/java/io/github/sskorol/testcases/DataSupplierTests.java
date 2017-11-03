@@ -66,7 +66,7 @@ public class DataSupplierTests extends BaseTest {
         final InvokedMethodNameListener listener = run(StreamsDataSupplierTests.class);
 
         assertThat(listener.getSucceedMethodNames())
-                .hasSize(15)
+                .hasSize(20)
                 .containsExactly(
                         "supplyCustomStreamData(user2)",
                         "supplyCustomStreamData(user3)",
@@ -76,6 +76,11 @@ public class DataSupplierTests extends BaseTest {
                         "supplyExternalStreamData(7)",
                         "supplyExternalStreamData(9)",
                         "supplyExtractedCustomStreamData(User(name=Mark, password=password1),User(name=Petya, password=password2))",
+                        "supplyFilteredByIndicesData(0)",
+                        "supplyFilteredByIndicesData(2)",
+                        "supplyFilteredByIndicesData(4)",
+                        "supplyFilteredByIndicesData(6)",
+                        "supplyFilteredByIndicesData(8)",
                         "supplyInternallyExtractedStreamData(name1,password1)",
                         "supplyInternallyExtractedStreamData(name2,password2)",
                         "supplyPrimitiveStreamData(0)",
@@ -251,7 +256,7 @@ public class DataSupplierTests extends BaseTest {
                            .flatMap(StreamEx::of)
                            .toList())
                 .extracting(DataSupplierMetaData::getDataSupplierMethod)
-                .hasSize(27);
+                .hasSize(28);
     }
 
     @Test

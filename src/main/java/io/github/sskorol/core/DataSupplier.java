@@ -16,4 +16,6 @@ public @interface DataSupplier {
     boolean flatMap() default false;
 
     boolean runInParallel() default false;
+
+    int[] indices() default {};
 }

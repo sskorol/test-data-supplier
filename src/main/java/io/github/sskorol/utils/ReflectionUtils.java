@@ -2,9 +2,9 @@ package io.github.sskorol.utils;
 
 import io.github.sskorol.core.DataSupplier;
 import io.vavr.Tuple;
-import io.vavr.Tuple2;
 import io.vavr.control.Try;
 import lombok.SneakyThrows;
+import lombok.val;
 import one.util.streamex.StreamEx;
 
 import java.lang.reflect.Method;
@@ -23,15 +23,16 @@ public final class ReflectionUtils {
     }
 
     @SneakyThrows(NoSuchMethodException.class)
+    @SuppressWarnings("FinalLocalVariable")
     public static Method getMethod(final Class<?> targetClass, final String targetMethodName) {
-        final Tuple2<String, Class<?>[]> metaData = StreamEx.of(targetClass.getMethods())
-                                            .map(m -> Tuple.of(m, m.getDeclaredAnnotation(DataSupplier.class)))
-                                            .filter(t -> Objects.nonNull(t._2)
+        val metaData = StreamEx.of(targetClass.getMethods())
+                               .map(m -> Tuple.of(m, m.getDeclaredAnnotation(DataSupplier.class)))
+                               .filter(t -> Objects.nonNull(t._2)
                                                     && (t._2.name().equals(targetMethodName)
                                                     || t._1.getName().equals(targetMethodName)))
-                                            .map(t -> Tuple.of(t._1.getName(), t._1.getParameterTypes()))
-                                            .findFirst()
-                                            .orElseGet(() -> Tuple.of(targetMethodName, new Class<?>[0]));
+                               .map(t -> Tuple.of(t._1.getName(), t._1.getParameterTypes()))
+                               .findFirst()
+                               .orElseGet(() -> Tuple.of(targetMethodName, new Class<?>[0]));
 
         return targetClass.getMethod(metaData._1, metaData._2);
     }

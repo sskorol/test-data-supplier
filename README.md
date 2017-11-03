@@ -95,7 +95,7 @@ repositories {
     
 dependencies {
     compile('org.testng:testng:6.12',
-            'io.github.sskorol:test-data-supplier:1.2.5'
+            'io.github.sskorol:test-data-supplier:1.3.0'
     )
 }
     
@@ -122,7 +122,7 @@ Add the following configuration into **pom.xml**:
     <dependency>
         <groupId>io.github.sskorol</groupId>
         <artifactId>test-data-supplier</artifactId>
-        <version>1.2.5</version>
+        <version>1.3.0</version>
     </dependency>
 </dependencies>
     
@@ -169,7 +169,7 @@ public T getData() {
 }
 ```
 
-**DataSupplier** supports the following args: **name**, **transpose**, **flatMap** and **runInParallel**. 
+**DataSupplier** supports the following args: **name**, **transpose**, **flatMap**, **runInParallel** and **indices**. 
 
 You can refer **DataSupplier** the same way as with TestNG **DataProvider**:
 
@@ -227,5 +227,4 @@ More information about its features could be found on the related [GitHub](https
 
 ## Limitations
 
- - no **indices** arg support (could be achieved by Stream API usage);
- - only **ITestContext** / **Method** injections are supported;
+Only **ITestContext** / **Method** injections are supported.
