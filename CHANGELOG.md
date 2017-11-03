@@ -1,5 +1,18 @@
 # Test Data Supplier Changelog
 
+## Unreleased
+**Indices support:**
+
+ * Added indices[] arg on annotation level to make DataSupplier fully similar to DataProvider.
+
+[8580acbee18e42e](https://github.com/sskorol/test-data-supplier/commit/8580acbee18e42e) Sergey Korol *2017-11-03 20:31:45*
+
+**Update CHANGELOG.md**
+
+ * Increased released version.
+
+[b4cf26874961e03](https://github.com/sskorol/test-data-supplier/commit/b4cf26874961e03) Sergey Korol *2017-11-02 16:17:08*
+
 ## 1.2.5
 **Class level annotations support:**
 
