@@ -11,8 +11,8 @@ import java.lang.reflect.Method;
 import java.util.*;
 
 import static io.github.sskorol.utils.ReflectionUtils.getDataSupplierAnnotation;
+import static io.github.sskorol.utils.ReflectionUtils.getDataSupplierClass;
 import static java.util.Objects.nonNull;
-import static java.util.Optional.ofNullable;
 
 /**
  * Core listener which transforms custom DataSupplier format to common TestNG DataProvider.
@@ -20,32 +20,31 @@ import static java.util.Optional.ofNullable;
 public class DataProviderTransformer implements IAnnotationTransformer {
 
     @DataProvider
-    public Iterator<Object[]> supplySeqData(final ITestContext context, final Method testMethod) {
-        return getMetaData(context, testMethod).getTestData().iterator();
+    public Iterator<Object[]> supplySequentialData(final ITestContext context, final Method testMethod) {
+        return getDataSupplierMetaData(context, testMethod).getTestData().iterator();
     }
 
     @DataProvider(parallel = true)
     public Iterator<Object[]> supplyParallelData(final ITestContext context, final Method testMethod) {
-        return getMetaData(context, testMethod).getTestData().iterator();
+        return getDataSupplierMetaData(context, testMethod).getTestData().iterator();
     }
 
     @Override
     @SuppressWarnings({"unchecked", "FinalLocalVariable"})
     public void transform(final ITestAnnotation annotation, final Class testClass,
                           final Constructor testConstructor, final Method testMethod) {
-        val dataSupplierAnnotation = getDataSupplierAnnotation(
-                ofNullable(annotation.getDataProviderClass())
-                        .map(dpc -> (Class) dpc)
-                        .orElseGet(() -> ofNullable(testMethod).map(Method::getDeclaringClass).orElse(testClass)),
-                annotation.getDataProvider());
+        val dataSupplierClass = getDataSupplierClass(annotation, testClass, testMethod);
+        val dataSupplierAnnotation = getDataSupplierAnnotation(dataSupplierClass, annotation.getDataProvider());
 
         if (!annotation.getDataProvider().isEmpty() && nonNull(dataSupplierAnnotation)) {
             annotation.setDataProviderClass(getClass());
-            annotation.setDataProvider(dataSupplierAnnotation.runInParallel() ? "supplyParallelData" : "supplySeqData");
+            annotation.setDataProvider(dataSupplierAnnotation.runInParallel()
+                    ? "supplyParallelData"
+                    : "supplySequentialData");
         }
     }
 
-    private DataSupplierMetaData getMetaData(final ITestContext context, final Method testMethod) {
+    private DataSupplierMetaData getDataSupplierMetaData(final ITestContext context, final Method testMethod) {
         return new DataSupplierMetaData(context, testMethod);
     }
 }

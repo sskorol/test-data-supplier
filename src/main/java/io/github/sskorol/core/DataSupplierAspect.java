@@ -1,6 +1,7 @@
 package io.github.sskorol.core;
 
 import io.github.sskorol.model.DataSupplierMetaData;
+import lombok.val;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.After;
@@ -25,21 +26,22 @@ public class DataSupplierAspect {
 
     @Before("execution(@org.testng.annotations.DataProvider * io.github.sskorol.core.DataProviderTransformer.*(..))")
     public void beforeDataProviderCall(final JoinPoint joinPoint) {
-        DATA_SUPPLIERS.forEach(ds -> ds.beforeDataPreparation((ITestContext) joinPoint.getArgs()[0],
+        DATA_SUPPLIERS.forEach(dataSupplier -> dataSupplier.beforeDataPreparation((ITestContext) joinPoint.getArgs()[0],
                 (Method) joinPoint.getArgs()[1]));
     }
 
     @After("execution(@org.testng.annotations.DataProvider * io.github.sskorol.core.DataProviderTransformer.*(..))")
     public void afterDataProviderCall(final JoinPoint joinPoint) {
-        DATA_SUPPLIERS.forEach(ds -> ds.afterDataPreparation((ITestContext) joinPoint.getArgs()[0],
+        DATA_SUPPLIERS.forEach(dataSupplier -> dataSupplier.afterDataPreparation((ITestContext) joinPoint.getArgs()[0],
                 (Method) joinPoint.getArgs()[1]));
     }
 
-    @Around("execution(* io.github.sskorol.core.DataProviderTransformer.getMetaData(..))")
+    @SuppressWarnings("FinalLocalVariable")
+    @Around("execution(* io.github.sskorol.core.DataProviderTransformer.getDataSupplierMetaData(..))")
     public DataSupplierMetaData onDataPreparation(final ProceedingJoinPoint joinPoint) throws Throwable {
-        final DataSupplierMetaData metaData = (DataSupplierMetaData) joinPoint.proceed(joinPoint.getArgs());
-        DATA_SUPPLIERS.forEach(ds -> ds.onDataPreparation(metaData));
-        return metaData;
+        val dataSupplierMetaData = (DataSupplierMetaData) joinPoint.proceed(joinPoint.getArgs());
+        DATA_SUPPLIERS.forEach(ds -> ds.onDataPreparation(dataSupplierMetaData));
+        return dataSupplierMetaData;
     }
 
     public static List<DataSupplierInterceptor> getInterceptors() {
