@@ -5,7 +5,7 @@ import io.github.sskorol.datasuppliers.ExternalDataSuppliers;
 import io.github.sskorol.utils.ServiceLoaderUtils;
 import org.testng.annotations.Test;
 
-import static io.github.sskorol.utils.ReflectionUtils.getMethod;
+import static io.github.sskorol.utils.ReflectionUtils.getDataSupplierMethod;
 import static org.assertj.core.api.Assertions.*;
 import static org.joor.Reflect.on;
 
@@ -25,7 +25,7 @@ public class ReflectionUtilsTests {
 
     @Test(expectedExceptions = NoSuchMethodException.class)
     public void shouldThrowAnExceptionOnNonExistingMethodAccess() {
-        getMethod(ExternalDataSuppliers.class, "missingMethodName");
+        getDataSupplierMethod(ExternalDataSuppliers.class, "missingMethodName");
     }
 
     @Test

@@ -1,6 +1,7 @@
 package io.github.sskorol.model;
 
 import io.github.sskorol.core.DataSupplier;
+import io.github.sskorol.utils.ReflectionUtils;
 import io.vavr.Tuple;
 import lombok.Getter;
 import lombok.val;
@@ -15,8 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static io.github.sskorol.utils.ReflectionUtils.getMethod;
-import static io.github.sskorol.utils.ReflectionUtils.invoke;
+import static io.github.sskorol.utils.ReflectionUtils.invokeDataSupplier;
 import static io.vavr.API.$;
 import static io.vavr.API.Case;
 import static io.vavr.API.Match;
@@ -56,22 +56,22 @@ public class DataSupplierMetaData {
         this.testData = transform();
     }
 
+    @SuppressWarnings("unchecked")
     private Method findDataSupplier() {
         val testAnnotation = ofNullable(testMethod.getDeclaredAnnotation(Test.class))
                 .orElseGet(() -> testMethod.getDeclaringClass().getDeclaredAnnotation(Test.class));
-        final Class<?> dataSupplierClass =
-                ofNullable(testAnnotation).map(Test::dataProviderClass).filter(dp -> dp != Object.class).isPresent()
-                        ? testAnnotation.dataProviderClass()
-                        : testMethod.getDeclaringClass();
-        val dataSupplierName = testAnnotation.dataProvider();
-        return getMethod(dataSupplierClass, dataSupplierName);
+
+        val dataSupplierClass = ofNullable(testAnnotation)
+                .map(Test::dataProviderClass)
+                .filter(dp -> dp != Object.class)
+                .orElseGet(() -> (Class) testMethod.getDeclaringClass());
+
+        return ReflectionUtils.getDataSupplierMethod(dataSupplierClass, testAnnotation.dataProvider());
     }
 
     private List<Object[]> transform() {
         val data = wrap(obtainReturnValue()).toList();
-        val indicesList = indices.length > 0
-                ? IntStreamEx.of(indices).boxed().toList()
-                : IntStreamEx.range(0, data.size()).boxed().toList();
+        val indicesList = indicesList(data.size());
         val wrappedReturnValue = EntryStream.of(data).filterKeys(indicesList::contains).values();
 
         return transpose
@@ -81,8 +81,17 @@ public class DataSupplierMetaData {
                 : new Object[]{ob}).toList();
     }
 
-    private StreamEx<?> wrap(final Object value) {
-        return Match(value).of(
+    private Object obtainReturnValue() {
+        return invokeDataSupplier(dataSupplierMethod, () -> stream(dataSupplierMethod.getParameterTypes())
+                .map(t -> Match((Class) t).of(
+                        Case($(ITestContext.class), () -> context),
+                        Case($(Method.class), () -> testMethod),
+                        Case($(), () -> null)))
+                .toArray());
+    }
+
+    private StreamEx<?> wrap(final Object data) {
+        return Match(data).of(
                 Case($(isNull()), () -> {
                     throw new IllegalArgumentException(format(
                             "Nothing to return from data supplier. The following test will be skipped: %s.%s.",
@@ -101,12 +110,12 @@ public class DataSupplierMetaData {
                 Case($(), d -> StreamEx.of(d)));
     }
 
-    private Object obtainReturnValue() {
-        return invoke(dataSupplierMethod, () -> stream(dataSupplierMethod.getParameterTypes())
-                .map(t -> Match((Class) t).of(
-                        Case($(ITestContext.class), () -> context),
-                        Case($(Method.class), () -> testMethod),
-                        Case($(), () -> null)))
-                .toArray());
+    private List<Integer> indicesList(final int collectionSize) {
+        return ofNullable(indices)
+                .filter(indicesArray -> indicesArray.length > 0)
+                .map(IntStreamEx::of)
+                .orElseGet(() -> IntStreamEx.range(0, collectionSize))
+                .boxed()
+                .toList();
     }
 }
