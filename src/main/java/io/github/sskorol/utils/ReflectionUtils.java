@@ -7,7 +7,7 @@ import io.vavr.control.Try;
 import lombok.SneakyThrows;
 import lombok.val;
 import one.util.streamex.StreamEx;
-import org.testng.annotations.ITestAnnotation;
+import org.testng.internal.annotations.IDataProvidable;
 
 import java.lang.reflect.Method;
 import java.util.Objects;
@@ -27,7 +27,7 @@ public final class ReflectionUtils {
     }
 
     @SuppressWarnings("unchecked")
-    public static Class<?> getDataSupplierClass(final ITestAnnotation annotation, final Class testClass,
+    public static Class<?> getDataSupplierClass(final IDataProvidable annotation, final Class testClass,
                                                 final Method testMethod) {
         return ofNullable(annotation.getDataProviderClass())
                 .map(dataProviderClass -> (Class) dataProviderClass)

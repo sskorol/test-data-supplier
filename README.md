@@ -94,8 +94,8 @@ repositories {
 }
     
 dependencies {
-    compile('org.testng:testng:6.12',
-            'io.github.sskorol:test-data-supplier:1.3.0'
+    compile('org.testng:testng:6.13.1',
+            'io.github.sskorol:test-data-supplier:1.4.0'
     )
 }
     
@@ -117,12 +117,12 @@ Add the following configuration into **pom.xml**:
     <dependency>
         <groupId>org.testng</groupId>
         <artifactId>testng</artifactId>
-        <version>6.11</version>
+        <version>6.13.1</version>
     </dependency>
     <dependency>
         <groupId>io.github.sskorol</groupId>
         <artifactId>test-data-supplier</artifactId>
-        <version>1.3.0</version>
+        <version>1.4.0</version>
     </dependency>
 </dependencies>
     
@@ -131,7 +131,7 @@ Add the following configuration into **pom.xml**:
         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-surefire-plugin</artifactId>
-            <version>2.20</version>
+            <version>2.20.1</version>
             <configuration>
                 <properties>
                     <property>
@@ -189,20 +189,51 @@ public void supplyExternalData(final T data) {
 
 Check **io.github.sskorol.testcases** package for more examples.
 
+### Factory
+
+In case of `@DataSupplier` usage along with `@Factory` annotation, it's required to explicitly provide `dataProviderClass` arg. 
+Otherwise, you'll get an exception about missing `DataProvider`. That's a limitation caused by [TNG-1631](https://github.com/cbeust/testng/issues/1631).
+
+```java
+@NoArgsConstructor
+public class InternalFactoryTests {
+    
+    @DataSupplier
+    public StreamEx getConstructorData() {
+        return IntStreamEx.rangeClosed(1, 3).boxed();
+    }
+    
+    @DataSupplier
+    public String getTestData() {
+        return "data";
+    }
+    
+    @Factory(dataProvider = "getConstructorData", dataProviderClass = InternalFactoryTests.class)
+    public InternalFactoryTests(final int index) {
+        // not implemented
+    }
+    
+    @Test(dataProvider = "getTestData")
+    public void internalFactoryTest(final String data) {
+        // not implemented
+    }
+}
+```
+
 ### Tracking meta-data
 
 **DataSupplierInterceptor** interface allows tracking original **DataProvider** method calls for accessing additional meta-data. You can use the following snippet for getting required info:
 ```java
 public class DataSupplierInterceptorImpl implements DataSupplierInterceptor {
     
-    private static final Map<Method, DataSupplierMetaData> META_DATA = new ConcurrentHashMap<>();
+    private static final Map<ITestNGMethod, DataSupplierMetaData> META_DATA = new ConcurrentHashMap<>();
     
     @Override
-    public void beforeDataPreparation(final ITestContext context, final Method method) {
+    public void beforeDataPreparation(final ITestContext context, final ITestNGMethod method) {
     }
     
     @Override
-    public void afterDataPreparation(final ITestContext context, final Method method) {
+    public void afterDataPreparation(final ITestContext context, final ITestNGMethod method) {
     }
     
     @Override
@@ -223,8 +254,4 @@ This class should be then loaded via SPI mechanism. Just create **META-INF/servi
 
 **Test Data Supplier** is integrated with IntelliJ IDEA in a form of plugin. Just install **test-data-supplier-plugin** from the official JetBrains repository.
 
-More information about its features could be found on the related [GitHub](https://github.com/sskorol/test-data-supplier-plugin) page. 
-
-## Limitations
-
-Only **ITestContext** / **Method** injections are supported.
+More information about its features could be found on the related [GitHub](https://github.com/sskorol/test-data-supplier-plugin) page.
