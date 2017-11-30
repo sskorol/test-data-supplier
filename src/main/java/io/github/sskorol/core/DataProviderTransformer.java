@@ -11,8 +11,8 @@ import java.lang.reflect.Method;
 import java.util.*;
 
 import static io.github.sskorol.utils.ReflectionUtils.getDataSupplierAnnotation;
+import static io.github.sskorol.utils.ReflectionUtils.getDataSupplierClass;
 import static java.util.Objects.nonNull;
-import static java.util.Optional.ofNullable;
 
 /**
  * Core listener which transforms custom DataSupplier format to common TestNG DataProvider.
@@ -58,11 +58,8 @@ public class DataProviderTransformer implements IAnnotationTransformer, IAnnotat
     @SuppressWarnings({"unchecked", "FinalLocalVariable"})
     private void assignCustomDataSupplier(final IDataProvidable annotation, final Method testMethod,
                                           final Class testClass) {
-        val dataSupplierAnnotation = getDataSupplierAnnotation(
-                ofNullable(annotation.getDataProviderClass())
-                        .map(dpc -> (Class) dpc)
-                        .orElseGet(() -> ofNullable(testMethod).map(Method::getDeclaringClass).orElse(testClass)),
-                annotation.getDataProvider());
+        val dataSupplierClass = getDataSupplierClass(annotation, testClass, testMethod);
+        val dataSupplierAnnotation = getDataSupplierAnnotation(dataSupplierClass, annotation.getDataProvider());
 
         if (!annotation.getDataProvider().isEmpty() && nonNull(dataSupplierAnnotation)) {
             annotation.setDataProviderClass(getClass());
