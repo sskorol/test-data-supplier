@@ -21,7 +21,7 @@ public interface DataSupplierInterceptor {
     }
 
     default void onDataPreparation(final DataSupplierMetaData metaData) {
-        // do nothing
+        // not implemented
     }
 
     default Collection<DataSupplierMetaData> getMetaData() {

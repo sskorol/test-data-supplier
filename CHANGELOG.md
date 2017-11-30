@@ -1,6 +1,6 @@
 # Test Data Supplier Changelog
 
-## Unreleased
+## 1.3.0
 **Indices support:**
 
  * Added indices[] arg on annotation level to make DataSupplier fully similar to DataProvider.
