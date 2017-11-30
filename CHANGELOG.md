@@ -1,5 +1,35 @@
 # Test Data Supplier Changelog
 
+## Unreleased
+**Minor refactoring and improvements on core level.**
+
+
+[8af19c7a4482c1f](https://github.com/sskorol/test-data-supplier/commit/8af19c7a4482c1f) Sergey Korol *2017-11-30 08:59:55*
+
+**Factory support (fixes #48):**
+
+ * Added Factory annotation processing support; note that it currently works only with explicit dataProviderClass specification (see README for details).
+ * Revised transformer structure due to TestNG internals complexity.
+ * ITestNGMethod injections:
+ * DataSupplier now supports ITestNGMethod injection into signature (that was required for correct Factory events processing).
+ * DataSupplierInterceptor now supplies ITestNGMethod instead of a Method.
+ * Dependencies:
+ * Updated Gradle and internal libraries&#39; versions.
+
+[2328a41f6f7d173](https://github.com/sskorol/test-data-supplier/commit/2328a41f6f7d173) Sergey Korol *2017-11-30 08:35:00*
+
+**Core refactoring:**
+
+ * Methods, variables renaming and splitting to make code more obvious and readable.
+
+[b813c8e1c6810b5](https://github.com/sskorol/test-data-supplier/commit/b813c8e1c6810b5) Sergey Korol *2017-11-04 19:35:28*
+
+**Update CHANGELOG.md**
+
+ * New release version update.
+
+[e7d8820614e0bc3](https://github.com/sskorol/test-data-supplier/commit/e7d8820614e0bc3) Sergey Korol *2017-11-03 20:47:37*
+
 ## 1.3.0
 **Indices support:**
 
