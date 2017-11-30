@@ -6,9 +6,12 @@ import io.github.sskorol.core.InvokedMethodNameListener;
 import io.github.sskorol.model.DataSupplierMetaData;
 import one.util.streamex.EntryStream;
 import one.util.streamex.StreamEx;
+import org.assertj.core.data.Index;
 import org.testng.ITestResult;
+import org.testng.TestNGException;
 import org.testng.annotations.Test;
 
+import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.List;
 
@@ -136,10 +139,11 @@ public class DataSupplierTests extends BaseTest {
         final InvokedMethodNameListener listener = run(InjectedArgsDataSupplierTests.class);
 
         assertThat(listener.getSucceedMethodNames())
-                .hasSize(4)
+                .hasSize(5)
                 .containsExactly(
                         "supplyContextMetaData(DataSupplier tests)",
-                        "supplyFullMetaData(DataSupplier tests,supplyFullMetaData)",
+                        "supplyFullMetaData(DataSupplier tests,supplyFullMetaData,test description)",
+                        "supplyITestNGMethodMetaData(supplyITestNGMethodMetaData)",
                         "supplyMethodMetaData(supplyMethodMetaData)",
                         "supplyWrongArgTypeMethodMetaData(data)"
                 );
@@ -245,7 +249,12 @@ public class DataSupplierTests extends BaseTest {
                 CollectionsDataSupplierTests.class,
                 StreamsDataSupplierTests.class,
                 SingleObjectsDataSupplierTests.class,
-                TupleDataSupplierTests.class);
+                TupleDataSupplierTests.class,
+                DataSupplierWithCustomNamesTests.class,
+                InjectedArgsDataSupplierTests.class,
+                ParallelDataSupplierTests.class,
+                InternalFactoryTests.class
+        );
 
         final List<DataSupplierInterceptor> interceptors = getInterceptors();
 
@@ -256,7 +265,9 @@ public class DataSupplierTests extends BaseTest {
                            .flatMap(StreamEx::of)
                            .toList())
                 .extracting(DataSupplierMetaData::getDataSupplierMethod)
-                .hasSize(28);
+                .extracting(Method::getName)
+                .hasSize(55)
+                .contains("getConstructorData", Index.atIndex(10));
     }
 
     @Test
@@ -274,5 +285,38 @@ public class DataSupplierTests extends BaseTest {
                         "shouldBeExecutedWithClassLevelAnnotationWithDataSupplier(data1)",
                         "shouldBeExecutedWithExternalDataSupplier(data2)"
                 );
+    }
+
+    @Test
+    public void dataSupplierWithFactoryAnnotationShouldWork() {
+        final InvokedMethodNameListener listener = run(InternalFactoryTests.class);
+
+        assertThat(listener.getSucceedMethodNames())
+                .hasSize(3)
+                .containsExactly(
+                        "internalFactoryTest(data)",
+                        "internalFactoryTest(data)",
+                        "internalFactoryTest(data)"
+                );
+    }
+
+    @Test
+    public void dataSupplierWithExternalFactoryAnnotationShouldWork() {
+        final InvokedMethodNameListener listener = run(ExternalFactorySource.class);
+
+        assertThat(listener.getSucceedMethodNames())
+                .hasSize(2)
+                .containsExactly(
+                        "externalFactoryTest()",
+                        "externalFactoryTest()"
+                );
+    }
+
+    /**
+     * See TestNG <a href="https://github.com/cbeust/testng/issues/1631">issue</a> with a missing default DP class.
+     */
+    @Test(expectedExceptions = TestNGException.class)
+    public void dataSupplierWithIncompleteFactoryAnnotationShouldNotBeExecuted() {
+        run(IncompleteFactoryTests.class);
     }
 }

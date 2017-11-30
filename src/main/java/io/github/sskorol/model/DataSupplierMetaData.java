@@ -2,10 +2,13 @@ package io.github.sskorol.model;
 
 import io.github.sskorol.core.DataSupplier;
 import io.vavr.Tuple;
+import io.vavr.Tuple2;
 import lombok.Getter;
 import lombok.val;
 import one.util.streamex.*;
 import org.testng.ITestContext;
+import org.testng.ITestNGMethod;
+import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
@@ -25,6 +28,7 @@ import static io.vavr.Predicates.isNull;
 import static java.lang.String.format;
 import static java.util.Arrays.stream;
 import static java.util.Collections.singletonList;
+import static java.util.Objects.nonNull;
 import static java.util.Optional.ofNullable;
 
 /**
@@ -34,7 +38,7 @@ import static java.util.Optional.ofNullable;
 public class DataSupplierMetaData {
 
     @Getter
-    private final Method testMethod;
+    private final ITestNGMethod testMethod;
     @Getter
     private final Method dataSupplierMethod;
     @Getter
@@ -44,7 +48,7 @@ public class DataSupplierMetaData {
     private final int[] indices;
     private final ITestContext context;
 
-    public DataSupplierMetaData(final ITestContext context, final Method testMethod) {
+    public DataSupplierMetaData(final ITestContext context, final ITestNGMethod testMethod) {
         this.context = context;
         this.testMethod = testMethod;
         this.dataSupplierMethod = findDataSupplier();
@@ -57,14 +61,37 @@ public class DataSupplierMetaData {
     }
 
     private Method findDataSupplier() {
-        val testAnnotation = ofNullable(testMethod.getDeclaredAnnotation(Test.class))
-                .orElseGet(() -> testMethod.getDeclaringClass().getDeclaredAnnotation(Test.class));
-        final Class<?> dataSupplierClass =
-                ofNullable(testAnnotation).map(Test::dataProviderClass).filter(dp -> dp != Object.class).isPresent()
-                        ? testAnnotation.dataProviderClass()
-                        : testMethod.getDeclaringClass();
-        val dataSupplierName = testAnnotation.dataProvider();
-        return getMethod(dataSupplierClass, dataSupplierName);
+        val annotationMetaData = testMethod.isTest() ? getTestAnnotationMetaData() : getFactoryAnnotationMetaData();
+        return getMethod(annotationMetaData._1, annotationMetaData._2);
+    }
+
+    @SuppressWarnings("unchecked")
+    private Tuple2<Class<?>, String> getTestAnnotationMetaData() {
+        val declaringClass = testMethod.getConstructorOrMethod().getDeclaringClass();
+        val testAnnotation = ofNullable(testMethod.getConstructorOrMethod()
+                                                  .getMethod()
+                                                  .getDeclaredAnnotation(Test.class))
+                .orElseGet(() -> declaringClass.getDeclaredAnnotation(Test.class));
+        val dataSupplierClass = ofNullable(testAnnotation)
+                .map(Test::dataProviderClass)
+                .filter(dp -> dp != Object.class)
+                .orElse((Class) declaringClass);
+
+        return Tuple.of(dataSupplierClass, testAnnotation.dataProvider());
+    }
+
+    private Tuple2<Class<?>, String> getFactoryAnnotationMetaData() {
+        val constructor = testMethod.getConstructorOrMethod().getConstructor();
+        val method = testMethod.getConstructorOrMethod().getMethod();
+
+        val factoryAnnotation = nonNull(method)
+                ? ofNullable(method.getDeclaredAnnotation(Factory.class))
+                : ofNullable(constructor.getDeclaredAnnotation(Factory.class));
+
+        return Tuple.of(factoryAnnotation
+                        .map(fa -> (Class) fa.dataProviderClass())
+                        .orElse(testMethod.getConstructorOrMethod().getDeclaringClass()),
+                factoryAnnotation.map(Factory::dataProvider).orElse(""));
     }
 
     private List<Object[]> transform() {
@@ -86,8 +113,8 @@ public class DataSupplierMetaData {
                 Case($(isNull()), () -> {
                     throw new IllegalArgumentException(format(
                             "Nothing to return from data supplier. The following test will be skipped: %s.%s.",
-                            testMethod.getDeclaringClass().getSimpleName(),
-                            testMethod.getName()));
+                            testMethod.getConstructorOrMethod().getDeclaringClass().getSimpleName(),
+                            testMethod.getConstructorOrMethod().getName()));
                 }),
                 Case($(instanceOf(Collection.class)), d -> StreamEx.of((Collection<?>) d)),
                 Case($(instanceOf(Map.class)), d -> EntryStream.of((Map<?, ?>) d).mapKeyValue(SimpleEntry::new)),
@@ -105,7 +132,8 @@ public class DataSupplierMetaData {
         return invoke(dataSupplierMethod, () -> stream(dataSupplierMethod.getParameterTypes())
                 .map(t -> Match((Class) t).of(
                         Case($(ITestContext.class), () -> context),
-                        Case($(Method.class), () -> testMethod),
+                        Case($(Method.class), () -> testMethod.getConstructorOrMethod().getMethod()),
+                        Case($(ITestNGMethod.class), () -> testMethod),
                         Case($(), () -> null)))
                 .toArray());
     }
