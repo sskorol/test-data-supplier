@@ -1,6 +1,6 @@
 # Test Data Supplier Changelog
 
-## Unreleased
+## 1.4.0
 **Minor refactoring and improvements on core level.**
 
 
