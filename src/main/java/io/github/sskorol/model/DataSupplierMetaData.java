@@ -88,10 +88,14 @@ public class DataSupplierMetaData {
                 ? ofNullable(method.getDeclaredAnnotation(Factory.class))
                 : ofNullable(constructor.getDeclaredAnnotation(Factory.class));
 
-        return Tuple.of(factoryAnnotation
-                        .map(fa -> (Class) fa.dataProviderClass())
-                        .orElse(testMethod.getConstructorOrMethod().getDeclaringClass()),
-                factoryAnnotation.map(Factory::dataProvider).orElse(""));
+        val dataProviderClass = factoryAnnotation
+                .map(fa -> (Class) fa.dataProviderClass())
+                .filter(cl -> cl != Object.class)
+                .orElseGet(() -> testMethod.getConstructorOrMethod().getDeclaringClass());
+
+        val dataProviderMethod = factoryAnnotation.map(Factory::dataProvider).orElse("");
+
+        return Tuple.of(dataProviderClass, dataProviderMethod);
     }
 
     private List<Object[]> transform() {
