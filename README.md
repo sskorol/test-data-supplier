@@ -191,8 +191,7 @@ Check **io.github.sskorol.testcases** package for more examples.
 
 ### Factory
 
-In case of `@DataSupplier` usage along with `@Factory` annotation, it's required to explicitly provide `dataProviderClass` arg. 
-Otherwise, you'll get an exception about missing `DataProvider`. That's a limitation caused by [TNG-1631](https://github.com/cbeust/testng/issues/1631).
+You can specify **DataSupplier** for **Factory** annotation as well as for common test methods.
 
 ```java
 @NoArgsConstructor
