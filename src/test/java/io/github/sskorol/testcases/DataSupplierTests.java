@@ -8,7 +8,6 @@ import one.util.streamex.EntryStream;
 import one.util.streamex.StreamEx;
 import org.assertj.core.data.Index;
 import org.testng.ITestResult;
-import org.testng.TestNGException;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
@@ -312,11 +311,17 @@ public class DataSupplierTests extends BaseTest {
                 );
     }
 
-    /**
-     * See TestNG <a href="https://github.com/cbeust/testng/issues/1631">issue</a> with a missing default DP class.
-     */
-    @Test(expectedExceptions = TestNGException.class)
-    public void dataSupplierWithIncompleteFactoryAnnotationShouldNotBeExecuted() {
-        run(IncompleteFactoryTests.class);
+    @Test
+    public void dataSupplierWithIncompleteFactoryAnnotationShouldBeExecuted() {
+        final InvokedMethodNameListener listener = run(IncompleteFactoryTests.class);
+        assertThat(listener.getSucceedMethodNames())
+                .hasSize(5)
+                .containsExactly(
+                        "incompleteFactoryTest()",
+                        "incompleteFactoryTest()",
+                        "incompleteFactoryTest()",
+                        "incompleteFactoryTest()",
+                        "incompleteFactoryTest()"
+                );
     }
 }

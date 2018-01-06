@@ -17,7 +17,7 @@ import static java.util.Objects.nonNull;
 /**
  * Core listener which transforms custom DataSupplier format to common TestNG DataProvider.
  */
-public class DataProviderTransformer implements IAnnotationTransformer, IAnnotationTransformer2 {
+public class DataProviderTransformer implements IAnnotationTransformer2 {
 
     @DataProvider
     public Iterator<Object[]> supplySeqData(final ITestContext context, final ITestNGMethod testMethod) {
