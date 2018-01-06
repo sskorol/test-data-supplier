@@ -314,6 +314,14 @@ public class DataSupplierTests extends BaseTest {
     @Test
     public void dataSupplierWithIncompleteFactoryAnnotationShouldBeExecuted() {
         final InvokedMethodNameListener listener = run(IncompleteFactoryTests.class);
-        assertThat(listener.getSucceedMethodNames()).hasSize(5);
+        assertThat(listener.getSucceedMethodNames())
+                .hasSize(5)
+                .containsExactly(
+                        "incompleteFactoryTest()",
+                        "incompleteFactoryTest()",
+                        "incompleteFactoryTest()",
+                        "incompleteFactoryTest()",
+                        "incompleteFactoryTest()"
+                );
     }
 }
