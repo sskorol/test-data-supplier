@@ -94,8 +94,8 @@ repositories {
 }
     
 dependencies {
-    compile('org.testng:testng:6.13.1',
-            'io.github.sskorol:test-data-supplier:1.4.0'
+    compile('org.testng:testng:6.14.2',
+            'io.github.sskorol:test-data-supplier:1.4.1'
     )
 }
     
@@ -117,12 +117,12 @@ Add the following configuration into **pom.xml**:
     <dependency>
         <groupId>org.testng</groupId>
         <artifactId>testng</artifactId>
-        <version>6.13.1</version>
+        <version>6.14.2</version>
     </dependency>
     <dependency>
         <groupId>io.github.sskorol</groupId>
         <artifactId>test-data-supplier</artifactId>
-        <version>1.4.0</version>
+        <version>1.4.1</version>
     </dependency>
 </dependencies>
     
