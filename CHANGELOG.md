@@ -1,11 +1,47 @@
 # Test Data Supplier Changelog
 
+## Unreleased
+**Updated required dependencies for better TestNG DP on Factory level support.**
+
+
+[83010a220d4dce4](https://github.com/sskorol/test-data-supplier/commit/83010a220d4dce4) Sergey Korol *2018-02-05 08:59:26*
+
+**Updated outdated deps and gradle version.**
+
+
+[baa4f1c9de24730](https://github.com/sskorol/test-data-supplier/commit/baa4f1c9de24730) Sergey Korol *2018-01-06 16:41:32*
+
+**Updated README with actual details regarding Factory.**
+
+
+[e1173678654ebb7](https://github.com/sskorol/test-data-supplier/commit/e1173678654ebb7) Sergey Korol *2017-12-19 22:10:25*
+
+**Factory updates:**
+
+ * Added support for missing data provider class injections into Factory meta-data.
+ * Updated outdated dependencies.
+
+[f4572604bbccb22](https://github.com/sskorol/test-data-supplier/commit/f4572604bbccb22) Sergey Korol *2017-12-19 22:07:24*
+
+**Create PULL_REQUEST_TEMPLATE.md**
+
+ * To simplify PRs creation process.
+
+[e70729c706a78c0](https://github.com/sskorol/test-data-supplier/commit/e70729c706a78c0) Sergey Korol *2017-12-19 16:22:34*
+
+**Added ISSUE_TEMPLATE**
+
+ * To simplify issues creation process.
+
+[3fbc9109c5a8ed1](https://github.com/sskorol/test-data-supplier/commit/3fbc9109c5a8ed1) Sergey Korol *2017-12-19 14:53:17*
+
+**Update CHANGELOG.md**
+
+ * Fixed version tag.
+
+[e6f66e6f538ca5c](https://github.com/sskorol/test-data-supplier/commit/e6f66e6f538ca5c) Sergey Korol *2017-11-30 09:14:16*
+
 ## 1.4.0
-**Minor refactoring and improvements on core level.**
-
-
-[8af19c7a4482c1f](https://github.com/sskorol/test-data-supplier/commit/8af19c7a4482c1f) Sergey Korol *2017-11-30 08:59:55*
-
 **Factory support (fixes #48):**
 
  * Added Factory annotation processing support; note that it currently works only with explicit dataProviderClass specification (see README for details).
@@ -17,6 +53,11 @@
  * Updated Gradle and internal libraries&#39; versions.
 
 [2328a41f6f7d173](https://github.com/sskorol/test-data-supplier/commit/2328a41f6f7d173) Sergey Korol *2017-11-30 08:35:00*
+
+**Minor refactoring and improvements on core level.**
+
+
+[8af19c7a4482c1f](https://github.com/sskorol/test-data-supplier/commit/8af19c7a4482c1f) Sergey Korol *2017-11-30 08:59:55*
 
 **Core refactoring:**
 
