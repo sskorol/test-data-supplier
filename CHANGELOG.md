@@ -1,6 +1,6 @@
 # Test Data Supplier Changelog
 
-## Unreleased
+## 1.4.1
 **Updated required dependencies for better TestNG DP on Factory level support.**
 
 
