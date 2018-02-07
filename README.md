@@ -158,6 +158,10 @@ Otherwise, you'll get an exception about missing **DataProvider**, as test liste
 are ignored while using TestNG run configuration. And TestNG itself will try to locate methods with a common annotation, 
 instead of **DataSupplier**. 
 
+### Listener limitation
+
+Note that **DataProviderTransformer**, which implements **IAnnotationTransformer2**, won't be working with **@Listeners** annotation, as TestNG doesn't allow to do that (see [Javadoc](https://github.com/cbeust/testng/blob/5fa5ed7f9fb8428fbc2412321f95f73164222af7/src/main/java/org/testng/annotations/Listeners.java#L13-L18)).
+
 ### API
 
 Instead of a common **DataProvider** annotation use the following:
