@@ -5,7 +5,7 @@ import io.github.sskorol.datasuppliers.ExternalDataSuppliers;
 import io.github.sskorol.model.User;
 import org.testng.annotations.Test;
 
-public class DataSupplierWithCustomNamesTests {
+public class DataSupplierWithCustomNamesTests extends BaseDataSupplier {
 
     @DataSupplier(name = "User supplier")
     public User getDataWithCustomName() {
@@ -19,6 +19,11 @@ public class DataSupplierWithCustomNamesTests {
 
     @Test(dataProviderClass = ExternalDataSuppliers.class, dataProvider = "Password supplier")
     public void supplyExternalPasswordFromNamedDataSupplier(final String password) {
+        // not implemented
+    }
+
+    @Test(dataProvider = "Parent class data")
+    public void supplyStringFromNamedParentClassDataSupplier(final String ob) {
         // not implemented
     }
 }

@@ -1,0 +1,92 @@
+<ruleset xmlns="http://codenarc.org/ruleset/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://codenarc.org/ruleset/1.0 http://codenarc.org/ruleset-schema.xsd"
+         xsi:noNamespaceSchemaLocation="http://codenarc.org/ruleset-schema.xsd">
+
+    <!-- Basic (http://codenarc.sourceforge.net/codenarc-rules-basic.html) -->
+    <ruleset-ref path='rulesets/basic.xml'/>
+
+    <!-- Braces (http://codenarc.sourceforge.net/codenarc-rules-braces.html) -->
+    <ruleset-ref path='rulesets/braces.xml'/>
+
+    <!-- Concurrency (http://codenarc.sourceforge.net/codenarc-rules-concurrency.html) -->
+    <ruleset-ref path='rulesets/concurrency.xml'/>
+
+    <!-- Convention (http://codenarc.sourceforge.net/codenarc-rules-convention.html) -->
+    <ruleset-ref path='rulesets/convention.xml'/>
+
+    <!-- Design (http://codenarc.sourceforge.net/codenarc-rules-design.html) -->
+    <ruleset-ref path='rulesets/design.xml'/>
+
+    <!-- DRY (Don't Repeat Yourself) (http://codenarc.sourceforge.net/codenarc-rules-dry.html) -->
+    <ruleset-ref path='rulesets/dry.xml'/>
+
+    <!-- Enhanced Classpath (http://codenarc.sourceforge.net/codenarc-rules-enhanced.html) -->
+    <!--<ruleset-ref path='rulesets/enhanced.xml'/>-->
+
+    <!-- Exceptions (http://codenarc.sourceforge.net/codenarc-rules-exceptions.html) -->
+    <ruleset-ref path='rulesets/exceptions.xml'/>
+
+    <!-- Formatting (http://codenarc.sourceforge.net/codenarc-rules-formatting.html) -->
+    <ruleset-ref path='rulesets/formatting.xml'>
+        <rule-config name="SpaceAroundMapEntryColon">
+            <property name="characterAfterColonRegex" value="\s"/>
+        </rule-config>
+    </ruleset-ref>
+
+    <!-- Generic (http://codenarc.sourceforge.net/codenarc-rules-generic.html) -->
+    <ruleset-ref path='rulesets/generic.xml'/>
+
+    <!-- Grails (http://codenarc.sourceforge.net/codenarc-rules-grails.html) -->
+    <!--<ruleset-ref path='rulesets/grails.xml'/>-->
+
+    <!-- Groovy-ism (http://codenarc.sourceforge.net/codenarc-rules-groovyism.html) -->
+    <ruleset-ref path='rulesets/groovyism.xml'/>
+
+    <!-- Imports (http://codenarc.sourceforge.net/codenarc-rules-imports.html) -->
+    <ruleset-ref path='rulesets/imports.xml'>
+        <exclude name="ImportFromSunPackages"/>
+        <exclude name="MisorderedStaticImports"/>
+        <exclude name="NoWildcardImports"/>
+    </ruleset-ref>
+
+    <!-- JDBC (http://codenarc.sourceforge.net/codenarc-rules-jdbc.html) -->
+    <ruleset-ref path='rulesets/jdbc.xml'/>
+
+    <!-- JUnit (http://codenarc.sourceforge.net/codenarc-rules-junit.html) -->
+    <ruleset-ref path='rulesets/junit.xml'/>
+
+    <!-- Logging (http://codenarc.sourceforge.net/codenarc-rules-logging.html) -->
+    <ruleset-ref path='rulesets/logging.xml'/>
+
+    <!-- Naming (http://codenarc.sourceforge.net/codenarc-rules-naming.html) -->
+    <ruleset-ref path='rulesets/naming.xml'>
+        <exclude name="FactoryMethodName"/>
+    </ruleset-ref>
+
+    <!-- Size and Complexity (http://codenarc.sourceforge.net/codenarc-rules-size.html) -->
+    <ruleset-ref path='rulesets/size.xml'>
+        <rule-config name="ClassSize">
+            <property name="maxLines" value="500"/>
+        </rule-config>
+        <rule-config name="MethodSize">
+            <property name="maxLines" value="50"/>
+        </rule-config>
+        <exclude name="CrapMetric"/>
+    </ruleset-ref>
+
+    <!-- Security (http://codenarc.sourceforge.net/codenarc-rules-security.html) -->
+    <ruleset-ref path='rulesets/security.xml'>
+        <exclude name="JavaIoPackageAccess"/>
+    </ruleset-ref>
+
+    <!-- Serialization (http://codenarc.sourceforge.net/codenarc-rules-serialization.html) -->
+    <ruleset-ref path='rulesets/serialization.xml'/>
+
+    <!-- Unnecessary (http://codenarc.sourceforge.net/codenarc-rules-unnecessary.html) -->
+    <ruleset-ref path='rulesets/unnecessary.xml'>
+        <exclude name="UnnecessaryReturnKeyword"/>
+    </ruleset-ref>
+
+    <!-- Unused (http://codenarc.sourceforge.net/codenarc-rules-unused.html) -->
+    <ruleset-ref path='rulesets/unused.xml'/>
+</ruleset>

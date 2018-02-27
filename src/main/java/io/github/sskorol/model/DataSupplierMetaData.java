@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import static io.github.sskorol.utils.ReflectionUtils.findParentDataSupplierClass;
 import static io.github.sskorol.utils.ReflectionUtils.invokeDataSupplier;
 import static io.vavr.API.$;
 import static io.vavr.API.Case;
@@ -68,6 +69,7 @@ public class DataSupplierMetaData {
     @SuppressWarnings("unchecked")
     private Tuple2<Class<?>, String> getTestAnnotationMetaData() {
         val declaringClass = testMethod.getConstructorOrMethod().getDeclaringClass();
+        val parentClass = findParentDataSupplierClass(testMethod.getConstructorOrMethod().getMethod(), declaringClass);
         val testAnnotation = ofNullable(testMethod.getConstructorOrMethod()
                                                   .getMethod()
                                                   .getDeclaredAnnotation(Test.class))
@@ -75,7 +77,7 @@ public class DataSupplierMetaData {
         val dataSupplierClass = ofNullable(testAnnotation)
                 .map(Test::dataProviderClass)
                 .filter(dp -> dp != Object.class)
-                .orElse((Class) declaringClass);
+                .orElse((Class) parentClass);
 
         return Tuple.of(dataSupplierClass, testAnnotation.dataProvider());
     }
