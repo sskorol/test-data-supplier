@@ -1,5 +1,31 @@
 # Test Data Supplier Changelog
 
+## Unreleased
+**Added subtypes analysis support [TestNG-1691](https://github.com/cbeust/testng/issues/1691).**
+
+ * Updated project dependencies, issue template and README.
+ * Minor refactoring.
+
+[c8b24e8df1c1768](https://github.com/sskorol/test-data-supplier/commit/c8b24e8df1c1768) Sergey Korol *2018-02-27 22:03:08*
+
+**Update README.md**
+
+ * Added listeners limitation.
+
+[d9f518785c5fc26](https://github.com/sskorol/test-data-supplier/commit/d9f518785c5fc26) Sergey Korol *2018-02-07 13:16:48*
+
+**Update README.md**
+
+ * Updated TestNG and DS versions.
+
+[d87b1f8fee8867b](https://github.com/sskorol/test-data-supplier/commit/d87b1f8fee8867b) Sergey Korol *2018-02-05 09:17:07*
+
+**Update CHANGELOG.md**
+
+ * Updated latest released tag.
+
+[d2dbbec94b3d154](https://github.com/sskorol/test-data-supplier/commit/d2dbbec94b3d154) Sergey Korol *2018-02-05 09:14:35*
+
 ## 1.4.1
 **Updated required dependencies for better TestNG DP on Factory level support.**
 
