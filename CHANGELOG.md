@@ -1,6 +1,6 @@
 # Test Data Supplier Changelog
 
-## Unreleased
+## 1.4.5
 **Added subtypes analysis support [TestNG-1691](https://github.com/cbeust/testng/issues/1691).**
 
  * Updated project dependencies, issue template and README.
