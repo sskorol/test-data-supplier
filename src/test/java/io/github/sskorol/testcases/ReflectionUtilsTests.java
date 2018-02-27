@@ -14,13 +14,13 @@ public class ReflectionUtilsTests {
     @Test
     public void shouldThrowAnExceptionOnReflectionUtilsConstructorAccess() {
         assertThatThrownBy(() -> on(ReflectionUtils.class).create())
-                .hasStackTraceContaining("java.lang.UnsupportedOperationException: Illegal access to private constructor");
+                .hasStackTraceContaining("java.lang.UnsupportedOperationException: This is a utility class and cannot be instantiated");
     }
 
     @Test
     public void shouldThrowAnExceptionOnServiceLoaderUtilsConstructorAccess() {
         assertThatThrownBy(() -> on(ServiceLoaderUtils.class).create())
-                .hasStackTraceContaining("java.lang.UnsupportedOperationException: Illegal access to private constructor");
+                .hasStackTraceContaining("java.lang.UnsupportedOperationException: This is a utility class and cannot be instantiated");
     }
 
     @Test(expectedExceptions = NoSuchMethodException.class)

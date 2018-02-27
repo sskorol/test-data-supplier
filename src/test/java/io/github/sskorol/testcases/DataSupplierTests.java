@@ -197,9 +197,10 @@ public class DataSupplierTests extends BaseTest {
         final InvokedMethodNameListener listener = run(DataSupplierWithCustomNamesTests.class);
 
         assertThat(listener.getSucceedMethodNames())
-                .hasSize(2)
+                .hasSize(3)
                 .containsExactly(
                         "supplyExternalPasswordFromNamedDataSupplier(qwerty)",
+                        "supplyStringFromNamedParentClassDataSupplier(baseData)",
                         "supplyUserFromNamedDataSupplier(User(name=userFromNamedDataSupplier, password=password))"
                 );
     }
@@ -252,7 +253,8 @@ public class DataSupplierTests extends BaseTest {
                 DataSupplierWithCustomNamesTests.class,
                 InjectedArgsDataSupplierTests.class,
                 ParallelDataSupplierTests.class,
-                InternalFactoryTests.class
+                InternalFactoryTests.class,
+                ChildTest.class
         );
 
         final List<DataSupplierInterceptor> interceptors = getInterceptors();
@@ -265,7 +267,7 @@ public class DataSupplierTests extends BaseTest {
                            .toList())
                 .extracting(DataSupplierMetaData::getDataSupplierMethod)
                 .extracting(Method::getName)
-                .hasSize(55)
+                .hasSize(57)
                 .contains("getConstructorData", Index.atIndex(10));
     }
 
@@ -283,6 +285,18 @@ public class DataSupplierTests extends BaseTest {
                         "shouldBeExecutedWithLocalDataSupplier(data)",
                         "shouldBeExecutedWithClassLevelAnnotationWithDataSupplier(data1)",
                         "shouldBeExecutedWithExternalDataSupplier(data2)"
+                );
+    }
+
+    @Test
+    public void dataSupplierWithParentClassLevelAnnotationsShouldWork() {
+        final InvokedMethodNameListener listener = run(ChildTest.class);
+
+        assertThat(listener.getSucceedMethodNames())
+                .hasSize(2)
+                .containsExactly(
+                        "provideDataFromParentClassDataSupplier(hash1,password1)",
+                        "provideDataFromParentClassDataSupplier(hash2,password2)"
                 );
     }
 

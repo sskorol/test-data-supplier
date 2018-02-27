@@ -3,6 +3,7 @@ package io.github.sskorol.datasuppliers;
 import io.github.sskorol.core.DataSupplier;
 import io.github.sskorol.model.User;
 import io.vavr.Tuple;
+import one.util.streamex.StreamEx;
 import org.testng.annotations.DataProvider;
 
 import java.util.Iterator;
@@ -62,5 +63,10 @@ public class ExternalDataSuppliers {
     @DataSupplier
     public String getClassLevelLocalData() {
         return "data2";
+    }
+
+    @DataSupplier(flatMap = true)
+    public StreamEx externalHashes() {
+        return StreamEx.of(Tuple.of("hash1", "password1"), Tuple.of("hash2", "password2"));
     }
 }

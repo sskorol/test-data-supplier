@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- http://findbugs.sourceforge.net/manual/filter.html -->
+<FindBugsFilter>
+
+    <!-- Do not check groovy -->
+    <Match>
+        <Source name="~.*\.groovy"/>
+    </Match>
+
+    <!-- Disable check -->
+    <!--<Match>-->
+        <!--<Bug pattern="DM_CONVERT_CASE" />-->
+    <!--</Match>-->
+
+    <!-- Do not check class -->
+    <!--<Match>-->
+        <!--<Class name="com.foobar.ClassNotToBeAnalyzed" />-->
+    <!--</Match>-->
+</FindBugsFilter>

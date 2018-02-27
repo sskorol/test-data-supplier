@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="Base ruleset" xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 http://pmd.sourceforge.net/ruleset_2_0_0.xsd">
+
+    <description>
+        General Java quality rules.
+    </description>
+
+    <!-- Basic (https://pmd.github.io/pmd-5.4.0/pmd-java/rules/java/basic.html) -->
+    <rule ref="rulesets/java/basic.xml"/>
+
+    <!-- Braces (https://pmd.github.io/pmd-5.4.0/pmd-java/rules/java/braces.html) -->
+    <rule ref="rulesets/java/braces.xml"/>
+
+    <!-- Clone Implementation (https://pmd.github.io/pmd-5.4.0/pmd-java/rules/java/clone.html) -->
+    <rule ref="rulesets/java/clone.xml"/>
+
+    <!-- Code Size (https://pmd.github.io/pmd-5.4.0/pmd-java/rules/java/codesize.html) -->
+    <rule ref="rulesets/java/codesize.xml">
+        <!-- using ModifiedCyclomaticComplexity and disabling two other duplicate rules-->
+        <exclude name="CyclomaticComplexity"/>
+        <exclude name="StdCyclomaticComplexity"/>
+    </rule>
+    <rule ref="rulesets/java/codesize.xml/ExcessiveMethodLength" message="Avoid methods longer than 50 lines">
+        <properties>
+            <property name="minimum" value="50"/>
+        </properties>
+    </rule>
+    <rule ref="rulesets/java/codesize.xml/ExcessiveClassLength" message="Avoid classes longer than 500 lines">
+        <properties>
+            <property name="minimum" value="500"/>
+        </properties>
+    </rule>
+    <rule ref="rulesets/java/codesize.xml/TooManyMethods" message="Avoid classes longer than 20 methods">
+        <properties>
+            <property name="maxmethods" value="20"/>
+        </properties>
+    </rule>
+    <rule ref="rulesets/java/codesize.xml/ModifiedCyclomaticComplexity">
+        <properties>
+            <property name="reportLevel" value="11"/>
+        </properties>
+    </rule>
+    <rule ref="rulesets/java/codesize.xml/NPathComplexity">
+        <properties>
+            <property name="minimum" value="201"/>
+        </properties>
+    </rule>
+
+    <!-- Comments (https://pmd.github.io/pmd-5.4.0/pmd-java/rules/java/comments.html) -->
+    <rule ref="rulesets/java/comments.xml">
+        <exclude name="CommentRequired"/>
+        <exclude name="CommentSize"/>
+    </rule>
+
+    <!-- Controversial (https://pmd.github.io/latest/pmd-java/rules/java/controversial.html) -->
+    <rule ref="rulesets/java/controversial.xml">
+        <exclude name="AtLeastOneConstructor"/>
+        <exclude name="AvoidFinalLocalVariable"/>
+        <exclude name="UseConcurrentHashMap"/>
+        <exclude name="DataflowAnomalyAnalysis"/>
+        <exclude name="CallSuperInConstructor"/>
+        <exclude name="OnlyOneReturn"/> <!-- disabled in favour of checkstyle ReturnCount check -->
+        <exclude name="NullAssignment"/> <!-- disabled due to false positive for initialization with ternary operator -->
+    </rule>
+
+    <!-- Coupling (https://pmd.github.io/latest/pmd-java/rules/java/coupling.html) -->
+    <rule ref="rulesets/java/coupling.xml">
+        <exclude name="LoosePackageCoupling"/>
+        <exclude name="LawOfDemeter"/>
+    </rule>
+
+    <!-- Design (https://pmd.github.io/latest/pmd-java/rules/java/design.html) -->
+    <rule ref="rulesets/java/design.xml">
+        <exclude name="ConfusingTernary"/>
+        <exclude name="UseLocaleWithCaseConversions"/>
+        <exclude name="AbstractClassWithoutAbstractMethod"/>
+        <exclude name="UseUtilityClass"/>
+        <!-- disabled as it's important for android and doesn't matter for general java (also fixes will
+             conflict with checkstyle's VisibilityModifier check -->
+        <exclude name="AccessorMethodGeneration"/>
+    </rule>
+    <rule ref="rulesets/java/design.xml/AvoidDeeplyNestedIfStmts">
+        <properties>
+            <property name="problemDepth" value="4"/>
+        </properties>
+    </rule>
+
+    <!-- Empty Code (https://pmd.github.io/latest/pmd-java/rules/java/empty.html) -->
+    <rule ref="rulesets/java/empty.xml"/>
+
+    <!-- Finalizer (https://pmd.github.io/latest/pmd-java/rules/java/finalizers.html) -->
+    <rule ref="rulesets/java/finalizers.xml">
+        <exclude name="EmptyFinalizer"/>
+        <exclude name="FinalizeOnlyCallsSuperFinalize"/>
+        <exclude name="FinalizeDoesNotCallSuperFinalize"/>
+    </rule>
+
+    <!-- Import Statements (https://pmd.github.io/latest/pmd-java/rules/java/imports.html) -->
+    <rule ref="rulesets/java/imports.xml">
+        <exclude name="TooManyStaticImports"/>
+    </rule>
+
+    <!-- J2EE (https://pmd.github.io/latest/pmd-java/rules/java/j2ee.html) -->
+    <!--<rule ref="rulesets/java/j2ee.xml"/>-->
+
+    <!-- JavaBeans (https://pmd.github.io/latest/pmd-java/rules/java/javabeans.html) -->
+    <rule ref="rulesets/java/javabeans.xml">
+        <exclude name="BeanMembersShouldSerialize"/>
+        <exclude name="MissingSerialVersionUID"/>
+    </rule>
+
+    <!-- JUnit (https://pmd.github.io/latest/pmd-java/rules/java/junit.html) -->
+    <rule ref="rulesets/java/junit.xml">
+        <exclude name="JUnitStaticSuite"/>
+        <exclude name="JUnitSpelling"/>
+        <exclude name="JUnitAssertionsShouldIncludeMessage"/>
+        <exclude name="JUnitTestsShouldIncludeAssert"/>
+    </rule>
+
+    <!-- Jakarta Commons Logging (https://pmd.github.io/latest/pmd-java/rules/java/logging-jakarta-commons.html) -->
+    <rule ref="rulesets/java/logging-jakarta-commons.xml">
+        <exclude name="UseCorrectExceptionLogging"/>
+        <exclude name="GuardDebugLogging"/>
+        <exclude name="GuardLogStatement"/>
+    </rule>
+
+    <!-- Java Logging (https://pmd.github.io/latest/pmd-java/rules/java/logging-java.html) -->
+    <rule ref="rulesets/java/logging-java.xml">
+        <exclude name="LoggerIsNotStaticFinal"/>
+        <exclude name="InvalidSlf4jMessageFormat"/>
+    </rule>
+
+    <!-- Migration (https://pmd.github.io/latest/pmd-java/rules/java/migrating.html) -->
+    <rule ref="rulesets/java/migrating.xml">
+        <exclude name="JUnit4TestShouldUseBeforeAnnotation"/>
+        <exclude name="JUnit4TestShouldUseAfterAnnotation"/>
+        <exclude name="JUnit4TestShouldUseTestAnnotation"/>
+        <exclude name="JUnit4SuitesShouldUseSuiteAnnotation"/>
+    </rule>
+
+    <!-- Naming (https://pmd.github.io/latest/pmd-java/rules/java/naming.html) -->
+    <rule ref="rulesets/java/naming.xml">
+        <exclude name="ShortClassName"/>
+        <exclude name="ShortVariable"/>
+        <exclude name="LongVariable"/>
+        <exclude name="ShortMethodName"/>
+        <exclude name="AbstractNaming"/>
+    </rule>
+
+    <!-- Optimization (https://pmd.github.io/latest/pmd-java/rules/java/optimizations.html) -->
+    <rule ref="rulesets/java/optimizations.xml">
+        <exclude name="LocalVariableCouldBeFinal"/>
+    </rule>
+
+    <!-- Strict Exceptions (https://pmd.github.io/latest/pmd-java/rules/java/strictexception.html) -->
+    <rule ref="rulesets/java/strictexception.xml">
+        <exclude name="SignatureDeclareThrowsException"/>
+        <exclude name="AvoidCatchingGenericException"/>
+        <exclude name="AvoidCatchingThrowable"/>
+    </rule>
+
+    <!-- String and StringBuffer (https://pmd.github.io/latest/pmd-java/rules/java/strings.html) -->
+    <rule ref="rulesets/java/strings.xml"/>
+    <rule ref="rulesets/java/strings.xml/AvoidDuplicateLiterals">
+        <properties>
+            <property name="skipAnnotations" value="true"/>
+        </properties>
+    </rule>
+
+    <!-- Security Code Guidelines (https://pmd.github.io/latest/pmd-java/rules/java/sunsecure.html) -->
+    <rule ref="rulesets/java/sunsecure.xml">
+        <exclude name="ArrayIsStoredDirectly"/>
+    </rule>
+
+    <!-- Type Resolution (https://pmd.github.io/latest/pmd-java/rules/java/typeresolution.html) -->
+    <rule ref="rulesets/java/typeresolution.xml">
+        <exclude name="SignatureDeclareThrowsException"/>
+    </rule>
+
+    <!-- Unnecessary (https://pmd.github.io/latest/pmd-java/rules/java/unnecessary.html) -->
+    <rule ref="rulesets/java/unnecessary.xml">
+        <exclude name="UselessParentheses"/>
+    </rule>
+
+    <!-- Unused Code (https://pmd.github.io/latest/pmd-java/rules/java/unusedcode.html) -->
+    <rule ref="rulesets/java/unusedcode.xml"/>
+
+</ruleset>

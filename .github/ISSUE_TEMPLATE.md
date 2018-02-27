@@ -15,10 +15,10 @@
  
 #### Environment
 
-| Test Data Supplier | 1.4.0 |
+| Test Data Supplier | 1.4.1 |
 | --- | --- |
-| TestNG | 6.13.1 |
-| Build tool | gradle@4.4 |
+| TestNG | 6.14.3 |
+| Build tool | gradle@4.5.1 |
 | IDE | IntelliJ@2017.3 |
 
 #### Is the issue reproductible on runner?
