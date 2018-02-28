@@ -1,6 +1,6 @@
 # Test Data Supplier Changelog
 
-## Unreleased
+## 1.5.0
 **Replaced common lib loading mechanism with SPI to simplify installation process.**
 
 
