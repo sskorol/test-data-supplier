@@ -1,5 +1,17 @@
 # Test Data Supplier Changelog
 
+## Unreleased
+**Replaced common lib loading mechanism with SPI to simplify installation process.**
+
+
+[af75e0adf3227cf](https://github.com/sskorol/test-data-supplier/commit/af75e0adf3227cf) Sergey Korol *2018-02-28 12:36:02*
+
+**Update CHANGELOG.md**
+
+ * Added new release tag.
+
+[6b98278a7fc9998](https://github.com/sskorol/test-data-supplier/commit/6b98278a7fc9998) Sergey Korol *2018-02-27 22:15:20*
+
 ## 1.4.5
 **Added subtypes analysis support [TestNG-1691](https://github.com/cbeust/testng/issues/1691).**
 
