@@ -15,7 +15,7 @@
  
 #### Environment
 
-| Test Data Supplier | 1.4.1 |
+| Test Data Supplier | 1.5.0 |
 | --- | --- |
 | TestNG | 6.14.3 |
 | Build tool | gradle@4.5.1 |
