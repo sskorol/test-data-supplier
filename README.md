@@ -95,14 +95,12 @@ repositories {
     
 dependencies {
     compile('org.testng:testng:6.14.3',
-            'io.github.sskorol:test-data-supplier:1.4.5'
+            'io.github.sskorol:test-data-supplier:1.5.0'
     )
 }
     
 test {
-    useTestNG() {
-        listeners << 'io.github.sskorol.core.DataProviderTransformer'
-    }
+    useTestNG()
 }
 ```
 
@@ -122,7 +120,7 @@ Add the following configuration into **pom.xml**:
     <dependency>
         <groupId>io.github.sskorol</groupId>
         <artifactId>test-data-supplier</artifactId>
-        <version>1.4.5</version>
+        <version>1.5.0</version>
     </dependency>
 </dependencies>
     
@@ -132,35 +130,12 @@ Add the following configuration into **pom.xml**:
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-surefire-plugin</artifactId>
             <version>2.20.1</version>
-            <configuration>
-                <properties>
-                    <property>
-                        <name>listener</name>
-                        <value>io.github.sskorol.core.DataProviderTransformer</value>
-                    </property>
-                </properties>
-            </configuration>
         </plugin>
     </plugins>
 </build>
 ```
 
 Check a separate [project](https://github.com/sskorol/test-data-supplier-maven-example) with usage examples.
-
-### TestNG
-
-If you're going to run tests directly from IDE via TestNG run configuration, you have to explicitly set 
-**io.github.sskorol.core.DataProviderTransformer** into Listeners section:
-
-![image](https://user-images.githubusercontent.com/6638780/32335197-fc3978ea-bff4-11e7-840b-01508615526d.png) 
-
-Otherwise, you'll get an exception about missing **DataProvider**, as test listeners' specified in Gradle / Maven settings  
-are ignored while using TestNG run configuration. And TestNG itself will try to locate methods with a common annotation, 
-instead of **DataSupplier**. 
-
-### Listener limitation
-
-Note that **DataProviderTransformer**, which implements **IAnnotationTransformer2**, won't be working with **@Listeners** annotation, as TestNG doesn't allow to do that (see [Javadoc](https://github.com/cbeust/testng/blob/5fa5ed7f9fb8428fbc2412321f95f73164222af7/src/main/java/org/testng/annotations/Listeners.java#L13-L18)).
 
 ### API
 
