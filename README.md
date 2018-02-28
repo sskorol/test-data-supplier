@@ -115,7 +115,7 @@ Add the following configuration into **pom.xml**:
     <dependency>
         <groupId>org.testng</groupId>
         <artifactId>testng</artifactId>
-        <version>6.14.3</version>
+        <version>6.14.2</version>
     </dependency>
     <dependency>
         <groupId>io.github.sskorol</groupId>
