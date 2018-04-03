@@ -6,12 +6,12 @@ buildscript {
     repositories {
         jcenter()
         maven {
-            url "https://plugins.gradle.org/m2/"
+            url = "https://plugins.gradle.org/m2/"
         }
     }
 
     dependencies {
-        classpath 'ru.vyarus:gradle-quality-plugin:2.4.0'
+        classpath 'ru.vyarus:gradle-quality-plugin:3.0.0'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.0'
         classpath 'net.researchgate:gradle-release:2.6.0'
         classpath 'org.twitter4j:twitter4j-core:4.0.6'
@@ -20,9 +20,9 @@ buildscript {
     }
 }
 
-group 'io.github.sskorol'
+group = 'io.github.sskorol'
 version = version
-description 'Test Data Supplier is an extended version of common TestNG DataProvider.'
+description = 'Test Data Supplier is an extended version of common TestNG DataProvider.'
 
 ext {
     gradleScriptDir = "${rootProject.projectDir}/gradle"
@@ -58,18 +58,18 @@ dependencies {
             'org.projectlombok:lombok:1.16.20',
             'io.vavr:vavr:0.9.2',
             'org.aspectj:aspectjrt:1.8.13',
-            'org.slf4j:slf4j-simple:1.8.0-beta1',
+            'org.slf4j:slf4j-simple:1.8.0-beta2',
             'org.reflections:reflections:0.9.11'
     )
     testCompile 'org.assertj:assertj-core:3.9.1'
-    jacoco group: 'org.jacoco', name: 'org.jacoco.ant', version: '0.8.0', classifier: 'nodeps'
-    jacocoRuntime group: 'org.jacoco', name: 'org.jacoco.agent', version: '0.8.0', classifier: 'runtime'
+    jacoco group: 'org.jacoco', name: 'org.jacoco.ant', version: '0.8.1', classifier: 'nodeps'
+    jacocoRuntime group: 'org.jacoco', name: 'org.jacoco.agent', version: '0.8.1', classifier: 'runtime'
 }
 
 sourceSets.main.output.classesDir = new File(buildDir, "classes/main")
 
 task wrapper(type: Wrapper) {
-    gradleVersion '4.5.1'
+    gradleVersion = '4.6'
 }
 
 task sourceJar(type: Jar, dependsOn: classes) {

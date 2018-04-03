@@ -18,7 +18,6 @@ class BaseTest {
         final DataProviderTransformer dataProviderTransformer = new DataProviderTransformer();
 
         tng.addListener((ITestNGListener) listener);
-        tng.addListener(dataProviderTransformer);
         tng.setDefaultTestName("DataSupplier tests");
         tng.run();
 
