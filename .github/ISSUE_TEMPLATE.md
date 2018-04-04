@@ -19,7 +19,7 @@
 | --- | --- |
 | TestNG | 6.14.3 |
 | Build tool | gradle@4.5.1 |
-| IDE | IntelliJ@2017.3 |
+| IDE | IntelliJ@2018.1 |
 
 #### Is the issue reproductible on runner?
 

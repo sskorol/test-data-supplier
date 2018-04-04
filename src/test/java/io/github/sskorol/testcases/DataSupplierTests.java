@@ -1,27 +1,30 @@
 package io.github.sskorol.testcases;
 
-import io.github.sskorol.core.DataProviderTransformer;
-import io.github.sskorol.core.DataSupplierInterceptor;
-import io.github.sskorol.core.InvokedMethodNameListener;
+import io.github.sskorol.core.*;
 import io.github.sskorol.model.DataSupplierMetaData;
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import one.util.streamex.EntryStream;
 import one.util.streamex.StreamEx;
 import org.assertj.core.data.Index;
 import org.testng.ITestResult;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
 import java.util.Collection;
-import java.util.List;
 
 import static io.github.sskorol.core.DataSupplierAspect.getInterceptors;
+import static io.github.sskorol.core.DataSupplierAspect.getTransformers;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Slf4j
+@Listeners(DummyListener.class)
 public class DataSupplierTests extends BaseTest {
 
     @Test
     public void arraysDataSuppliersShouldWork() {
-        final InvokedMethodNameListener listener = run(ArraysDataSupplierTests.class);
+        val listener = run(ArraysDataSupplierTests.class);
 
         assertThat(listener.getSucceedMethodNames())
                 .hasSize(13)
@@ -44,7 +47,7 @@ public class DataSupplierTests extends BaseTest {
 
     @Test
     public void collectionsDataSuppliersShouldWork() {
-        final InvokedMethodNameListener listener = run(CollectionsDataSupplierTests.class);
+        val listener = run(CollectionsDataSupplierTests.class);
 
         assertThat(listener.getSucceedMethodNames())
                 .hasSize(11)
@@ -65,7 +68,7 @@ public class DataSupplierTests extends BaseTest {
 
     @Test
     public void streamsDataSuppliersShouldWork() {
-        final InvokedMethodNameListener listener = run(StreamsDataSupplierTests.class);
+        val listener = run(StreamsDataSupplierTests.class);
 
         assertThat(listener.getSucceedMethodNames())
                 .hasSize(20)
@@ -95,7 +98,7 @@ public class DataSupplierTests extends BaseTest {
 
     @Test
     public void singleObjectDataSuppliersShouldWork() {
-        final InvokedMethodNameListener listener = run(SingleObjectsDataSupplierTests.class);
+        val listener = run(SingleObjectsDataSupplierTests.class);
 
         assertThat(listener.getSucceedMethodNames())
                 .hasSize(4)
@@ -109,7 +112,7 @@ public class DataSupplierTests extends BaseTest {
 
     @Test
     public void nullObjectsDataSuppliersShouldWork() {
-        final InvokedMethodNameListener listener = run(NullObjectsDataSupplierTests.class);
+        val listener = run(NullObjectsDataSupplierTests.class);
 
         assertThat(listener.getSkippedBeforeInvocationMethodNames())
                 .hasSize(5)
@@ -135,7 +138,7 @@ public class DataSupplierTests extends BaseTest {
 
     @Test
     public void dataSuppliersWithInjectedArgsShouldWork() {
-        final InvokedMethodNameListener listener = run(InjectedArgsDataSupplierTests.class);
+        val listener = run(InjectedArgsDataSupplierTests.class);
 
         assertThat(listener.getSucceedMethodNames())
                 .hasSize(5)
@@ -161,7 +164,7 @@ public class DataSupplierTests extends BaseTest {
 
     @Test
     public void missingDataSuppliersShouldNotWork() {
-        final InvokedMethodNameListener listener = run(MissingDataSupplierTests.class);
+        val listener = run(MissingDataSupplierTests.class);
 
         assertThat(listener.getFailedBeforeInvocationMethodNames())
                 .hasSize(2)
@@ -181,7 +184,7 @@ public class DataSupplierTests extends BaseTest {
 
     @Test
     public void commonDataProviderTestsShouldWork() {
-        final InvokedMethodNameListener listener = run(CommonDataProviderTests.class);
+        val listener = run(CommonDataProviderTests.class);
 
         assertThat(listener.getSucceedMethodNames())
                 .hasSize(3)
@@ -194,7 +197,7 @@ public class DataSupplierTests extends BaseTest {
 
     @Test
     public void namedDataSupplierTestsShouldWork() {
-        final InvokedMethodNameListener listener = run(DataSupplierWithCustomNamesTests.class);
+        val listener = run(DataSupplierWithCustomNamesTests.class);
 
         assertThat(listener.getSucceedMethodNames())
                 .hasSize(3)
@@ -207,7 +210,7 @@ public class DataSupplierTests extends BaseTest {
 
     @Test
     public void tupleDataSupplierTestsShouldWork() {
-        final InvokedMethodNameListener listener = run(TupleDataSupplierTests.class);
+        val listener = run(TupleDataSupplierTests.class);
 
         assertThat(listener.getSucceedMethodNames())
                 .hasSize(6)
@@ -223,7 +226,7 @@ public class DataSupplierTests extends BaseTest {
 
     @Test
     public void parallelDataSupplierTestsShouldWork() {
-        final InvokedMethodNameListener listener = run(ParallelDataSupplierTests.class);
+        val listener = run(ParallelDataSupplierTests.class);
 
         assertThat(listener.getSucceedMethodNames())
                 .hasSize(4)
@@ -257,10 +260,9 @@ public class DataSupplierTests extends BaseTest {
                 ChildTest.class
         );
 
-        final List<DataSupplierInterceptor> interceptors = getInterceptors();
+        val interceptors = getInterceptors();
 
         assertThat(interceptors).hasSize(2);
-
         assertThat(StreamEx.of(interceptors)
                            .map(DataSupplierInterceptor::getMetaData)
                            .flatMap(StreamEx::of)
@@ -272,8 +274,22 @@ public class DataSupplierTests extends BaseTest {
     }
 
     @Test
+    public void transformerAspectShouldInterceptOriginalCalls() {
+        run(SingleObjectsDataSupplierTests.class);
+        val transformers = getTransformers();
+
+        assertThat(transformers).hasSize(1);
+        assertThat(StreamEx.of(transformers)
+                           .select(IAnnotationTransformerInterceptorImpl.class)
+                           .map(IAnnotationTransformerInterceptorImpl::getTotalTransformerCalls)
+                           .findFirst()
+                           .orElse(-1))
+                .isGreaterThan(0);
+    }
+
+    @Test
     public void dataSupplierWithClassLevelAnnotationsShouldWork() {
-        final InvokedMethodNameListener listener = run(
+        val listener = run(
                 ClassLevelAnnotationWithLocalDataSupplierTests.class,
                 ClassLevelAnnotationWithDataSuppliersTests.class
         );
@@ -290,7 +306,7 @@ public class DataSupplierTests extends BaseTest {
 
     @Test
     public void dataSupplierWithParentClassLevelAnnotationsShouldWork() {
-        final InvokedMethodNameListener listener = run(ChildTest.class);
+        val listener = run(ChildTest.class);
 
         assertThat(listener.getSucceedMethodNames())
                 .hasSize(2)
@@ -302,7 +318,7 @@ public class DataSupplierTests extends BaseTest {
 
     @Test
     public void dataSupplierWithFactoryAnnotationShouldWork() {
-        final InvokedMethodNameListener listener = run(InternalFactoryTests.class);
+        val listener = run(InternalFactoryTests.class);
 
         assertThat(listener.getSucceedMethodNames())
                 .hasSize(3)
@@ -315,7 +331,7 @@ public class DataSupplierTests extends BaseTest {
 
     @Test
     public void dataSupplierWithExternalFactoryAnnotationShouldWork() {
-        final InvokedMethodNameListener listener = run(ExternalFactorySource.class);
+        val listener = run(ExternalFactorySource.class);
 
         assertThat(listener.getSucceedMethodNames())
                 .hasSize(2)
@@ -327,7 +343,8 @@ public class DataSupplierTests extends BaseTest {
 
     @Test
     public void dataSupplierWithIncompleteFactoryAnnotationShouldBeExecuted() {
-        final InvokedMethodNameListener listener = run(IncompleteFactoryTests.class);
+        val listener = run(IncompleteFactoryTests.class);
+
         assertThat(listener.getSucceedMethodNames())
                 .hasSize(5)
                 .containsExactly(

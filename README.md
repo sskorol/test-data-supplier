@@ -95,7 +95,7 @@ repositories {
     
 dependencies {
     compile('org.testng:testng:6.14.3',
-            'io.github.sskorol:test-data-supplier:1.5.0'
+            'io.github.sskorol:test-data-supplier:1.5.5'
     )
 }
     
@@ -120,7 +120,7 @@ Add the following configuration into **pom.xml**:
     <dependency>
         <groupId>io.github.sskorol</groupId>
         <artifactId>test-data-supplier</artifactId>
-        <version>1.5.0</version>
+        <version>1.5.5</version>
     </dependency>
 </dependencies>
     
@@ -227,6 +227,36 @@ public class DataSupplierInterceptorImpl implements DataSupplierInterceptor {
 ```
 
 This class should be then loaded via SPI mechanism. Just create **META-INF/services** folder in **resources** root, and add a new file **io.github.sskorol.core.DataSupplierInterceptor** with a full path to implementation class.
+
+### IAnnotationTransformer restriction
+
+TestNG restrict users in amount of **IAnnotationTransformer** implementations. You may have not more than a single transformer within project's scope.
+As **test-data-supplier** uses this interface for its internal staff, you won't be able to apply your own implementation.
+
+In case if you still need to add your own **IAnnotationTransformer**, you have to implement the following interface: 
+
+```java
+public class IAnnotationTransformerInterceptorImpl implements IAnnotationTransformerInterceptor {
+
+    @Override
+    public void transform(IFactoryAnnotation annotation, Method testMethod) {
+    }
+
+    @Override
+    public void transform(IConfigurationAnnotation annotation, Class testClass, Constructor testConstructor, Method testMethod) {
+    }
+
+    @Override
+    public void transform(IDataProviderAnnotation annotation, Method method) {
+    }
+
+    @Override
+    public void transform(IListenersAnnotation annotation, Class testClass) {
+    }
+}
+```
+
+It's just an SPI wrapper for common TestNG mechanism. Use the same technique as for **DataSupplierInterceptor** to include it into your project.
 
 ## IntelliJ IDEA support
 
