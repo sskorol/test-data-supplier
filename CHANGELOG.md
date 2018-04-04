@@ -1,5 +1,34 @@
 # Test Data Supplier Changelog
 
+## Unreleased
+**Downgrading due to 4.5.1 due to caching issue.**
+
+
+[8d2ce2c787ec765](https://github.com/sskorol/test-data-supplier/commit/8d2ce2c787ec765) Sergey Korol *2018-04-04 13:35:14*
+
+**Increased coverage.**
+
+
+[b6b652b8f4ed9d1](https://github.com/sskorol/test-data-supplier/commit/b6b652b8f4ed9d1) Sergey Korol *2018-04-04 11:48:29*
+
+**Added SPI for custom IAnnotationTransformers processing.**
+
+ * Minor refactoring.
+
+[b67c7846a4a7ae2](https://github.com/sskorol/test-data-supplier/commit/b67c7846a4a7ae2) Sergey Korol *2018-04-03 14:43:41*
+
+**Update README.md**
+
+ * 6.14.3 version is not released to Maven yet. Fixed.
+
+[01654618531b850](https://github.com/sskorol/test-data-supplier/commit/01654618531b850) Sergey Korol *2018-02-28 13:03:38*
+
+**Update CHANGELOG.md**
+
+ * Added new release tag.
+
+[b83ad3ffed8ec06](https://github.com/sskorol/test-data-supplier/commit/b83ad3ffed8ec06) Sergey Korol *2018-02-28 12:48:38*
+
 ## 1.5.0
 **Replaced common lib loading mechanism with SPI to simplify installation process.**
 
