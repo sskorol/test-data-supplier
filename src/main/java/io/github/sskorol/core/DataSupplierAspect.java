@@ -55,10 +55,6 @@ public class DataSupplierAspect {
     @Before("execution(* io.github.sskorol.core.DataProviderTransformer.transform(..))")
     public void beforeTransformationCall(final JoinPoint joinPoint) {
         final Object[] args = joinPoint.getArgs();
-        if (args == null || args.length == 0) {
-            log.error("Transformer arguments list is empty");
-            return;
-        }
 
         Match(args[0]).of(
                 Case($(val -> val instanceof ITestAnnotation), arg ->

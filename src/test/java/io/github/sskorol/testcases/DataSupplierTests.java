@@ -8,6 +8,7 @@ import one.util.streamex.EntryStream;
 import one.util.streamex.StreamEx;
 import org.assertj.core.data.Index;
 import org.testng.ITestResult;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
@@ -18,6 +19,7 @@ import static io.github.sskorol.core.DataSupplierAspect.getTransformers;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
+@Listeners(DummyListener.class)
 public class DataSupplierTests extends BaseTest {
 
     @Test
