@@ -127,12 +127,8 @@ public class DataSupplierTests extends BaseTest {
         assertThat(EntryStream.of(listener.getResults()).values().toList())
                 .extracting(ITestResult::getThrowable)
                 .extracting(Throwable::getMessage)
-                .containsExactly(
-                        "java.lang.IllegalArgumentException: Nothing to return from data supplier. The following test will be skipped: NullObjectsDataSupplierTests.supplyNullCollectionData.",
-                        "java.lang.IllegalArgumentException: Nothing to return from data supplier. The following test will be skipped: NullObjectsDataSupplierTests.supplyNullStreamData.",
-                        "java.lang.IllegalArgumentException: Nothing to return from data supplier. The following test will be skipped: NullObjectsDataSupplierTests.supplyExtractedNullObject.",
-                        "java.lang.IllegalArgumentException: Nothing to return from data supplier. The following test will be skipped: NullObjectsDataSupplierTests.supplyNullArrayData.",
-                        "java.lang.IllegalArgumentException: Nothing to return from data supplier. The following test will be skipped: NullObjectsDataSupplierTests.supplyNullObjectData."
+                .allMatch(message -> message.equals(
+                        "java.lang.IllegalArgumentException: Nothing to return from data supplier. Test will be skipped.")
                 );
     }
 
@@ -159,7 +155,7 @@ public class DataSupplierTests extends BaseTest {
                 .extracting(ITestResult::getThrowable)
                 .extracting(Throwable::getMessage)
                 .containsExactly(
-                        "java.lang.IllegalArgumentException: Nothing to return from data supplier. The following test will be skipped: InjectedArgsDataSupplierTests.supplyNullArgTypeMethodMetaData.");
+                        "java.lang.IllegalArgumentException: Nothing to return from data supplier. Test will be skipped.");
     }
 
     @Test
@@ -269,8 +265,8 @@ public class DataSupplierTests extends BaseTest {
                            .toList())
                 .extracting(DataSupplierMetaData::getDataSupplierMethod)
                 .extracting(Method::getName)
-                .hasSize(57)
-                .contains("getConstructorData", Index.atIndex(10));
+                .hasSize(59)
+                .contains("getConstructorData", Index.atIndex(11));
     }
 
     @Test
@@ -354,5 +350,44 @@ public class DataSupplierTests extends BaseTest {
                         "incompleteFactoryTest()",
                         "incompleteFactoryTest()"
                 );
+    }
+
+    @Test
+    public void csvDataSupplierTestsShouldWork() {
+        val listener = run(CsvDataSupplierTests.class);
+
+        assertThat(listener.getSucceedMethodNames())
+                .hasSize(4)
+                .containsExactly(
+                        "shouldReadLocalCsv(User(name=admin, password=admin))",
+                        "shouldReadLocalCsv(User(name=sskorol, password=password))",
+                        "shouldReadLocalCsv(User(name=guest, password=123))",
+                        "shouldReadRemoteCsv(CrimeRecord(address=3108 OCCIDENTAL DR, description=10851(A)VC TAKE VEH W/O OWNER))"
+                );
+
+        assertThat(listener.getSkippedBeforeInvocationMethodNames())
+                .hasSize(1)
+                .containsExactly("shouldNotBeExecutedWithMissingCsvResource()");
+    }
+
+    @Test
+    public void jsonDataSupplierTestsShouldWork() {
+        val listener = run(JsonDataSupplierTests.class);
+
+        assertThat(listener.getSucceedMethodNames())
+                .hasSize(7)
+                .containsExactly(
+                        "shouldReadLocalJson(Client(firstName=Ivan, lastName=Ivanov))",
+                        "shouldReadLocalJsonArray(JsonUser(name=admin, password=admin))",
+                        "shouldReadLocalJsonArray(JsonUser(name=sskorol, password=password))",
+                        "shouldReadLocalJsonArray(JsonUser(name=guest, password=123))",
+                        "shouldReadRemoteJson(Animal(name=Meowsy, species=cat, foods=Food(likes=[tuna, catnip], dislikes=[ham, zucchini])))",
+                        "shouldReadRemoteJson(Animal(name=Barky, species=dog, foods=Food(likes=[bones, carrots], dislikes=[tuna])))",
+                        "shouldReadRemoteJson(Animal(name=Purrpaws, species=cat, foods=Food(likes=[mice], dislikes=[cookies])))"
+                );
+
+        assertThat(listener.getSkippedBeforeInvocationMethodNames())
+                .hasSize(1)
+                .containsExactly("shouldNotBeExecutedWithMissingJsonResource()");
     }
 }

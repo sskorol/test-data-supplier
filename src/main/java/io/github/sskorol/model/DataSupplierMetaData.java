@@ -1,16 +1,12 @@
 package io.github.sskorol.model;
 
 import io.github.sskorol.core.DataSupplier;
-import io.github.sskorol.utils.ReflectionUtils;
 import io.vavr.Tuple;
-import io.vavr.Tuple2;
 import lombok.Getter;
 import lombok.val;
 import one.util.streamex.*;
 import org.testng.ITestContext;
 import org.testng.ITestNGMethod;
-import org.testng.annotations.Factory;
-import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
 import java.util.AbstractMap.SimpleEntry;
@@ -19,17 +15,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static io.github.sskorol.utils.ReflectionUtils.findParentDataSupplierClass;
+import static io.github.sskorol.utils.ReflectionUtils.findDataSupplier;
 import static io.github.sskorol.utils.ReflectionUtils.invokeDataSupplier;
 import static io.vavr.API.$;
 import static io.vavr.API.Case;
 import static io.vavr.API.Match;
 import static io.vavr.Predicates.instanceOf;
 import static io.vavr.Predicates.isNull;
-import static java.lang.String.format;
 import static java.util.Arrays.stream;
 import static java.util.Collections.singletonList;
-import static java.util.Objects.nonNull;
 import static java.util.Optional.ofNullable;
 
 /**
@@ -52,7 +46,7 @@ public class DataSupplierMetaData {
     public DataSupplierMetaData(final ITestContext context, final ITestNGMethod testMethod) {
         this.context = context;
         this.testMethod = testMethod;
-        this.dataSupplierMethod = findDataSupplier();
+        this.dataSupplierMethod = findDataSupplier(testMethod);
 
         val dataSupplier = ofNullable(dataSupplierMethod.getDeclaredAnnotation(DataSupplier.class));
         this.transpose = dataSupplier.map(DataSupplier::transpose).orElse(false);
@@ -61,55 +55,18 @@ public class DataSupplierMetaData {
         this.testData = transform();
     }
 
-    private Method findDataSupplier() {
-        val annotationMetaData = testMethod.isTest() ? getTestAnnotationMetaData() : getFactoryAnnotationMetaData();
-        return ReflectionUtils.getDataSupplierMethod(annotationMetaData._1, annotationMetaData._2);
-    }
-
-    @SuppressWarnings("unchecked")
-    private Tuple2<Class<?>, String> getTestAnnotationMetaData() {
-        val declaringClass = testMethod.getConstructorOrMethod().getDeclaringClass();
-        val parentClass = findParentDataSupplierClass(testMethod.getConstructorOrMethod().getMethod(), declaringClass);
-        val testAnnotation = ofNullable(testMethod.getConstructorOrMethod()
-                                                  .getMethod()
-                                                  .getDeclaredAnnotation(Test.class))
-                .orElseGet(() -> declaringClass.getDeclaredAnnotation(Test.class));
-        val dataSupplierClass = ofNullable(testAnnotation)
-                .map(Test::dataProviderClass)
-                .filter(dp -> dp != Object.class)
-                .orElse((Class) parentClass);
-
-        return Tuple.of(dataSupplierClass, testAnnotation.dataProvider());
-    }
-
-    private Tuple2<Class<?>, String> getFactoryAnnotationMetaData() {
-        val constructor = testMethod.getConstructorOrMethod().getConstructor();
-        val method = testMethod.getConstructorOrMethod().getMethod();
-
-        val factoryAnnotation = nonNull(method)
-                ? ofNullable(method.getDeclaredAnnotation(Factory.class))
-                : ofNullable(constructor.getDeclaredAnnotation(Factory.class));
-
-        val dataProviderClass = factoryAnnotation
-                .map(fa -> (Class) fa.dataProviderClass())
-                .filter(cl -> cl != Object.class)
-                .orElseGet(() -> testMethod.getConstructorOrMethod().getDeclaringClass());
-
-        val dataProviderMethod = factoryAnnotation.map(Factory::dataProvider).orElse("");
-
-        return Tuple.of(dataProviderClass, dataProviderMethod);
-    }
-
     private List<Object[]> transform() {
         val data = wrap(obtainReturnValue()).toList();
         val indicesList = indicesList(data.size());
         val wrappedReturnValue = EntryStream.of(data).filterKeys(indicesList::contains).values();
 
-        return transpose
-                ? singletonList(flatMap ? wrappedReturnValue.flatMap(this::wrap).toArray()
-                : wrappedReturnValue.toArray())
-                : wrappedReturnValue.map(ob -> flatMap ? wrap(ob).toArray()
-                : new Object[]{ob}).toList();
+        if (transpose) {
+            return singletonList(flatMap
+                    ? wrappedReturnValue.flatMap(this::wrap).toArray()
+                    : wrappedReturnValue.toArray());
+        }
+
+        return wrappedReturnValue.map(ob -> flatMap ? wrap(ob).toArray() : new Object[]{ob}).toList();
     }
 
     private Object obtainReturnValue() {
@@ -125,10 +82,7 @@ public class DataSupplierMetaData {
     private StreamEx<?> wrap(final Object data) {
         return Match(data).of(
                 Case($(isNull()), () -> {
-                    throw new IllegalArgumentException(format(
-                            "Nothing to return from data supplier. The following test will be skipped: %s.%s.",
-                            testMethod.getConstructorOrMethod().getDeclaringClass().getSimpleName(),
-                            testMethod.getConstructorOrMethod().getName()));
+                    throw new IllegalArgumentException("Nothing to return from data supplier. Test will be skipped.");
                 }),
                 Case($(instanceOf(Collection.class)), d -> StreamEx.of((Collection<?>) d)),
                 Case($(instanceOf(Map.class)), d -> EntryStream.of((Map<?, ?>) d).mapKeyValue(SimpleEntry::new)),
