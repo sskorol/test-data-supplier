@@ -1,14 +1,14 @@
 package io.github.sskorol.model;
 
+import com.google.gson.annotations.SerializedName;
 import io.github.sskorol.csv.Source;
-import io.github.sskorol.csv.FieldName;
 import lombok.Data;
 
 @Data
-@Source(path = "users.csv")
-public class User {
+@Source(path = "users.json")
+public class JsonUser {
 
-    @FieldName("username")
+    @SerializedName("username")
     private final String name;
     private final String password;
 }
