@@ -1,5 +1,31 @@
 # Test Data Supplier Changelog
 
+## Unreleased
+**Refactoring:**
+
+ * Moved data annotations to model package.
+ * Updated README with new features.
+
+[18a12e826113f54](https://github.com/sskorol/test-data-supplier/commit/18a12e826113f54) Sergey Korol *2018-06-06 10:43:36*
+
+**Core updates:**
+
+ * Added a new utility class for data retrieval from JSON / CSV files and urls.
+ * Added new annotations for Java entities to specify source and field names.
+ * Refactored meta data (moved some generic staff into reflection utils).
+ * Quality:
+ * Updated gradle plugin to the latest version.
+ * Gradle / libs:
+ * Updated wrapper and key libraries&#39; versions.
+
+[9d5272aa9a3993c](https://github.com/sskorol/test-data-supplier/commit/9d5272aa9a3993c) Sergey Korol *2018-06-06 10:06:55*
+
+**Update CHANGELOG.md**
+
+ * Bumped release version.
+
+[8b2daca277bca5a](https://github.com/sskorol/test-data-supplier/commit/8b2daca277bca5a) Sergey Korol *2018-04-04 14:15:20*
+
 ## 1.5.5
 **Downgrading due to 4.5.1 due to caching issue.**
 
