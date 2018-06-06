@@ -1,6 +1,5 @@
 package io.github.sskorol.model;
 
-import io.github.sskorol.csv.Source;
 import lombok.Data;
 
 @Data

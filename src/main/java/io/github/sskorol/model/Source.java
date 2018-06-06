@@ -1,4 +1,4 @@
-package io.github.sskorol.csv;
+package io.github.sskorol.model;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

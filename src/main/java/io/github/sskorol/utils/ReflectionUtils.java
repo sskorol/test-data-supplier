@@ -1,8 +1,8 @@
 package io.github.sskorol.utils;
 
 import io.github.sskorol.core.DataSupplier;
-import io.github.sskorol.csv.FieldName;
-import io.github.sskorol.csv.Source;
+import io.github.sskorol.model.FieldName;
+import io.github.sskorol.model.Source;
 import io.vavr.Tuple;
 import io.vavr.Tuple2;
 import io.vavr.control.Try;

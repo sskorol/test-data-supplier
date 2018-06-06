@@ -1,7 +1,6 @@
 package io.github.sskorol.model;
 
 import com.google.gson.annotations.SerializedName;
-import io.github.sskorol.csv.Source;
 import lombok.Data;
 
 @Data
