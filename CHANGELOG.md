@@ -1,6 +1,6 @@
 # Test Data Supplier Changelog
 
-## Unreleased
+## 1.6.0
 **Refactoring:**
 
  * Moved data annotations to model package.
