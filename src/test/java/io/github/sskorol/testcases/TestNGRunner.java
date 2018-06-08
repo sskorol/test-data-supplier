@@ -5,7 +5,7 @@ import io.github.sskorol.core.InvokedMethodNameListener;
 import org.testng.ITestNGListener;
 import org.testng.TestNG;
 
-class BaseTest {
+class TestNGRunner {
 
     static InvokedMethodNameListener run(final Class<?>... testClasses) {
         return run(InvokedMethodNameListener.class.getName(), testClasses);

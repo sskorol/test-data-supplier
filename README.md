@@ -1,8 +1,8 @@
 # Test Data Supplier 
 
 [![Build Status](https://travis-ci.org/sskorol/test-data-supplier.svg?branch=master)](https://travis-ci.org/sskorol/test-data-supplier)
-[![codebeat badge](https://codebeat.co/badges/2d4e3080-1ec0-4747-b81e-06fa7d95e955)](https://codebeat.co/projects/github-com-sskorol-test-data-supplier-master)
-[![codecov](https://codecov.io/gh/sskorol/test-data-supplier/branch/master/graph/badge.svg)](https://codecov.io/gh/sskorol/test-data-supplier)
+![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=io.github.sskorol%3Atest-data-supplier&metric=alert_status)
+![Code Coverage](https://sonarcloud.io/api/project_badges/measure?project=io.github.sskorol%3Atest-data-supplier&metric=coverage)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.sskorol/test-data-supplier/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/io.github.sskorol/test-data-supplier)
 [![Bintray](https://api.bintray.com/packages/sskorol/test-data-supplier/test-data-supplier/images/download.svg)](https://bintray.com/sskorol/test-data-supplier/test-data-supplier/_latestVersion)
 [![GitHub license](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://goo.gl/9GLmMZ)

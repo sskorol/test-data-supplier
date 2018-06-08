@@ -1,23 +1,13 @@
-import twitter4j.TwitterFactory
-import twitter4j.conf.ConfigurationBuilder
 import se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask
 
-buildscript {
-    repositories {
-        jcenter()
-        maven {
-            url = "https://plugins.gradle.org/m2/"
-        }
-    }
-
-    dependencies {
-        classpath 'ru.vyarus:gradle-quality-plugin:3.0.0'
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.0'
-        classpath 'net.researchgate:gradle-release:2.7.0'
-        classpath 'org.twitter4j:twitter4j-core:4.0.6'
-        classpath 'gradle.plugin.se.bjurr.gitchangelog:git-changelog-gradle-plugin:1.55'
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.17.0'
-    }
+plugins {
+    id "java"
+    id "org.sonarqube" version "2.6"
+    id "com.jfrog.bintray" version "1.8.0"
+    id "net.researchgate.release" version "2.7.0"
+    id "com.ferranpons.twitterplugin" version "1.0.2"
+    id "se.bjurr.gitchangelog.git-changelog-gradle-plugin" version "1.55"
+    id "com.github.ben-manes.versions" version "0.17.0"
 }
 
 group = 'io.github.sskorol'
@@ -29,10 +19,6 @@ ext {
     projectUrl = "https://github.com/sskorol/test-data-supplier"
 }
 
-apply plugin: 'java'
-apply plugin: 'ru.vyarus.quality'
-apply plugin: 'se.bjurr.gitchangelog.git-changelog-gradle-plugin'
-apply plugin: 'com.github.ben-manes.versions'
 apply from: "${gradleScriptDir}/bintray.gradle"
 apply from: "${gradleScriptDir}/release.gradle"
 apply from: "${gradleScriptDir}/maven-publish.gradle"
@@ -154,36 +140,15 @@ task report(dependsOn: ['instrument', 'test']) {
     }
 }
 
-task tweet(type: Tweet)
-afterReleaseBuild.dependsOn tweet, gitChangelog
+twitterPlugin {
+    def releaseVersion = project.hasProperty('release.releaseVersion') ? project.property('release.releaseVersion') : System.getenv('RELEASE_VERSION')
+    def tweet = "Test Data Supplier ${releaseVersion} has been released: ${project.projectUrl} #testng #testdatasupplier #java"
 
-class Tweet extends DefaultTask {
-
-    String consumerKey = project.hasProperty('consumerKey') ? project.property('consumerKey') : System.getenv('CONSUMER_KEY')
-    String consumerSecret = project.hasProperty('consumerSecret') ? project.property('consumerSecret') : System.getenv('CONSUMER_SECRET')
-    String accessToken = project.hasProperty('accessToken') ? project.property('accessToken') : System.getenv('ACCESS_TOKEN')
-    String accessTokenSecret = project.hasProperty('accessTokenSecret') ? project.property('accessTokenSecret') : System.getenv('ACCESS_TOKEN_SECRET')
-    String releaseVersion = project.hasProperty('release.releaseVersion') ? project.property('release.releaseVersion') : System.getenv('RELEASE_VERSION')
-
-    @TaskAction
-    def updateStatus() {
-        if (consumerKey != null && consumerSecret != null && accessToken != null && accessTokenSecret != null && releaseVersion != null) {
-            String tweet = "Test Data Supplier ${releaseVersion} has been released: ${project.projectUrl} #testng #testdatasupplier #java"
-
-            ConfigurationBuilder builder = new ConfigurationBuilder()
-            builder.setDebugEnabled(true)
-                    .setOAuthConsumerKey(consumerKey)
-                    .setOAuthConsumerSecret(consumerSecret)
-                    .setOAuthAccessToken(accessToken)
-                    .setOAuthAccessTokenSecret(accessTokenSecret)
-
-            new TwitterFactory(builder.build())
-                    .getInstance()
-                    .updateStatus(tweet)
-
-            println "Release tweet has been published."
-        } else {
-            println "You should provide Twitter keys / secrets to perform status update."
-        }
-    }
+    consumerKey = project.hasProperty('consumerKey') ? project.property('consumerKey') : System.getenv('CONSUMER_KEY')
+    consumerSecret = project.hasProperty('consumerSecret') ? project.property('consumerSecret') : System.getenv('CONSUMER_SECRET')
+    accessToken = project.hasProperty('accessToken') ? project.property('accessToken') : System.getenv('ACCESS_TOKEN')
+    accessTokenSecret = project.hasProperty('accessTokenSecret') ? project.property('accessTokenSecret') : System.getenv('ACCESS_TOKEN_SECRET')
+    message = "${tweet}"
 }
+
+afterReleaseBuild.dependsOn createTweet, gitChangelog
