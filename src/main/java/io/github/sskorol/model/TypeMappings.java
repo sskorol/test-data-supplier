@@ -36,7 +36,7 @@ public enum TypeMappings {
     }
 
     @SuppressWarnings("unchecked")
-    public <T> StreamEx<T> wrap(final T ob) {
+    public <T> StreamEx<T> streamOf(final T ob) {
         return (StreamEx<T>) mapper.apply(ob);
     }
 }

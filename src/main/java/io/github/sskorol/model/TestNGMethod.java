@@ -20,7 +20,7 @@ import static java.util.Optional.ofNullable;
 /**
  * Internal entity required for storing TestNG meta data retrieved from listeners.
  */
-public class TestNGMetaData {
+public class TestNGMethod {
 
     @Getter
     private final ITestNGMethod testMethod;
@@ -29,7 +29,7 @@ public class TestNGMetaData {
     private final ITestContext context;
     private final DataSupplier dataSupplier;
 
-    public TestNGMetaData(final ITestContext context, final ITestNGMethod testMethod) {
+    public TestNGMethod(final ITestContext context, final ITestNGMethod testMethod) {
         this.context = context;
         this.testMethod = testMethod;
         this.dataSupplierMethod = findDataSupplier(testMethod);

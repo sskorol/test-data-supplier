@@ -1,8 +1,8 @@
 # Test Data Supplier 
 
 [![Build Status](https://travis-ci.org/sskorol/test-data-supplier.svg?branch=master)](https://travis-ci.org/sskorol/test-data-supplier)
-![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=io.github.sskorol%3Atest-data-supplier&metric=alert_status)
-![Code Coverage](https://sonarcloud.io/api/project_badges/measure?project=io.github.sskorol%3Atest-data-supplier&metric=coverage)
+[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=io.github.sskorol%3Atest-data-supplier&metric=alert_status)](https://sonarcloud.io/dashboard?id=io.github.sskorol%3Atest-data-supplier)
+[![Code Coverage](https://sonarcloud.io/api/project_badges/measure?project=io.github.sskorol%3Atest-data-supplier&metric=coverage)](https://sonarcloud.io/component_measures?id=io.github.sskorol%3Atest-data-supplier&metric=coverage)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.sskorol/test-data-supplier/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/io.github.sskorol/test-data-supplier)
 [![Bintray](https://api.bintray.com/packages/sskorol/test-data-supplier/test-data-supplier/images/download.svg)](https://bintray.com/sskorol/test-data-supplier/test-data-supplier/_latestVersion)
 [![GitHub license](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://goo.gl/9GLmMZ)

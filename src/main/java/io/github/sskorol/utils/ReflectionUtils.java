@@ -33,7 +33,7 @@ import static java.util.Optional.ofNullable;
 import static org.joor.Reflect.on;
 
 /**
- * Simple utility class for internal DataSupplier management.
+ * An utility class for internal DataSupplier management.
  */
 @UtilityClass
 @SuppressWarnings("FinalLocalVariable")
@@ -81,6 +81,61 @@ public class ReflectionUtils {
     }
 
     @SuppressWarnings("unchecked")
+    private static Tuple2<Class<?>, String> getTestAnnotationMetaData(final ITestNGMethod testMethod) {
+        val declaringClass = testMethod.getConstructorOrMethod().getDeclaringClass();
+        val parentClass = findParentDataSupplierClass(testMethod.getConstructorOrMethod().getMethod(), declaringClass);
+        val testAnnotation = ofNullable(testMethod.getConstructorOrMethod()
+                                                  .getMethod()
+                                                  .getDeclaredAnnotation(Test.class))
+                .orElseGet(() -> declaringClass.getDeclaredAnnotation(Test.class));
+        val dataSupplierClass = ofNullable(testAnnotation)
+                .map(Test::dataProviderClass)
+                .filter(dp -> dp != Object.class)
+                .orElse((Class) parentClass);
+
+        return Tuple.of(dataSupplierClass, testAnnotation.dataProvider());
+    }
+
+    @SuppressWarnings("unchecked")
+    public static Tuple2<Class<?>, String> getFactoryAnnotationMetaData(final ITestNGMethod testMethod) {
+        val constructor = testMethod.getConstructorOrMethod().getConstructor();
+        val method = testMethod.getConstructorOrMethod().getMethod();
+
+        val factoryAnnotation = nonNull(method)
+                ? ofNullable(method.getDeclaredAnnotation(Factory.class))
+                : ofNullable(constructor.getDeclaredAnnotation(Factory.class));
+
+        val dataProviderClass = factoryAnnotation
+                .map(fa -> (Class) fa.dataProviderClass())
+                .filter(cl -> cl != Object.class)
+                .orElseGet(() -> testMethod.getConstructorOrMethod().getDeclaringClass());
+
+        val dataProviderMethod = factoryAnnotation.map(Factory::dataProvider).orElse("");
+
+        return Tuple.of(dataProviderClass, dataProviderMethod);
+    }
+
+    public static Class<?> findParentDataSupplierClass(final Method testMethod, final Class testClass) {
+        return ofNullable(testMethod)
+                .map(m -> Tuple.of(m, new Reflections(m.getDeclaringClass().getPackage().getName())))
+                .map(findParentDataSupplierClass())
+                .orElse(testClass);
+    }
+
+    public static Function<Tuple2<Method, Reflections>, Class<?>> findParentDataSupplierClass() {
+        return t -> StreamEx.of(t._2.getSubTypesOf(t._1.getDeclaringClass()))
+                            .findFirst(c -> c.isAnnotationPresent(Test.class))
+                            .map(c -> c.getDeclaredAnnotation(Test.class))
+                            .map(a -> (Class) a.dataProviderClass())
+                            .orElse(t._1.getDeclaringClass());
+    }
+
+    public static Predicate<Tuple2<Method, DataSupplier>> hasDataSupplierMethod(final String targetMethodName) {
+        return metaData -> nonNull(metaData._2)
+                && (metaData._2.name().equals(targetMethodName) || metaData._1.getName().equals(targetMethodName));
+    }
+
+    @SuppressWarnings("unchecked")
     public static <T> Class<T[]> castToArray(final Class<T> entityClass) {
         return (Class<T[]>) (entityClass.isArray() ? entityClass : Array.newInstance(entityClass, 1).getClass());
     }
@@ -103,69 +158,14 @@ public class ReflectionUtils {
                 .orElseThrow(() -> new IOException("Unable to access resource specified in " + entity));
     }
 
-    public static <T> StreamEx<T> wrap(final T data) {
+    public static <T> StreamEx<T> streamOf(final T data) {
         if (isNull(data)) {
             throw new IllegalArgumentException("Nothing to return from data supplier. Test will be skipped.");
         }
 
         return StreamEx.of(TypeMappings.values())
                        .findFirst(type -> type.isInstanceOf(data))
-                       .map(type -> type.wrap(data))
+                       .map(type -> type.streamOf(data))
                        .orElseGet(() -> StreamEx.of(data));
-    }
-
-    @SuppressWarnings("unchecked")
-    private static Tuple2<Class<?>, String> getTestAnnotationMetaData(final ITestNGMethod testMethod) {
-        val declaringClass = testMethod.getConstructorOrMethod().getDeclaringClass();
-        val parentClass = findParentDataSupplierClass(testMethod.getConstructorOrMethod().getMethod(), declaringClass);
-        val testAnnotation = ofNullable(testMethod.getConstructorOrMethod()
-                                                  .getMethod()
-                                                  .getDeclaredAnnotation(Test.class))
-                .orElseGet(() -> declaringClass.getDeclaredAnnotation(Test.class));
-        val dataSupplierClass = ofNullable(testAnnotation)
-                .map(Test::dataProviderClass)
-                .filter(dp -> dp != Object.class)
-                .orElse((Class) parentClass);
-
-        return Tuple.of(dataSupplierClass, testAnnotation.dataProvider());
-    }
-
-    @SuppressWarnings("unchecked")
-    private static Tuple2<Class<?>, String> getFactoryAnnotationMetaData(final ITestNGMethod testMethod) {
-        val constructor = testMethod.getConstructorOrMethod().getConstructor();
-        val method = testMethod.getConstructorOrMethod().getMethod();
-
-        val factoryAnnotation = nonNull(method)
-                ? ofNullable(method.getDeclaredAnnotation(Factory.class))
-                : ofNullable(constructor.getDeclaredAnnotation(Factory.class));
-
-        val dataProviderClass = factoryAnnotation
-                .map(fa -> (Class) fa.dataProviderClass())
-                .filter(cl -> cl != Object.class)
-                .orElseGet(() -> testMethod.getConstructorOrMethod().getDeclaringClass());
-
-        val dataProviderMethod = factoryAnnotation.map(Factory::dataProvider).orElse("");
-
-        return Tuple.of(dataProviderClass, dataProviderMethod);
-    }
-
-    private static Class<?> findParentDataSupplierClass(final Method testMethod, final Class testClass) {
-        return ofNullable(testMethod)
-                .map(m -> Tuple.of(m, new Reflections(m.getDeclaringClass().getPackage().getName())))
-                .map(findParentDataSupplierClass())
-                .orElse(testClass);
-    }
-
-    private static Function<Tuple2<Method, Reflections>, Class<?>> findParentDataSupplierClass() {
-        return t -> StreamEx.of(t._2.getSubTypesOf(t._1.getDeclaringClass()))
-                            .findFirst(c -> c.isAnnotationPresent(Test.class))
-                            .map(c -> c.getDeclaredAnnotation(Test.class))
-                            .map(a -> (Class) a.dataProviderClass())
-                            .orElse(t._1.getDeclaringClass());
-    }
-
-    private static Predicate<Tuple2<Method, DataSupplier>> hasDataSupplierMethod(final String targetMethodName) {
-        return metaData -> nonNull(metaData._2)
-                && (metaData._2.name().equals(targetMethodName) || metaData._1.getName().equals(targetMethodName));
     }
 }
