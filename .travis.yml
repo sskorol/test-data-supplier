@@ -1,16 +1,21 @@
-sudo: enabled
-dist: trusty
-
 language: java
+sudo: false
+install: true
+addons:
+  sonarcloud:
+    organization: "sskorol-github"
+    token:
+      secure: "G0io5DQn6jsZS58Nk04xMP8b6RmdOSrR5LaFnfHTeVNDhy1KBVt5/pSQL7od9S0o9UreZSidZ9FXKSTWQxmkJJ/RZIsw91DX2nWwRCqIL5XqRi+sKHjnToeJUmn5HuAYnAQ6NoSg5l9HryXEX6PG2n15hRBUjjpigOu+W4gL7JCpYlIQ/FcvzaEnw0n4APGEoldTpfSUHbnbzWiTFFB9Cyy4ke/DwBiabKwTCAWwzXXeXRKIFYnDqITKapx0kNRlZyq/nElHmd0q29Y4zuvd2YFB/vXuFhtxo2lNJF6kvfO1hrWqPlkvnGUsOa12Ko6zurpilmS3GCjasYjHsPFzqQtdCFSmkmP4goULAT9sUSd2X7bzkpTR8JnxYdeOvvB5D7aBJvwkkfUj12ClCCIBaAhRzBBrjSWRlmZsWh/0gbXLMZiwL44QwRnnTNmpfSb1gvWvTgTnlg6QTb7TZ/3g0a7zRAtkwuB470XE9W7aDa8qVYC9njZIB2M8vVcKNJlDUhDPIf+XJHQb/vlzZJeJjE6SE9rODi7SICwkSCvb6+G7Nz1Vb/9TfzZLbylGgtr/cLOGaccbAt5c84BxzsZnsgYGh+IhLbPqfKOcIAhfCBaJ0G8lCPMuTtkWaicV5QzxTc/yYSO1G0fyT/6PCOpN6//S+pN8rZjMFyWr7fwR3oo="
 jdk:
   - oraclejdk8
-
 script:
-  - ./gradlew clean report build
-
-after_success:
-  - bash <(curl -s https://codecov.io/bash)
-
+  - ./gradlew report sonarqube
+cache:
+  directories:
+    - '$HOME/.m2/repository'
+    - '$HOME/.sonar/cache'
+    - '$HOME/.gradle'
+    - '.gradle'
 notifications:
   email:
     recipients:

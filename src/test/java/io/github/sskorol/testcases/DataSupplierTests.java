@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
 @Listeners(DummyListener.class)
-public class DataSupplierTests extends BaseTest {
+public class DataSupplierTests extends TestNGRunner {
 
     @Test
     public void arraysDataSuppliersShouldWork() {
