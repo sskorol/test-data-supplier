@@ -7,7 +7,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 import lombok.experimental.UtilityClass;
-import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import one.util.streamex.StreamEx;
 import org.apache.commons.csv.CSVFormat;
@@ -30,7 +29,6 @@ import static org.joor.Reflect.on;
 /**
  * CSV and JSON data processing class.
  */
-@Slf4j
 @UtilityClass
 @SuppressWarnings("FinalLocalVariable")
 public class DataSourceUtils {
@@ -66,11 +64,10 @@ public class DataSourceUtils {
     public static <T> StreamEx<T> getYmlRecords(final Class<T> entity) {
         try {
             val yamlFactory = new YAMLFactory();
-            val values = new ObjectMapper(yamlFactory)
+            return StreamEx.of(new ObjectMapper(yamlFactory)
                     .configure(FAIL_ON_UNKNOWN_PROPERTIES, false)
                     .readValues(yamlFactory.createParser(getSourcePath(entity)), entity)
-                    .readAll();
-            return StreamEx.of(values);
+                    .readAll());
         } catch (Exception ex) {
             throw new IllegalArgumentException(format("Unable to read YAML data to %s.", entity), ex);
         }
