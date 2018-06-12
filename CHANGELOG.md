@@ -1,5 +1,35 @@
 # Test Data Supplier Changelog
 
+## Unreleased
+**Minor refactoring.**
+
+
+[d321e37a35183a3](https://github.com/sskorol/test-data-supplier/commit/d321e37a35183a3) Sergey Korol *2018-06-12 20:53:14*
+
+**Added YAML file processing support via the same technique as was used for JSON and CSV.**
+
+
+[dec4be682a1e4ce](https://github.com/sskorol/test-data-supplier/commit/dec4be682a1e4ce) Sergey Korol *2018-06-12 20:46:11*
+
+**Fixed Sonar configuration issues.**
+
+ * Revised naming and ordering of some fields and entities.
+
+[9e00a7c7d8feaab](https://github.com/sskorol/test-data-supplier/commit/9e00a7c7d8feaab) Sergey Korol *2018-06-10 08:50:20*
+
+**Refactoring:**
+
+ * Replaced gradle quality plugin with Sonar Cloud.
+ * Decomposed some heavy code pieces.
+ * Minor cleanup.
+
+[272276ce3e7cc20](https://github.com/sskorol/test-data-supplier/commit/272276ce3e7cc20) Sergey Korol *2018-06-08 15:39:37*
+
+**Version bumping**
+
+
+[203642cc922c69c](https://github.com/sskorol/test-data-supplier/commit/203642cc922c69c) Sergey Korol *2018-06-06 12:29:44*
+
 ## 1.6.0
 **Refactoring:**
 
