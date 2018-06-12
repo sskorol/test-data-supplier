@@ -95,7 +95,7 @@ repositories {
     
 dependencies {
     compile('org.testng:testng:6.14.3',
-            'io.github.sskorol:test-data-supplier:1.6.0'
+            'io.github.sskorol:test-data-supplier:1.6.5'
     )
 }
     
@@ -120,7 +120,7 @@ Add the following configuration into **pom.xml**:
     <dependency>
         <groupId>io.github.sskorol</groupId>
         <artifactId>test-data-supplier</artifactId>
-        <version>1.6.0</version>
+        <version>1.6.5</version>
     </dependency>
 </dependencies>
     
@@ -168,9 +168,9 @@ public void supplyExternalData(final T data) {
 
 Check **io.github.sskorol.testcases** package for more examples.
 
-### JSON and CSV processors
+### JSON, CSV and YAML processors
 
-Since 1.6.0 version test data supplier supports JSON and CSV data retrieval. Assuming you have the following resources:
+Test data supplier supports JSON, CSV and YML data retrieval. Assuming you have the following resources:
 
 ```csv
 username,password
@@ -196,6 +196,18 @@ username,password
 ]
 ```
 
+```yaml
+---
+ username: admin
+ password: admin
+---
+ username: sskorol
+ password: password
+---
+ username: guest
+ password: '123'
+```
+
 You can now map Java entities to these data sources using **@Source** annotation, which accepts either local file name 
 or URL:
 
@@ -219,12 +231,22 @@ public class User {
 }
 ```
 
-In case if some Java field's name differs from its data source representation, you can assign a valid name via either 
-**@FieldName** for CSV or **@SerializedName** for JSON data type.
+```java
+@Data
+@NoArgsConstructor
+@Source(path = "users.yml")
+public class User {
+    @JsonProperty("username")
+    private final String name;
+    private final String password;
+}
+
+In case if some Java field's name differs from its data source representation, you can assign a valid name via 
+**@FieldName** for CSV, **@SerializedName** for JSON and **@JsonProperty** for YML data type.
 
 Note that local data sources must be located in a classpath.
 
-Then in **DataSupplier** you can call special helpers to retrieve data from CSV or JSON data source:
+Then in **DataSupplier** you can call special helpers to retrieve data from CSV, JSON or YML data source:
 
 ```java
 @DataSupplier
@@ -237,6 +259,13 @@ public StreamEx<User> getUsers() {
 @DataSupplier
 public StreamEx<User> getUsers() {
     return getJsonRecords(User.class);
+}
+```
+
+```java
+@DataSupplier
+public StreamEx<User> getUsers() {
+    return getYmlRecords(User.class);
 }
 ```
 

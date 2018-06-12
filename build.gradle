@@ -47,7 +47,9 @@ dependencies {
             'org.slf4j:slf4j-simple:1.8.0-beta2',
             'org.reflections:reflections:0.9.11',
             'org.apache.commons:commons-csv:1.5',
-            'com.google.code.gson:gson:2.8.5'
+            'com.google.code.gson:gson:2.8.5',
+            'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.9.6',
+            'com.fasterxml.jackson.core:jackson-databind:2.9.5'
     )
     testCompile 'org.assertj:assertj-core:3.10.0'
     jacoco group: 'org.jacoco', name: 'org.jacoco.ant', version: '0.8.1', classifier: 'nodeps'

@@ -1,7 +1,6 @@
 package io.github.sskorol.model;
 
 import io.vavr.Tuple;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import one.util.streamex.*;
 
@@ -14,7 +13,6 @@ import java.util.stream.Stream;
 /**
  * Internal structure for handling type transformations.
  */
-@Getter
 @RequiredArgsConstructor
 public enum TypeMappings {
 
