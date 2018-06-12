@@ -1,0 +1,20 @@
+version: '3'
+services:
+ react-app:
+  image: "sskorol/sc18-react-app"
+  network_mode: bridge
+  expose:
+   - "3000"
+ selenoid:
+  image: "aerokube/selenoid"
+  network_mode: bridge
+  ports:
+   - "4444:4444"
+  environment:
+   - DOCKER_API_VERSION=1.35
+  links:
+   - react-app
+  volumes:
+   - "${WORK_DIR}:/etc/selenoid"
+   - "//var/run/docker.sock:/var/run/docker.sock"
+  command: ["-conf", "/etc/selenoid/browsers.json"]

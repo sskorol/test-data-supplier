@@ -1,5 +1,7 @@
 package io.github.sskorol.utils;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -13,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
+import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
 import static io.github.sskorol.utils.ReflectionUtils.castToArray;
 import static io.github.sskorol.utils.ReflectionUtils.castToObject;
 import static io.github.sskorol.utils.ReflectionUtils.getSourcePath;
@@ -55,6 +58,18 @@ public class DataSourceUtils {
         } catch (IOException ex) {
             throw new IllegalArgumentException(
                     format("Unable to read JSON data to %s. Check provided path.", entity), ex);
+        }
+    }
+
+    public static <T> StreamEx<T> getYmlRecords(final Class<T> entity) {
+        try {
+            val yamlFactory = new YAMLFactory();
+            return StreamEx.of(new ObjectMapper(yamlFactory)
+                    .configure(FAIL_ON_UNKNOWN_PROPERTIES, false)
+                    .readValues(yamlFactory.createParser(getSourcePath(entity)), entity)
+                    .readAll());
+        } catch (Exception ex) {
+            throw new IllegalArgumentException(format("Unable to read YAML data to %s.", entity), ex);
         }
     }
 }
