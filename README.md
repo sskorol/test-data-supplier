@@ -240,6 +240,7 @@ public class User {
     private final String name;
     private final String password;
 }
+```
 
 In case if some Java field's name differs from its data source representation, you can assign a valid name via 
 **@FieldName** for CSV, **@SerializedName** for JSON and **@JsonProperty** for YML data type.
