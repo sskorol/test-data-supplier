@@ -1,5 +1,26 @@
 # Test Data Supplier Changelog
 
+## Unreleased
+**Fixed README typos**
+
+
+[2a6ac8a36c17b48](https://github.com/sskorol/test-data-supplier/commit/2a6ac8a36c17b48) Sergey Korol *2018-06-15 11:33:31*
+
+**Replaced DataSourceUtils with a generic DataReader implementations for Json, Yaml and Csv types. See TestDataReader javadocs for details.**
+
+
+[65ab82239b78475](https://github.com/sskorol/test-data-supplier/commit/65ab82239b78475) Sergey Korol *2018-06-15 11:25:12*
+
+**Fixed broken README layout**
+
+
+[0e5323fee95a09a](https://github.com/sskorol/test-data-supplier/commit/0e5323fee95a09a) Sergey Korol *2018-06-12 21:08:19*
+
+**Version bumping**
+
+
+[bb451762ad50341](https://github.com/sskorol/test-data-supplier/commit/bb451762ad50341) Sergey Korol *2018-06-12 21:05:21*
+
 ## 1.6.5
 **Minor refactoring.**
 
