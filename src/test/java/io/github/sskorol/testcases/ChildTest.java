@@ -5,5 +5,9 @@ import org.testng.annotations.Test;
 
 @Test(dataProviderClass = ExternalDataSuppliers.class)
 public class ChildTest extends ParentTest {
-    // not important
+
+    @Test
+    public void dummyTest() {
+        // not important
+    }
 }

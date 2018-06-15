@@ -1,5 +1,6 @@
 package io.github.sskorol.model;
 
+import io.github.sskorol.data.Source;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

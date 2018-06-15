@@ -95,7 +95,7 @@ repositories {
     
 dependencies {
     compile('org.testng:testng:6.14.3',
-            'io.github.sskorol:test-data-supplier:1.6.5'
+            'io.github.sskorol:test-data-supplier:1.7.0'
     )
 }
     
@@ -120,7 +120,7 @@ Add the following configuration into **pom.xml**:
     <dependency>
         <groupId>io.github.sskorol</groupId>
         <artifactId>test-data-supplier</artifactId>
-        <version>1.6.5</version>
+        <version>1.7.0</version>
     </dependency>
 </dependencies>
     
@@ -247,28 +247,32 @@ In case if some Java field's name differs from its data source representation, y
 
 Note that local data sources must be located in a classpath.
 
-Then in **DataSupplier** you can call special helpers to retrieve data from CSV, JSON or YML data source:
+Then in **DataSupplier** you can call special **TestDataReader** builder to retrieve data from CSV, JSON or YML data source. 
+See javadocs to get more details.
 
 ```java
 @DataSupplier
 public StreamEx<User> getUsers() {
-    return getCsvRecords(User.class);
+    return use(CsvReader.class).withTarget(User.class).withSource("users.csv").read();
 }
 ```
 
 ```java
 @DataSupplier
 public StreamEx<User> getUsers() {
-    return getJsonRecords(User.class);
+    use(JsonReader.class).withTarget(Animal.class).withSource("http://animals.json").read();
 }
 ```
 
 ```java
 @DataSupplier
 public StreamEx<User> getUsers() {
-    return getYmlRecords(User.class);
+    return use(YamlReader.class).withTarget(TravisConfiguration.class).read();
 }
 ```
+
+If you want to specify custom source in runtime, you can remove **@Source** annotation and use **withSource** builder 
+method instead.
 
 Note that in case of a data reading error, corresponding test will be skipped. 
 
