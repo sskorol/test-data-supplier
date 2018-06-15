@@ -305,8 +305,9 @@ public class DataSupplierTests extends TestNGRunner {
         val listener = run(ChildTest.class);
 
         assertThat(listener.getSucceedMethodNames())
-                .hasSize(2)
+                .hasSize(3)
                 .containsExactly(
+                        "dummyTest()",
                         "provideDataFromParentClassDataSupplier(hash1,password1)",
                         "provideDataFromParentClassDataSupplier(hash2,password2)"
                 );

@@ -1,34 +1,35 @@
 package io.github.sskorol.testcases;
 
 import io.github.sskorol.core.DataSupplier;
+import io.github.sskorol.data.YamlReader;
 import io.github.sskorol.model.*;
 import lombok.extern.slf4j.Slf4j;
 import one.util.streamex.StreamEx;
 import org.testng.annotations.Test;
 
-import static io.github.sskorol.utils.DataSourceUtils.getYmlRecords;
+import static io.github.sskorol.data.TestDataReader.use;
 
 @Slf4j
 public class YamlDataSupplierTests {
 
     @DataSupplier
     public StreamEx<DockerConfiguration> getDockerConfiguration() {
-        return getYmlRecords(DockerConfiguration.class);
+        return use(YamlReader.class).withTarget(DockerConfiguration.class).read();
     }
 
     @DataSupplier
     public StreamEx<YamlUser> getUsers() {
-        return getYmlRecords(YamlUser.class);
+        return use(YamlReader.class).withTarget(YamlUser.class).read();
     }
 
     @DataSupplier
     public StreamEx<TravisConfiguration> getTravisConfiguration() {
-        return getYmlRecords(TravisConfiguration.class);
+        return use(YamlReader.class).withTarget(TravisConfiguration.class).read();
     }
 
     @DataSupplier
     public StreamEx<MissingClient> getMissingClient() {
-        return getYmlRecords(MissingClient.class);
+        return use(YamlReader.class).withTarget(MissingClient.class).read();
     }
 
     @Test(dataProvider = "getDockerConfiguration")

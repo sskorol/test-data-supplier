@@ -1,29 +1,36 @@
 package io.github.sskorol.testcases;
 
 import io.github.sskorol.core.DataSupplier;
+import io.github.sskorol.data.CsvReader;
 import io.github.sskorol.model.CrimeRecord;
 import io.github.sskorol.model.MissingClient;
 import io.github.sskorol.model.User;
 import one.util.streamex.StreamEx;
 import org.testng.annotations.Test;
 
-import static io.github.sskorol.utils.DataSourceUtils.getCsvRecords;
+import static io.github.sskorol.data.TestDataReader.use;
 
 public class CsvDataSupplierTests {
 
     @DataSupplier
     public StreamEx<User> getUsers() {
-        return getCsvRecords(User.class);
+        return use(CsvReader.class)
+                .withTarget(User.class)
+                .withSource("users.csv")
+                .read();
     }
 
     @DataSupplier
     public StreamEx<CrimeRecord> getCrimes() {
-        return getCsvRecords(CrimeRecord.class).limit(1);
+        return use(CsvReader.class)
+                .withTarget(CrimeRecord.class)
+                .read()
+                .limit(1);
     }
 
     @DataSupplier
     public StreamEx<MissingClient> getMissingClient() {
-        return getCsvRecords(MissingClient.class);
+        return use(CsvReader.class).withTarget(MissingClient.class).read();
     }
 
     @Test(dataProvider = "getUsers")

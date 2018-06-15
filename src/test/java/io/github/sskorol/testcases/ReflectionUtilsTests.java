@@ -1,6 +1,5 @@
 package io.github.sskorol.testcases;
 
-import io.github.sskorol.utils.DataSourceUtils;
 import io.github.sskorol.utils.ReflectionUtils;
 import io.github.sskorol.datasuppliers.ExternalDataSuppliers;
 import io.github.sskorol.utils.ServiceLoaderUtils;
@@ -21,12 +20,6 @@ public class ReflectionUtilsTests {
     @Test
     public void shouldThrowAnExceptionOnServiceLoaderUtilsConstructorAccess() {
         assertThatThrownBy(() -> on(ServiceLoaderUtils.class).create())
-                .hasStackTraceContaining("java.lang.UnsupportedOperationException: This is a utility class and cannot be instantiated");
-    }
-
-    @Test
-    public void shouldThrowAnExceptionOnDataSourceUtilsConstructorAccess() {
-        assertThatThrownBy(() -> on(DataSourceUtils.class).create())
                 .hasStackTraceContaining("java.lang.UnsupportedOperationException: This is a utility class and cannot be instantiated");
     }
 

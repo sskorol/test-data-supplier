@@ -1,9 +1,9 @@
 package io.github.sskorol.model;
 
+import io.github.sskorol.data.FieldName;
 import lombok.Data;
 
 @Data
-@Source(path = "users.csv")
 public class User {
 
     @FieldName("username")

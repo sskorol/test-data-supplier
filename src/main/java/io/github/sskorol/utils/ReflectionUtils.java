@@ -1,8 +1,8 @@
 package io.github.sskorol.utils;
 
 import io.github.sskorol.core.DataSupplier;
-import io.github.sskorol.model.FieldName;
-import io.github.sskorol.model.Source;
+import io.github.sskorol.data.FieldName;
+import io.github.sskorol.data.Source;
 import io.github.sskorol.model.TypeMappings;
 import io.vavr.Tuple;
 import io.vavr.Tuple2;
@@ -151,11 +151,14 @@ public class ReflectionUtils {
     }
 
     public static <T> URL getSourcePath(final Class<T> entity) throws IOException {
-        val path = ofNullable(entity.getDeclaredAnnotation(Source.class))
+        return getSourcePath(ofNullable(entity.getDeclaredAnnotation(Source.class))
                 .map(Source::path)
-                .orElse("");
+                .orElse(""));
+    }
+
+    public static URL getSourcePath(final String path) throws IOException {
         return ofNullable(Try.of(() -> new URL(path)).getOrElseGet(ex -> getSystemResource(path)))
-                .orElseThrow(() -> new IOException("Unable to access resource specified in " + entity));
+                .orElseThrow(() -> new IOException("Unable to access resource specified by " + path + " path"));
     }
 
     public static <T> StreamEx<T> streamOf(final T data) {
