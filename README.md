@@ -260,14 +260,14 @@ public StreamEx<User> getUsers() {
 ```java
 @DataSupplier
 public StreamEx<User> getUsers() {
-    use(JsonReader.class).withTarget(Animal.class).withSource("http://animals.json").read();
+    return use(JsonReader.class).withTarget(User.class).withSource("http://users.json").read();
 }
 ```
 
 ```java
 @DataSupplier
 public StreamEx<User> getUsers() {
-    return use(YamlReader.class).withTarget(TravisConfiguration.class).read();
+    return use(YamlReader.class).withTarget(User.class).read();
 }
 ```
 
