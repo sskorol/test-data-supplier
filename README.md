@@ -194,7 +194,7 @@ test {
 Your **module-info.java** may look like the following:
 
 ```java
-module data.supplier.tests {
+module your.module.name {
     requires io.github.sskorol.testdatasupplier;
     requires testng;
    
