@@ -1,13 +1,14 @@
 import se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask
 
 plugins {
+    id "java-library"
     id "java"
-    id "org.sonarqube" version "2.6"
-    id "com.jfrog.bintray" version "1.8.0"
+    id "org.sonarqube" version "2.6.2"
+    id "com.jfrog.bintray" version "1.8.4"
     id "net.researchgate.release" version "2.7.0"
     id "com.ferranpons.twitterplugin" version "1.0.2"
-    id "se.bjurr.gitchangelog.git-changelog-gradle-plugin" version "1.55"
-    id "com.github.ben-manes.versions" version "0.17.0"
+    id "se.bjurr.gitchangelog.git-changelog-gradle-plugin" version "1.56"
+    id "com.github.ben-manes.versions" version "0.20.0"
 }
 
 group = 'io.github.sskorol'
@@ -17,13 +18,14 @@ description = 'Test Data Supplier is an extended version of common TestNG DataPr
 ext {
     gradleScriptDir = "${rootProject.projectDir}/gradle"
     projectUrl = "https://github.com/sskorol/test-data-supplier"
+    moduleName = 'io.github.sskorol.testdatasupplier'
 }
 
 apply from: "${gradleScriptDir}/bintray.gradle"
 apply from: "${gradleScriptDir}/release.gradle"
 apply from: "${gradleScriptDir}/maven-publish.gradle"
 
-sourceCompatibility = JavaVersion.VERSION_1_8
+sourceCompatibility = JavaVersion.VERSION_1_10
 
 repositories {
     jcenter()
@@ -38,37 +40,44 @@ configurations {
 
 dependencies {
     agent 'org.aspectj:aspectjweaver:1.9.1'
-    compile('org.testng:testng:6.14.3',
-            'org.jooq:joor-java-8:0.9.8',
+    compile('org.jooq:joor:0.9.9',
+            'org.testng:testng:6.14.3',
             'one.util:streamex:0.6.7',
-            'org.projectlombok:lombok:1.18.0',
             'io.vavr:vavr:0.9.2',
             'org.aspectj:aspectjrt:1.9.1',
-            'org.slf4j:slf4j-simple:1.8.0-beta2',
             'org.reflections:reflections:0.9.11',
-            'org.apache.commons:commons-csv:1.5',
+            'org.apache.commons:commons-csv:1.6',
             'com.google.code.gson:gson:2.8.5',
-            'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.9.6',
-            'com.fasterxml.jackson.core:jackson-databind:2.9.5'
+            'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.9.7',
+            'com.fasterxml.jackson.core:jackson-databind:2.9.7'
     )
-    testCompile 'org.assertj:assertj-core:3.10.0'
-    jacoco group: 'org.jacoco', name: 'org.jacoco.ant', version: '0.8.1', classifier: 'nodeps'
-    jacocoRuntime group: 'org.jacoco', name: 'org.jacoco.agent', version: '0.8.1', classifier: 'runtime'
+    testCompile 'org.assertj:assertj-core:3.11.1'
+    jacoco group: 'org.jacoco', name: 'org.jacoco.ant', version: '0.8.2', classifier: 'nodeps'
+    jacocoRuntime group: 'org.jacoco', name: 'org.jacoco.agent', version: '0.8.2', classifier: 'runtime'
 }
 
 sourceSets.main.output.classesDir = new File(buildDir, "classes/main")
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '4.8'
+    gradleVersion = '4.10.2'
 }
 
 task sourceJar(type: Jar, dependsOn: classes) {
+    inputs.property("moduleName", moduleName)
+    manifest {
+        attributes('Automatic-Module-Name': moduleName)
+    }
     classifier = 'sources'
     from sourceSets.main.allJava
 }
 
 tasks.withType(Javadoc) {
+    inputs.property("moduleName", moduleName)
+    doFirst {
+        options.addStringOption('-module-path', classpath.asPath)
+    }
     options.addStringOption('Xdoclint:none', '-quiet')
+    options.addBooleanOption('html5', true)
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
@@ -81,15 +90,64 @@ artifacts {
     archives javadocJar
 }
 
-test {
+compileJava {
+    inputs.property("moduleName", moduleName)
     doFirst {
-        jvmArgs "-javaagent:${configurations.agent.singleFile}"
+        options.compilerArgs = [
+                '--module-path', classpath.asPath
+        ]
+        classpath = files()
+    }
+}
+
+compileTestJava {
+    inputs.property("moduleName", moduleName)
+    doFirst {
+        options.compilerArgs = [
+                '--module-path', classpath.asPath,
+                '--patch-module', "$moduleName=" + files(sourceSets.test.java.srcDirs).asPath,
+        ]
+        classpath = files()
+    }
+}
+
+task copyResources(type: Copy) {
+    from 'src/test/resources'
+    into 'build/classes-instrumented'
+}
+
+test {
+    testLogging {
+        events "skipped", "failed"
+        exceptionFormat "full"
     }
 
     useTestNG() {
         suites 'src/test/resources/smoke-suite.xml'
     }
+
+    inputs.property("moduleName", moduleName)
+    doFirst {
+        jvmArgs = [
+                "-javaagent:${configurations.agent.singleFile}",
+                '--module-path', classpath.asPath,
+                '--add-modules', 'ALL-MODULE-PATH',
+                '--add-opens', 'io.github.sskorol.testdatasupplier/io.github.sskorol.testcases=testng',
+                '--add-opens', 'io.github.sskorol.testdatasupplier/io.github.sskorol.listeners=testng',
+                '--add-opens', 'io.github.sskorol.testdatasupplier/io.github.sskorol.testcases=org.jooq.joor',
+                '--add-opens', 'io.github.sskorol.testdatasupplier/io.github.sskorol.entities=org.jooq.joor',
+                '--add-opens', 'io.github.sskorol.testdatasupplier/io.github.sskorol.entities=com.fasterxml.jackson.databind',
+                '--add-opens', 'io.github.sskorol.testdatasupplier/io.github.sskorol.datasuppliers=org.jooq.joor',
+                '--add-opens', 'io.github.sskorol.testdatasupplier/io.github.sskorol.datasuppliers=testng',
+                '--add-opens', 'java.base/java.util=one.util.streamex',
+                '--add-opens', 'java.base/java.util.stream=one.util.streamex',
+                '--patch-module', "$moduleName=" + files(sourceSets.test.java.outputDir).asPath
+        ]
+        classpath = files()
+    }
 }
+
+test.dependsOn copyResources
 
 task gitChangelog(type: GitChangelogTask) {
     file = new File("CHANGELOG.md")

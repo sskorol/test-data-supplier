@@ -2,7 +2,7 @@ package io.github.sskorol.testcases;
 
 import io.github.sskorol.core.DataSupplier;
 import io.github.sskorol.datasuppliers.ExternalDataSuppliers;
-import io.github.sskorol.model.User;
+import io.github.sskorol.entities.User;
 import one.util.streamex.IntStreamEx;
 import one.util.streamex.StreamEx;
 import org.testng.annotations.Test;
@@ -18,29 +18,29 @@ public class StreamsDataSupplierTests {
     @DataSupplier
     public Stream<Integer> getPrimitiveStreamData() {
         return IntStream.range(0, 10)
-                        .filter(d -> d % 2 == 0)
-                        .boxed();
+            .filter(d -> d % 2 == 0)
+            .boxed();
     }
 
     @DataSupplier(transpose = true)
     public Stream<User> extractCustomStreamData() {
         return Stream.of(
-                new User("Petya", "password2"),
-                new User("Virus Petya", "password3"),
-                new User("Mark", "password1"))
-                     .filter(u -> !u.getName().contains("Virus"))
-                     .sorted(comparing(User::getPassword));
+            new User("Petya", "password2"),
+            new User("Virus Petya", "password3"),
+            new User("Mark", "password1"))
+            .filter(u -> !u.getName().contains("Virus"))
+            .sorted(comparing(User::getPassword));
     }
 
     @DataSupplier
     public StreamEx<String> getCustomStreamData() {
         return StreamEx.of(
-                new User("user2", "password2"),
-                new User("user3", "password3"),
-                new User("user1", "password1"))
-                       .map(User::getName)
-                       .sorted()
-                       .skip(1);
+            new User("user2", "password2"),
+            new User("user3", "password3"),
+            new User("user1", "password1"))
+            .map(User::getName)
+            .sorted()
+            .skip(1);
     }
 
     @DataSupplier(flatMap = true)

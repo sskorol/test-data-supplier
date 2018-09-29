@@ -1,14 +1,15 @@
 package io.github.sskorol.core;
 
 import io.github.sskorol.model.DataSupplierMetaData;
-import lombok.val;
-import org.testng.*;
+import org.testng.IAnnotationTransformer3;
+import org.testng.ITestContext;
+import org.testng.ITestNGMethod;
 import org.testng.annotations.*;
 import org.testng.internal.annotations.IDataProvidable;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.Iterator;
 
 import static io.github.sskorol.utils.ReflectionUtils.getDataSupplierAnnotation;
 import static io.github.sskorol.utils.ReflectionUtils.getDataSupplierClass;
@@ -63,8 +64,8 @@ public class DataProviderTransformer implements IAnnotationTransformer3 {
     @SuppressWarnings({"unchecked", "FinalLocalVariable"})
     private void assignCustomDataSupplier(final IDataProvidable annotation, final Method testMethod,
                                           final Class testClass) {
-        val dataSupplierClass = getDataSupplierClass(annotation, testClass, testMethod);
-        val dataSupplierAnnotation = getDataSupplierAnnotation(dataSupplierClass, annotation.getDataProvider());
+        var dataSupplierClass = getDataSupplierClass(annotation, testClass, testMethod);
+        var dataSupplierAnnotation = getDataSupplierAnnotation(dataSupplierClass, annotation.getDataProvider());
 
         if (!annotation.getDataProvider().isEmpty() && nonNull(dataSupplierAnnotation)) {
             annotation.setDataProviderClass(getClass());

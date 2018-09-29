@@ -1,9 +1,6 @@
 package io.github.sskorol.data;
 
 import io.github.sskorol.utils.ReflectionUtils;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.val;
 import one.util.streamex.StreamEx;
 import org.apache.commons.csv.CSVFormat;
 
@@ -14,8 +11,6 @@ import static java.lang.String.format;
 import static org.apache.commons.csv.CSVParser.parse;
 import static org.joor.Reflect.on;
 
-@Getter
-@RequiredArgsConstructor
 public class CsvReader<T> implements DataReader<T> {
 
     private final Class<T> entityClass;
@@ -25,17 +20,32 @@ public class CsvReader<T> implements DataReader<T> {
         this(entityClass, "");
     }
 
+    public CsvReader(final Class<T> entityClass, final String path) {
+        this.entityClass = entityClass;
+        this.path = path;
+    }
+
+    @Override
+    public Class<T> getEntityClass() {
+        return entityClass;
+    }
+
+    @Override
+    public String getPath() {
+        return path;
+    }
+
     @Override
     public StreamEx<T> read() {
-        try (val csvParser = parse(getUrl(), StandardCharsets.UTF_8,
-                CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim())) {
-            val entityFields = StreamEx.of(entityClass.getDeclaredFields()).map(ReflectionUtils::getFieldName).toList();
+        try (var csvParser = parse(getUrl(), StandardCharsets.UTF_8,
+            CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim())) {
+            var entityFields = StreamEx.of(entityClass.getDeclaredFields()).map(ReflectionUtils::getFieldName).toList();
             return StreamEx.of(csvParser.getRecords())
-                           .map(record -> StreamEx.of(entityFields).map(record::get).toArray())
-                           .map(args -> on(entityClass).create(args).get());
+                .map(record -> StreamEx.of(entityFields).map(record::get).toArray())
+                .map(args -> on(entityClass).create(args).get());
         } catch (IOException ex) {
             throw new IllegalArgumentException(
-                    format("Unable to read JSON data to %s. Check provided path.", entityClass), ex);
+                format("Unable to read JSON data to %s. Check provided path.", entityClass), ex);
         }
     }
 }

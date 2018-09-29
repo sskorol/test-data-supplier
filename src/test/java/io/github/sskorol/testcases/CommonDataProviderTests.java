@@ -11,7 +11,7 @@ public class CommonDataProviderTests {
 
     @DataProvider
     public Iterator<Object[]> getData() {
-        return Stream.of("data").map(d -> new Object[]{d}).iterator();
+        return Stream.of("data").map(d -> new Object[] {d}).iterator();
     }
 
     @Test

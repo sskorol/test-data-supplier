@@ -1,16 +1,15 @@
 package io.github.sskorol.testcases;
 
 import io.github.sskorol.core.DataSupplier;
-import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import one.util.streamex.IntStreamEx;
 import one.util.streamex.StreamEx;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 
-@NoArgsConstructor
-@Slf4j
 public class IncompleteFactoryTests {
+
+    public IncompleteFactoryTests() {
+    }
 
     @DataSupplier
     public StreamEx getIncompleteConstructorData() {

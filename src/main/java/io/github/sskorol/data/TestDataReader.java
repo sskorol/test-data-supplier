@@ -1,7 +1,5 @@
 package io.github.sskorol.data;
 
-import lombok.RequiredArgsConstructor;
-import lombok.val;
 import one.util.streamex.StreamEx;
 
 import java.util.Objects;
@@ -18,12 +16,16 @@ import static org.joor.Reflect.on;
  * }</pre>
  * Please note that {@link io.github.sskorol.data.TestDataReader.DataBuilder#withSource(String)} is optional. But if
  * it's skipped, you have to use {@link io.github.sskorol.data.Source} annotation to define source path.
+ *
  * @param <T> {@link io.github.sskorol.data.DataReader} implementation class.
  */
-@RequiredArgsConstructor
 public class TestDataReader<T extends DataReader<?>> {
 
     private final Class<T> dataReaderClass;
+
+    public TestDataReader(final Class<T> dataReaderClass) {
+        this.dataReaderClass = dataReaderClass;
+    }
 
     public static <T extends DataReader<?>> TestDataReader<T> use(final Class<T> dataReaderClass) {
         return new TestDataReader<>(dataReaderClass);
@@ -33,12 +35,16 @@ public class TestDataReader<T extends DataReader<?>> {
         return new DataBuilder<>(dataReaderClass, entityClass);
     }
 
-    @RequiredArgsConstructor
     public static class DataBuilder<T, E> {
 
         private final Class<T> dataReaderClass;
         private final Class<E> entityClass;
         private String path;
+
+        public DataBuilder(final Class<T> dataReaderClass, final Class<E> entityClass) {
+            this.dataReaderClass = dataReaderClass;
+            this.entityClass = entityClass;
+        }
 
         public DataBuilder<T, E> withSource(final String path) {
             this.path = path;
@@ -46,7 +52,7 @@ public class TestDataReader<T extends DataReader<?>> {
         }
 
         public StreamEx<E> read() {
-            val args = StreamEx.of(entityClass, path).filter(Objects::nonNull).toArray();
+            var args = StreamEx.of(entityClass, path).filter(Objects::nonNull).toArray();
             return on(dataReaderClass).create(args).call("read").get();
         }
     }

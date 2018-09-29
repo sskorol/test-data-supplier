@@ -1,7 +1,7 @@
 package io.github.sskorol.testcases;
 
 import io.github.sskorol.core.DataProviderTransformer;
-import io.github.sskorol.core.InvokedMethodNameListener;
+import io.github.sskorol.listeners.InvokedMethodNameListener;
 import org.testng.ITestNGListener;
 import org.testng.TestNG;
 

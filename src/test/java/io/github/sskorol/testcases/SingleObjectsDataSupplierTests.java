@@ -2,7 +2,7 @@ package io.github.sskorol.testcases;
 
 import io.github.sskorol.core.DataSupplier;
 import io.github.sskorol.datasuppliers.ExternalDataSuppliers;
-import io.github.sskorol.model.User;
+import io.github.sskorol.entities.User;
 import org.testng.annotations.Test;
 
 public class SingleObjectsDataSupplierTests {

@@ -2,10 +2,10 @@ package io.github.sskorol.testcases;
 
 import io.github.sskorol.core.DataSupplier;
 import io.github.sskorol.data.JsonReader;
-import io.github.sskorol.model.Animal;
-import io.github.sskorol.model.Client;
-import io.github.sskorol.model.JsonUser;
-import io.github.sskorol.model.MissingClient;
+import io.github.sskorol.entities.Animal;
+import io.github.sskorol.entities.Client;
+import io.github.sskorol.entities.JsonUser;
+import io.github.sskorol.entities.MissingClient;
 import one.util.streamex.StreamEx;
 import org.testng.annotations.Test;
 
@@ -26,9 +26,9 @@ public class JsonDataSupplierTests {
     @DataSupplier
     public StreamEx<Animal> getAnimals() {
         return use(JsonReader.class)
-                .withTarget(Animal.class)
-                .withSource("https://raw.githubusercontent.com/LearnWebCode/json-example/master/animals-1.json")
-                .read();
+            .withTarget(Animal.class)
+            .withSource("https://raw.githubusercontent.com/LearnWebCode/json-example/master/animals-1.json")
+            .read();
     }
 
     @DataSupplier

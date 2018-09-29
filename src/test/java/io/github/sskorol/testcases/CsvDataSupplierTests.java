@@ -2,9 +2,9 @@ package io.github.sskorol.testcases;
 
 import io.github.sskorol.core.DataSupplier;
 import io.github.sskorol.data.CsvReader;
-import io.github.sskorol.model.CrimeRecord;
-import io.github.sskorol.model.MissingClient;
-import io.github.sskorol.model.User;
+import io.github.sskorol.entities.CrimeRecord;
+import io.github.sskorol.entities.MissingClient;
+import io.github.sskorol.entities.User;
 import one.util.streamex.StreamEx;
 import org.testng.annotations.Test;
 
@@ -15,17 +15,17 @@ public class CsvDataSupplierTests {
     @DataSupplier
     public StreamEx<User> getUsers() {
         return use(CsvReader.class)
-                .withTarget(User.class)
-                .withSource("users.csv")
-                .read();
+            .withTarget(User.class)
+            .withSource("users.csv")
+            .read();
     }
 
     @DataSupplier
     public StreamEx<CrimeRecord> getCrimes() {
         return use(CsvReader.class)
-                .withTarget(CrimeRecord.class)
-                .read()
-                .limit(1);
+            .withTarget(CrimeRecord.class)
+            .read()
+            .limit(1);
     }
 
     @DataSupplier

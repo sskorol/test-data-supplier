@@ -2,7 +2,7 @@ package io.github.sskorol.testcases;
 
 import io.github.sskorol.core.DataSupplier;
 import io.github.sskorol.datasuppliers.ExternalDataSuppliers;
-import io.github.sskorol.model.User;
+import io.github.sskorol.entities.User;
 import one.util.streamex.StreamEx;
 import org.testng.annotations.Test;
 
@@ -10,17 +10,17 @@ public class ArraysDataSupplierTests {
 
     @DataSupplier(transpose = true)
     public String[] extractCommonArrayData() {
-        return new String[]{"data1", "data2"};
+        return new String[] {"data1", "data2"};
     }
 
     @DataSupplier(flatMap = true)
     public StreamEx extractNestedArrayData() {
-        return StreamEx.of("data3", "data4", "data5").map(ob -> new String[]{ob, ob});
+        return StreamEx.of("data3", "data4", "data5").map(ob -> new String[] {ob, ob});
     }
 
     @DataSupplier
     public User[] getCustomArrayData() {
-        return new User[]{new User("username", "password"), null};
+        return new User[] {new User("username", "password"), null};
     }
 
     @DataSupplier
