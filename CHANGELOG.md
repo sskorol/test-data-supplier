@@ -1,5 +1,11 @@
 # Test Data Supplier Changelog
 
+## Unreleased
+**Added ITestNGListener SPI back to support non-modular apps without explicit forcing users to put implementation to their projects.**
+
+
+[986e1e2cb3bac67](https://github.com/sskorol/test-data-supplier/commit/986e1e2cb3bac67) Sergey Korol *2018-09-29 21:33:00*
+
 ## 1.8.0
 **Update README.md**
 
