@@ -1,4 +1,4 @@
-package io.github.sskorol.core;
+package io.github.sskorol.listeners;
 
 import one.util.streamex.StreamEx;
 import org.testng.IInvokedMethod;
@@ -36,7 +36,7 @@ public class InvokedMethodNameListener implements IInvokedMethodListener, ITestL
 
             threads.putIfAbsent(rawMethodName, new CopyOnWriteArrayList<>());
             threads.computeIfPresent(rawMethodName,
-                    (s, l) -> StreamEx.of(l).append(currentThreadId).distinct().toList());
+                (s, l) -> StreamEx.of(l).append(currentThreadId).distinct().toList());
 
             invokedMethodNames.add(getName(testResult));
         }
@@ -47,12 +47,12 @@ public class InvokedMethodNameListener implements IInvokedMethodListener, ITestL
         if (method.isTestMethod()) {
             final String name = getName(testResult);
             Match(testResult.getStatus()).of(
-                    Case($(FAILURE), () -> failedMethodNames.add(name)),
-                    Case($(SKIP), () -> skippedMethodNames.add(name)),
-                    Case($(SUCCESS), () -> succeedMethodNames.add(name)),
-                    Case($(), () -> {
-                        throw new AssertionError("Unexpected value: " + testResult.getStatus());
-                    })
+                Case($(FAILURE), () -> failedMethodNames.add(name)),
+                Case($(SKIP), () -> skippedMethodNames.add(name)),
+                Case($(SUCCESS), () -> succeedMethodNames.add(name)),
+                Case($(), () -> {
+                    throw new AssertionError("Unexpected value: " + testResult.getStatus());
+                })
             );
         }
     }
@@ -103,14 +103,14 @@ public class InvokedMethodNameListener implements IInvokedMethodListener, ITestL
 
     private static String getName(final ITestResult result) {
         return result.getMethod().getConstructorOrMethod().getName()
-                + "(" + getParameterNames(result.getParameters()).joining(",") + ")";
+            + "(" + getParameterNames(result.getParameters()).joining(",") + ")";
     }
 
     private static StreamEx<String> getParameterNames(final Object[] parameters) {
         return StreamEx.of(parameters)
-                       .map(p -> p instanceof Object[]
-                               ? "[" + StreamEx.of((Object[]) p).joining(",") + "]"
-                               : Objects.toString(p));
+            .map(p -> p instanceof Object[]
+                ? "[" + StreamEx.of((Object[]) p).joining(",") + "]"
+                : Objects.toString(p));
     }
 
     public List<String> getFoundMethodNames() {

@@ -1,5 +1,5 @@
 <aspectj>
-	<aspects>
-		<aspect name="io.github.sskorol.core.DataSupplierAspect"/>
-	</aspects>
+    <aspects>
+        <aspect name="io.github.sskorol.core.DataSupplierAspect"/>
+    </aspects>
 </aspectj>

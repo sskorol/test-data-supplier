@@ -1,7 +1,6 @@
 package io.github.sskorol.core;
 
 import io.github.sskorol.model.DataSupplierMetaData;
-import lombok.extern.slf4j.Slf4j;
 import one.util.streamex.StreamEx;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -25,7 +24,6 @@ import static io.vavr.API.*;
  * Key aspect for DataSupplier interception.
  */
 @Aspect
-@Slf4j
 public class DataSupplierAspect {
 
     private static final List<DataSupplierInterceptor> DATA_SUPPLIERS =

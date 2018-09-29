@@ -2,14 +2,15 @@ package io.github.sskorol.testcases;
 
 import io.github.sskorol.core.DataSupplier;
 import io.github.sskorol.data.YamlReader;
-import io.github.sskorol.model.*;
-import lombok.extern.slf4j.Slf4j;
+import io.github.sskorol.entities.DockerConfiguration;
+import io.github.sskorol.entities.MissingClient;
+import io.github.sskorol.entities.TravisConfiguration;
+import io.github.sskorol.entities.YamlUser;
 import one.util.streamex.StreamEx;
 import org.testng.annotations.Test;
 
 import static io.github.sskorol.data.TestDataReader.use;
 
-@Slf4j
 public class YamlDataSupplierTests {
 
     @DataSupplier

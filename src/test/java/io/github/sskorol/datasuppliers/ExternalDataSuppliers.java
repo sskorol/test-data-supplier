@@ -1,7 +1,7 @@
 package io.github.sskorol.datasuppliers;
 
 import io.github.sskorol.core.DataSupplier;
-import io.github.sskorol.model.User;
+import io.github.sskorol.entities.User;
 import io.vavr.Tuple;
 import one.util.streamex.StreamEx;
 import org.testng.annotations.DataProvider;

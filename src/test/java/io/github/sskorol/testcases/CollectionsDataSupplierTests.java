@@ -2,7 +2,7 @@ package io.github.sskorol.testcases;
 
 import io.github.sskorol.core.DataSupplier;
 import io.github.sskorol.datasuppliers.ExternalDataSuppliers;
-import io.github.sskorol.model.User;
+import io.github.sskorol.entities.User;
 import one.util.streamex.EntryStream;
 import one.util.streamex.StreamEx;
 import org.testng.annotations.Test;
@@ -43,10 +43,10 @@ public class CollectionsDataSupplierTests {
     @DataSupplier(transpose = true)
     public Set<User> extractCustomListData() {
         return StreamEx.of(
-                new User("username", "password"),
-                new User("username", "password"),
-                null,
-                null).toSet();
+            new User("username", "password"),
+            new User("username", "password"),
+            null,
+            null).toSet();
     }
 
     @Test(dataProvider = "getCommonListData")

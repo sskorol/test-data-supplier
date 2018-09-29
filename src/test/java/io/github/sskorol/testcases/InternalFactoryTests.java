@@ -1,15 +1,16 @@
 package io.github.sskorol.testcases;
 
 import io.github.sskorol.core.DataSupplier;
-import lombok.NoArgsConstructor;
 import one.util.streamex.IntStreamEx;
 import one.util.streamex.StreamEx;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 
-@NoArgsConstructor
 public class InternalFactoryTests {
+
+    public InternalFactoryTests() {
+    }
 
     @BeforeMethod
     public void setUp() {
