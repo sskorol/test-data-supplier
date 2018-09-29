@@ -137,6 +137,78 @@ Add the following configuration into **pom.xml**:
 
 Check a separate [project](https://github.com/sskorol/test-data-supplier-maven-example) with usage examples.
 
+### Java 10 support
+
+It's a bit tricky in terms of building and testing modular applications:
+
+```groovy
+configurations {
+    agent
+}
+    
+dependencies {
+    agent 'org.aspectj:aspectjweaver:1.9.1'
+    compile 'io.github.sskorol:test-data-supplier:1.8.0'
+    testCompile 'org.testng:testng:6.14.3'
+}
+    
+compileJava {
+    inputs.property("moduleName", moduleName)
+    doFirst {
+        options.compilerArgs = [
+                '--module-path', classpath.asPath
+        ]
+        classpath = files()
+    }
+}
+   
+compileTestJava {
+    inputs.property("moduleName", moduleName)
+    doFirst {
+        options.compilerArgs = [
+                '--module-path', classpath.asPath,
+                '--patch-module', "$moduleName=" + files(sourceSets.test.java.srcDirs).asPath,
+        ]
+        classpath = files()
+    }
+}
+   
+test {
+    useTestNG()
+   
+    inputs.property("moduleName", moduleName)
+    doFirst {
+        jvmArgs = [
+                "-javaagent:${configurations.agent.singleFile}",
+                '--module-path', classpath.asPath,
+                '--add-modules', 'ALL-MODULE-PATH',
+                '--add-opens', 'your.module.name/test.package.path=testng',
+                '--add-opens', 'your.module.name/test.package.path=org.jooq.joor',
+                '--patch-module', "$moduleName=" + files(sourceSets.test.java.outputDir).asPath
+        ]
+        classpath = files()
+    }
+}
+```
+
+Your **module-info.java** may look like the following:
+
+```java
+module data.supplier.tests {
+    requires io.github.sskorol.testdatasupplier;
+    requires testng;
+   
+    // Optional
+    provides io.github.sskorol.core.IAnnotationTransformerInterceptor
+        with path.to.transformer.ImplementationClass;
+   
+    provides io.github.sskorol.core.DataSupplierInterceptor
+        with path.to.interceptor.ImplementationClass;
+}
+```
+
+Sample project will be added soon. Stay tuned. ;)
+
 ### API
 
 Instead of a common **DataProvider** annotation use the following:
