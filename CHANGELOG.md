@@ -1,5 +1,32 @@
 # Test Data Supplier Changelog
 
+## Unreleased
+**Update README.md**
+
+ * Fixed README typo.
+
+[f72bad6f7fe3f05](https://github.com/sskorol/test-data-supplier/commit/f72bad6f7fe3f05) Sergey Korol *2018-09-29 18:43:58*
+
+**Fixed broken test which referred to trevis config.**
+
+ * Updated README with Java 10 usage examples.
+ * Added more generic copy task to support both common test task and jacoco instrumentation.
+
+[5c7bf526d3fc31b](https://github.com/sskorol/test-data-supplier/commit/5c7bf526d3fc31b) Sergey Korol *2018-09-29 18:30:29*
+
+**Refactored project to support Java 10.**
+
+ * Java 11 is not supported by Lombok and AspectJ yet, so we have to wait for new releases.
+ * Lombok was removed at all for now, as it doesn&#39;t work well with modular projects.
+ * New SPI updates affected coverage, as it&#39;s not possible to test implementation classes within test sources root. The only option is moving implementations outside to a separate module. But I don&#39;t believe we want to split tests from main sources.
+
+[1c759014ca2e3af](https://github.com/sskorol/test-data-supplier/commit/1c759014ca2e3af) Sergey Korol *2018-09-29 17:01:40*
+
+**Bumped release version**
+
+
+[5e30a0a529d27cd](https://github.com/sskorol/test-data-supplier/commit/5e30a0a529d27cd) Sergey Korol *2018-06-15 11:39:00*
+
 ## 1.7.0
 **Fixed README typos**
 
