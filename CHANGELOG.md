@@ -1,6 +1,6 @@
 # Test Data Supplier Changelog
 
-## Unreleased
+## 1.8.0
 **Update README.md**
 
  * Fixed README typo.
