@@ -84,7 +84,7 @@ public void supplyInternallyExtractedMapData(final Integer key, final String val
 
 ## Usage
 
-### Gradle
+### Gradle (Java < 9)
 
 Add the following configuration into **build.gradle**:
 
@@ -106,7 +106,7 @@ test {
 
 Check a separate [project](https://github.com/sskorol/test-data-supplier-gradle-example) with usage examples.
 
-### Maven
+### Maven (Java < 9)
 
 Add the following configuration into **pom.xml**:
 
