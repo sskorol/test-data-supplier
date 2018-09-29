@@ -1,6 +1,6 @@
 # Test Data Supplier Changelog
 
-## Unreleased
+## 1.8.1
 **Added ITestNGListener SPI back to support non-modular apps without explicit forcing users to put implementation to their projects.**
 
 
