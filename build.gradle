@@ -111,9 +111,16 @@ compileTestJava {
     }
 }
 
-task copyResources(type: Copy) {
-    from 'src/test/resources'
-    into 'build/classes-instrumented'
+task copyResources << {
+    copy {
+        from 'src/test/resources'
+        into 'build/classes-instrumented'
+
+    }
+    copy {
+        from 'src/test/resources'
+        into 'build/classes/main'
+    }
 }
 
 test {
