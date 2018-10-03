@@ -161,7 +161,7 @@ configurations {
     
 dependencies {
     agent 'org.aspectj:aspectjweaver:1.9.2.RC'
-    compile 'io.github.sskorol:test-data-supplier:1.9.0'
+    compile 'io.github.sskorol:test-data-supplier:1.8.2'
     testCompile 'org.testng:testng:6.14.3'
 }
     
