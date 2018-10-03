@@ -137,18 +137,31 @@ Add the following configuration into **pom.xml**:
 
 Check a separate [project](https://github.com/sskorol/test-data-supplier-maven-example) with usage examples.
 
-### Java 10 support
+### Java 11 support
 
 It's a bit tricky in terms of building and testing modular applications:
 
 ```groovy
+ext {
+    moduleName = 'your.module.name'
+}
+    
+sourceCompatibility = JavaVersion.VERSION_11
+    
+repositories {
+    maven {
+        url "http://maven.springframework.org/milestone"
+    }
+    jcenter()
+}
+    
 configurations {
     agent
 }
     
 dependencies {
-    agent 'org.aspectj:aspectjweaver:1.9.1'
-    compile 'io.github.sskorol:test-data-supplier:1.8.1'
+    agent 'org.aspectj:aspectjweaver:1.9.2.RC'
+    compile 'io.github.sskorol:test-data-supplier:1.9.0'
     testCompile 'org.testng:testng:6.14.3'
 }
     
@@ -190,6 +203,9 @@ test {
     }
 }
 ```
+
+Note that **AspectJ** is still in RC state in terms of Java 11 support. A patch version will be created as soon as AspectJ is officially released.
+For now you may see some warnings related to illegal assess in console log. 
 
 Your **module-info.java** may look like the following:
 
