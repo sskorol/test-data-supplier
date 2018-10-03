@@ -19,15 +19,20 @@ ext {
     gradleScriptDir = "${rootProject.projectDir}/gradle"
     projectUrl = "https://github.com/sskorol/test-data-supplier"
     moduleName = 'io.github.sskorol.testdatasupplier'
+
+    aspectjVersion = '1.9.2.RC2'
 }
 
 apply from: "${gradleScriptDir}/bintray.gradle"
 apply from: "${gradleScriptDir}/release.gradle"
 apply from: "${gradleScriptDir}/maven-publish.gradle"
 
-sourceCompatibility = JavaVersion.VERSION_1_10
+sourceCompatibility = JavaVersion.VERSION_11
 
 repositories {
+    maven {
+        url "http://maven.springframework.org/milestone"
+    }
     jcenter()
     mavenLocal()
 }
@@ -39,12 +44,12 @@ configurations {
 }
 
 dependencies {
-    agent 'org.aspectj:aspectjweaver:1.9.1'
+    agent "org.aspectj:aspectjweaver:${aspectjVersion}"
     compile('org.jooq:joor:0.9.9',
             'org.testng:testng:6.14.3',
             'one.util:streamex:0.6.7',
             'io.vavr:vavr:0.9.2',
-            'org.aspectj:aspectjrt:1.9.1',
+            "org.aspectj:aspectjrt:${aspectjVersion}",
             'org.reflections:reflections:0.9.11',
             'org.apache.commons:commons-csv:1.6',
             'com.google.code.gson:gson:2.8.5',
