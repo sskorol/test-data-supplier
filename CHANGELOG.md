@@ -1,8 +1,13 @@
 # Test Data Supplier Changelog
 
+## 1.8.2
+**Added Java 11 support.
+AspectJ is still in RC state, so may produce illegal access warnings.**
+
+[79802dcb6fd494a](https://github.com/sskorol/test-data-supplier/commit/79802dcb6fd494a) Sergey Korol *2018-10-03 15:44:00*
+
 ## 1.8.1
 **Added ITestNGListener SPI back to support non-modular apps without explicit forcing users to put implementation to their projects.**
-
 
 [986e1e2cb3bac67](https://github.com/sskorol/test-data-supplier/commit/986e1e2cb3bac67) Sergey Korol *2018-09-29 21:33:00*
 
