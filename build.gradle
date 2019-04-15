@@ -64,13 +64,28 @@ task wrapper(type: Wrapper) {
     gradleVersion = '4.10.2'
 }
 
-task sourceJar(type: Jar, dependsOn: classes) {
+jar {
     inputs.property("moduleName", moduleName)
     manifest {
         attributes('Automatic-Module-Name': moduleName)
     }
-    classifier = 'sources'
-    from sourceSets.main.allJava
+    from sourceSets.main.output
+    from("src/main/services") {
+        into("META-INF/services")
+    }
+}
+
+task spiOffJar(type: Jar, dependsOn: classes) {
+    inputs.property("moduleName", moduleName)
+    manifest {
+        attributes('Automatic-Module-Name': moduleName)
+    }
+    classifier = 'spi-off'
+    from sourceSets.main.output
+}
+
+configurations {
+    spiOff.extendsFrom(compile)
 }
 
 tasks.withType(Javadoc) {
@@ -88,7 +103,8 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 }
 
 artifacts {
-    archives sourceJar
+    spiOff spiOffJar
+    archives spiOffJar
     archives javadocJar
 }
 

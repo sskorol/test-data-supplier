@@ -160,8 +160,8 @@ configurations {
 }
     
 dependencies {
-    agent 'org.aspectj:aspectjweaver:1.9.2.RC'
-    compile 'io.github.sskorol:test-data-supplier:1.8.2'
+    agent 'org.aspectj:aspectjweaver:1.9.2'
+    compile 'io.github.sskorol:test-data-supplier:1.8.4'
     testCompile 'org.testng:testng:6.14.3'
 }
     
@@ -203,9 +203,6 @@ test {
     }
 }
 ```
-
-Note that **AspectJ** is still in RC state in terms of Java 11 support. A patch version will be created as soon as AspectJ is officially released.
-For now you may see some warnings related to illegal assess in console log. 
 
 Your **module-info.java** may look like the following:
 
@@ -453,6 +450,14 @@ public class IAnnotationTransformerInterceptorImpl implements IAnnotationTransfo
 ```
 
 It's just an SPI wrapper for common TestNG mechanism. Use the same technique as for **DataSupplierInterceptor** to include it into your project.
+
+Note that in case if you want to manage **DataProviderTransformer** manually, you have to use a special spi-off distribution:
+
+```groovy
+dependencies {
+    compile 'io.github.sskorol:test-data-supplier:1.8.4:spi-off'
+}
+```
 
 ## IntelliJ IDEA support
 
