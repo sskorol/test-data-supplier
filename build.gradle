@@ -75,6 +75,18 @@ jar {
     }
 }
 
+task sourceJar(type: Jar, dependsOn: classes) {
+    inputs.property("moduleName", moduleName)
+    manifest {
+        attributes('Automatic-Module-Name': moduleName)
+    }
+    classifier = 'sources'
+    from sourceSets.main.output
+    from("src/main/services") {
+        into("META-INF/services")
+    }
+}
+
 task spiOffJar(type: Jar, dependsOn: classes) {
     inputs.property("moduleName", moduleName)
     manifest {
@@ -104,6 +116,7 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 
 artifacts {
     spiOff spiOffJar
+    archives sourceJar
     archives spiOffJar
     archives javadocJar
 }

@@ -1,5 +1,10 @@
 # Test Data Supplier Changelog
 
+## 1.8.5
+**Added missing sources classifier for Maven distribution.**
+
+[4ff246f69c1690c](https://github.com/sskorol/test-data-supplier/commit/4ff246f69c1690c) Sergey Korol *2019-04-15 at 22:40*
+
 ## 1.8.4
 **Added SPI-off jar support to allow users manually handling DataProviderTransformer via spi-off classifier.**
 
