@@ -1,5 +1,15 @@
 # Test Data Supplier Changelog
 
+## 1.8.4
+**Added SPI-off jar support to allow users manually handling DataProviderTransformer via spi-off classifier.**
+
+[083395fd52326c9](https://github.com/sskorol/test-data-supplier/commit/083395fd52326c9) Sergey Korol *2019-04-15 at 21:23*
+
+## 1.8.3
+**Updated dependencies which potentially caused issues on latest Java 11.**
+
+[633b652a11c342b](https://github.com/sskorol/test-data-supplier/commit/633b652a11c342b) Sergey Korol *2019-02-17 at 18:26*
+
 ## 1.8.2
 **Added Java 11 support.
 AspectJ is still in RC state, so may produce illegal access warnings.**
