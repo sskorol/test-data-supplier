@@ -1,9 +1,10 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 <suite name="Common suite">
-	<test name="DataSupplier tests" parallel="classes" thread-count="2">
-		<classes>
-			<class name="io.github.sskorol.testcases.DataSupplierTests"/>
-			<class name="io.github.sskorol.testcases.ReflectionUtilsTests"/>
-		</classes>
-	</test>
+    <test name="DataSupplier tests" parallel="classes" thread-count="2">
+        <classes>
+            <class name="io.github.sskorol.testcases.DataSupplierTests"/>
+            <class name="io.github.sskorol.testcases.ReflectionUtilsTests"/>
+            <class name="io.github.sskorol.testcases.TypeMappingsTests"/>
+        </classes>
+    </test>
 </suite>

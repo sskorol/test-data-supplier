@@ -3,12 +3,13 @@ import se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask
 plugins {
     id "java-library"
     id "java"
-    id "org.sonarqube" version "2.7"
+    id "jacoco"
+    id "org.sonarqube" version "2.7.1"
     id "com.jfrog.bintray" version "1.8.4"
-    id "net.researchgate.release" version "2.8.0"
-    id "com.ferranpons.twitterplugin" version "1.0.2"
-    id "se.bjurr.gitchangelog.git-changelog-gradle-plugin" version "1.60"
-    id "com.github.ben-manes.versions" version "0.20.0"
+    id "net.researchgate.release" version "2.8.1"
+    id "com.ferranpons.twitterplugin" version "1.1.0"
+    id "se.bjurr.gitchangelog.git-changelog-gradle-plugin" version "1.64"
+    id "com.github.ben-manes.versions" version "0.22.0"
 }
 
 group = 'io.github.sskorol'
@@ -16,11 +17,13 @@ version = version
 description = 'Test Data Supplier is an extended version of common TestNG DataProvider.'
 
 ext {
-    gradleScriptDir = "${rootProject.projectDir}/gradle"
+    gradleScriptDir = "${rootProject.projectDir}/gradle".toString()
     projectUrl = "https://github.com/sskorol/test-data-supplier"
     moduleName = 'io.github.sskorol.testdatasupplier'
 
-    aspectjVersion = '1.9.2'
+    aspectjVersion = '1.9.4'
+    jacksonVersion = '2.9.9'
+    lombokVersion = '1.18.8'
 }
 
 apply from: "${gradleScriptDir}/bintray.gradle"
@@ -35,33 +38,36 @@ repositories {
 }
 
 configurations {
-    jacoco
-    jacocoRuntime
     agent
 }
 
 dependencies {
     agent "org.aspectj:aspectjweaver:${aspectjVersion}"
-    compile('org.jooq:joor:0.9.10',
-            'org.testng:testng:6.14.3',
-            'one.util:streamex:0.6.8',
-            'io.vavr:vavr:0.10.0',
+    compileOnly("org.projectlombok:lombok:${lombokVersion}")
+    testCompileOnly("org.projectlombok:lombok:${lombokVersion}")
+    annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
+    testAnnotationProcessor("org.projectlombok:lombok:${lombokVersion}")
+    compile('org.jooq:joor:0.9.12',
+            'org.testng:testng:7.0.0',
+            'one.util:streamex:0.7.0',
+            'io.vavr:vavr:1.0.0-alpha-3',
             "org.aspectj:aspectjrt:${aspectjVersion}",
             'org.reflections:reflections:0.9.11',
-            'org.apache.commons:commons-csv:1.6',
+            'org.apache.commons:commons-csv:1.7',
             'com.google.code.gson:gson:2.8.5',
-            'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.9.8',
-            'com.fasterxml.jackson.core:jackson-databind:2.9.8'
+            "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${jacksonVersion}",
+            "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}",
     )
-    testCompile 'org.assertj:assertj-core:3.11.1'
-    jacoco group: 'org.jacoco', name: 'org.jacoco.ant', version: '0.8.3', classifier: 'nodeps'
-    jacocoRuntime group: 'org.jacoco', name: 'org.jacoco.agent', version: '0.8.3', classifier: 'runtime'
+    testCompile('org.assertj:assertj-core:3.11.1')
 }
 
-sourceSets.main.output.classesDir = new File(buildDir, "classes/main")
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '4.10.2'
+jacoco.toolVersion = "0.8.4"
+jacocoTestReport {
+    reports {
+        xml.enabled = true
+        xml.destination = file("${buildDir}/reports/jacoco/jacoco.xml")
+        html.destination = file("${buildDir}/reports/jacoco")
+    }
 }
 
 jar {
@@ -80,7 +86,7 @@ task sourceJar(type: Jar, dependsOn: classes) {
     manifest {
         attributes('Automatic-Module-Name': moduleName)
     }
-    classifier = 'sources'
+    archiveClassifier.set('sources')
     from sourceSets.main.output
     from("src/main/services") {
         into("META-INF/services")
@@ -92,7 +98,7 @@ task spiOffJar(type: Jar, dependsOn: classes) {
     manifest {
         attributes('Automatic-Module-Name': moduleName)
     }
-    classifier = 'spi-off'
+    archiveClassifier.set('spi-off')
     from sourceSets.main.output
 }
 
@@ -110,7 +116,7 @@ tasks.withType(Javadoc) {
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
+    archiveClassifier.set('javadoc')
     from javadoc.destinationDir
 }
 
@@ -125,7 +131,8 @@ compileJava {
     inputs.property("moduleName", moduleName)
     doFirst {
         options.compilerArgs = [
-                '--module-path', classpath.asPath
+                '--module-path', classpath.asPath,
+                '-Xlint:deprecation'
         ]
         classpath = files()
     }
@@ -137,20 +144,9 @@ compileTestJava {
         options.compilerArgs = [
                 '--module-path', classpath.asPath,
                 '--patch-module', "$moduleName=" + files(sourceSets.test.java.srcDirs).asPath,
+                '-Xlint:deprecation',
         ]
         classpath = files()
-    }
-}
-
-task copyResources << {
-    copy {
-        from 'src/test/resources'
-        into 'build/classes-instrumented'
-
-    }
-    copy {
-        from 'src/test/resources'
-        into 'build/classes/main'
     }
 }
 
@@ -170,72 +166,25 @@ test {
                 "-javaagent:${configurations.agent.singleFile}",
                 '--module-path', classpath.asPath,
                 '--add-modules', 'ALL-MODULE-PATH',
-                '--add-opens', 'io.github.sskorol.testdatasupplier/io.github.sskorol.testcases=testng',
-                '--add-opens', 'io.github.sskorol.testdatasupplier/io.github.sskorol.listeners=testng',
+                '--add-opens', 'io.github.sskorol.testdatasupplier/io.github.sskorol.testcases=org.testng',
+                '--add-opens', 'io.github.sskorol.testdatasupplier/io.github.sskorol.listeners=org.testng',
+                '--add-opens', 'io.github.sskorol.testdatasupplier/io.github.sskorol.listeners=ALL-UNNAMED',
                 '--add-opens', 'io.github.sskorol.testdatasupplier/io.github.sskorol.testcases=org.jooq.joor',
                 '--add-opens', 'io.github.sskorol.testdatasupplier/io.github.sskorol.entities=org.jooq.joor',
                 '--add-opens', 'io.github.sskorol.testdatasupplier/io.github.sskorol.entities=com.fasterxml.jackson.databind',
                 '--add-opens', 'io.github.sskorol.testdatasupplier/io.github.sskorol.datasuppliers=org.jooq.joor',
-                '--add-opens', 'io.github.sskorol.testdatasupplier/io.github.sskorol.datasuppliers=testng',
+                '--add-opens', 'io.github.sskorol.testdatasupplier/io.github.sskorol.datasuppliers=org.testng',
                 '--add-opens', 'java.base/java.util=one.util.streamex',
                 '--add-opens', 'java.base/java.util.stream=one.util.streamex',
-                '--patch-module', "$moduleName=" + files(sourceSets.test.java.outputDir).asPath
+                '--patch-module', "$moduleName=" + files(sourceSets.test.java.outputDir, sourceSets.test.output.resourcesDir).asPath
         ]
         classpath = files()
     }
 }
 
-test.dependsOn copyResources
-
 task gitChangelog(type: GitChangelogTask) {
     file = new File("CHANGELOG.md")
     templateContent = file('gradle/changelog.mustache').getText('UTF-8')
-}
-
-task instrument(dependsOn: ['classes']) {
-    ext.outputDir = buildDir.path + '/classes-instrumented'
-    doLast {
-        ant.taskdef(name: 'instrument',
-                classname: 'org.jacoco.ant.InstrumentTask',
-                classpath: configurations.jacoco.asPath)
-        ant.instrument(destdir: outputDir) {
-            fileset(dir: sourceSets.main.output.classesDir)
-        }
-    }
-}
-
-gradle.taskGraph.whenReady { graph ->
-    if (graph.hasTask(instrument)) {
-        tasks.withType(Test) {
-            doFirst {
-                systemProperty 'jacoco-agent.destfile', buildDir.path + '/jacoco/tests.exec'
-                classpath = files(instrument.outputDir) + classpath + configurations.jacocoRuntime
-            }
-        }
-    }
-}
-
-task report(dependsOn: ['instrument', 'test']) {
-    doLast {
-        ant.taskdef(name: 'report',
-                classname: 'org.jacoco.ant.ReportTask',
-                classpath: configurations.jacoco.asPath)
-        ant.report() {
-            executiondata {
-                ant.file(file: buildDir.path + '/jacoco/tests.exec')
-            }
-            structure(name: 'Coverage Report') {
-                classfiles {
-                    fileset(dir: sourceSets.main.output.classesDir)
-                }
-                sourcefiles {
-                    fileset(dir: 'src/main/java')
-                }
-            }
-            html(destdir: buildDir.path + '/reports/jacoco')
-            xml(destfile: buildDir.path + '/reports/jacoco/report.xml')
-        }
-    }
 }
 
 twitterPlugin {

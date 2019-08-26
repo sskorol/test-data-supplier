@@ -1,10 +1,11 @@
 package io.github.sskorol.data;
 
+import lombok.AllArgsConstructor;
 import one.util.streamex.StreamEx;
 
 import java.util.Objects;
 
-import static org.joor.Reflect.on;
+import static org.joor.Reflect.onClass;
 
 /**
  * Generic structure for reading test data in JSON, CSV and YAML formats. Each format has it's own implementation,
@@ -19,13 +20,10 @@ import static org.joor.Reflect.on;
  *
  * @param <T> {@link io.github.sskorol.data.DataReader} implementation class.
  */
+@AllArgsConstructor
 public class TestDataReader<T extends DataReader<?>> {
 
     private final Class<T> dataReaderClass;
-
-    public TestDataReader(final Class<T> dataReaderClass) {
-        this.dataReaderClass = dataReaderClass;
-    }
 
     public static <T extends DataReader<?>> TestDataReader<T> use(final Class<T> dataReaderClass) {
         return new TestDataReader<>(dataReaderClass);
@@ -53,7 +51,7 @@ public class TestDataReader<T extends DataReader<?>> {
 
         public StreamEx<E> read() {
             var args = StreamEx.of(entityClass, path).filter(Objects::nonNull).toArray();
-            return on(dataReaderClass).create(args).call("read").get();
+            return onClass(dataReaderClass).create(args).call("read").get();
         }
     }
 }

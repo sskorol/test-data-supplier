@@ -1,6 +1,7 @@
 package io.github.sskorol.model;
 
 import io.vavr.Tuple;
+import lombok.AllArgsConstructor;
 import one.util.streamex.*;
 
 import java.util.AbstractMap;
@@ -12,6 +13,7 @@ import java.util.stream.Stream;
 /**
  * Internal structure for handling type transformations.
  */
+@AllArgsConstructor
 public enum TypeMappings {
 
     COLLECTION(Collection.class, d -> StreamEx.of((Collection<?>) d)),
@@ -26,11 +28,6 @@ public enum TypeMappings {
 
     private final Class<?> typeClass;
     private final Function<Object, StreamEx<?>> mapper;
-
-    TypeMappings(final Class<?> typeClass, final Function<Object, StreamEx<?>> mapper) {
-        this.typeClass = typeClass;
-        this.mapper = mapper;
-    }
 
     public boolean isInstanceOf(final Object ob) {
         return ob != null && typeClass.isAssignableFrom(ob.getClass());
