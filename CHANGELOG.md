@@ -1,5 +1,16 @@
 # Test Data Supplier Changelog
 
+## 1.9.0
+**feat(dependencies): migrate to TestNG 7.0.0**
+
+ * added TestNG 7.0.0 support;
+ * provided a better integration with Java 11 (all the libraries were updated);
+ * Gradle config was revised as well after migration to 5th version;
+ * code coverage was increased;
+ * some classes were refactored;
+
+[58416db46485dbb](https://github.com/sskorol/test-data-supplier/commit/58416db46485dbb) Sergey Korol *2019-08-26 at 19:07*
+
 ## 1.8.5
 **Added missing sources classifier for Maven distribution.**
 
