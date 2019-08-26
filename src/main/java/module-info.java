@@ -12,7 +12,7 @@ module io.github.sskorol.testdatasupplier {
     uses io.github.sskorol.core.DataSupplierInterceptor;
     uses org.testng.ITestNGListener;
 
-    requires testng;
+    requires org.testng;
     requires io.vavr;
     requires one.util.streamex;
     requires reflections;
@@ -22,4 +22,5 @@ module io.github.sskorol.testdatasupplier {
     requires com.fasterxml.jackson.dataformat.yaml;
     requires com.fasterxml.jackson.databind;
     requires commons.csv;
+    requires static lombok;
 }

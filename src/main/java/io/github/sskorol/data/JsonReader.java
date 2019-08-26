@@ -3,6 +3,8 @@ package io.github.sskorol.data;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import one.util.streamex.StreamEx;
 
 import java.io.IOException;
@@ -14,18 +16,16 @@ import static io.github.sskorol.utils.ReflectionUtils.castToObject;
 import static io.vavr.API.*;
 import static java.lang.String.format;
 
+@AllArgsConstructor
 public class JsonReader<T> implements DataReader<T> {
 
+    @Getter
     private final Class<T> entityClass;
+    @Getter
     private final String path;
 
     public JsonReader(final Class<T> entityClass) {
         this(entityClass, "");
-    }
-
-    public JsonReader(final Class<T> entityClass, final String path) {
-        this.entityClass = entityClass;
-        this.path = path;
     }
 
     @SuppressWarnings("unchecked")
@@ -41,15 +41,5 @@ public class JsonReader<T> implements DataReader<T> {
             throw new IllegalArgumentException(
                 format("Unable to read CSV data to %s. Check provided path.", entityClass), ex);
         }
-    }
-
-    @Override
-    public Class<T> getEntityClass() {
-        return entityClass;
-    }
-
-    @Override
-    public String getPath() {
-        return path;
     }
 }

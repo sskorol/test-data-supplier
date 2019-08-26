@@ -7,15 +7,15 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 
-public class ExternalFactorySource {
+public class ExternalFactorySourceTests {
 
     @DataSupplier
     public List sourceData() {
         return asList("data1", "data2");
     }
 
-    @Factory(dataProvider = "sourceData", dataProviderClass = ExternalFactorySource.class)
+    @Factory(dataProvider = "sourceData", dataProviderClass = ExternalFactorySourceTests.class)
     public Object[] createTestClassInstance(final String data) {
-        return new Object[] {new ExternalFactoryTestTarget(data)};
+        return new Object[]{new ExternalFactoryTestTarget(data)};
     }
 }

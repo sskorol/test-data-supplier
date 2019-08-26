@@ -8,7 +8,7 @@
 [![GitHub license](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://goo.gl/9GLmMZ)
 [![Twitter](https://img.shields.io/twitter/url/https/github.com/sskorol/test-data-supplier.svg?style=social)](https://twitter.com/intent/tweet?text=Check%20new%20Test%20Data%20Supplier%20library:&url=https://github.com/sskorol/test-data-supplier)
 
-This repository contains TestNG **DataProvider** wrapper which helps to supply test data in a more flexible way.
+This repository contains TestNG **DataProvider** wrapper (latest version is based on TestNG 7.0.0) which helps to supply test data in a more flexible way.
 
 Common **DataProvider** forces using quite old and ugly syntax which expects one of the following types to be returned from DP method's body:
 
@@ -142,6 +142,11 @@ Check a separate [project](https://github.com/sskorol/test-data-supplier-maven-e
 It's a bit tricky in terms of building and testing modular applications:
 
 ```groovy
+plugins {
+    id 'java-library'
+    id 'java'
+}
+    
 ext {
     moduleName = 'your.module.name'
 }
@@ -149,9 +154,6 @@ ext {
 sourceCompatibility = JavaVersion.VERSION_11
     
 repositories {
-    maven {
-        url "http://maven.springframework.org/milestone"
-    }
     jcenter()
 }
     
@@ -160,9 +162,8 @@ configurations {
 }
     
 dependencies {
-    agent 'org.aspectj:aspectjweaver:1.9.2'
-    compile 'io.github.sskorol:test-data-supplier:1.8.5'
-    testCompile 'org.testng:testng:6.14.3'
+    agent 'org.aspectj:aspectjweaver:1.9.4'
+    compile 'io.github.sskorol:test-data-supplier:1.9.0'
 }
     
 compileJava {
@@ -195,7 +196,7 @@ test {
                 "-javaagent:${configurations.agent.singleFile}",
                 '--module-path', classpath.asPath,
                 '--add-modules', 'ALL-MODULE-PATH',
-                '--add-opens', 'your.module.name/test.package.path=testng',
+                '--add-opens', 'your.module.name/test.package.path=org.testng',
                 '--add-opens', 'your.module.name/test.package.path=org.jooq.joor',
                 '--patch-module', "$moduleName=" + files(sourceSets.test.java.outputDir).asPath
         ]
@@ -209,7 +210,7 @@ Your **module-info.java** may look like the following:
 ```java
 module your.module.name {
     requires io.github.sskorol.testdatasupplier;
-    requires testng;
+    requires org.testng;
    
     // Optional
     provides io.github.sskorol.core.IAnnotationTransformerInterceptor
@@ -455,7 +456,7 @@ Note that in case if you want to manage **DataProviderTransformer** manually, yo
 
 ```groovy
 dependencies {
-    compile 'io.github.sskorol:test-data-supplier:1.8.5:spi-off'
+    compile 'io.github.sskorol:test-data-supplier:1.9.0:spi-off'
 }
 ```
 

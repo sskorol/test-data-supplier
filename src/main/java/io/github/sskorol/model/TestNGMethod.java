@@ -31,14 +31,6 @@ public class TestNGMethod {
         this.dataSupplier = dataSupplierMethod.getDeclaredAnnotation(DataSupplier.class);
     }
 
-    public Method getDataSupplierMethod() {
-        return dataSupplierMethod;
-    }
-
-    public ITestNGMethod getTestMethod() {
-        return testMethod;
-    }
-
     public <T> T getDataSupplierArg(final Function<DataSupplier, T> mapper, final T other) {
         return ofNullable(dataSupplier).map(mapper).orElse(other);
     }
