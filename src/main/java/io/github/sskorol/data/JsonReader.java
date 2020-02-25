@@ -2,7 +2,6 @@ package io.github.sskorol.data;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import one.util.streamex.StreamEx;
@@ -11,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
+import static com.google.gson.JsonParser.parseReader;
 import static io.github.sskorol.utils.ReflectionUtils.castToArray;
 import static io.github.sskorol.utils.ReflectionUtils.castToObject;
 import static io.vavr.API.*;
@@ -33,7 +33,7 @@ public class JsonReader<T> implements DataReader<T> {
         var gson = new Gson();
         try (var streamReader = new InputStreamReader(getUrl().openStream(), StandardCharsets.UTF_8);
              var jsonReader = new com.google.gson.stream.JsonReader(streamReader)) {
-            return StreamEx.of((T[]) Match(new JsonParser().parse(jsonReader)).of(
+            return StreamEx.of((T[]) Match(parseReader(jsonReader)).of(
                 Case($(JsonElement::isJsonArray), j -> gson.fromJson(j, castToArray(entityClass))),
                 Case($(), j -> (T[]) new Object[] {gson.fromJson(j, castToObject(entityClass))})
             ));

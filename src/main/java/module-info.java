@@ -18,7 +18,7 @@ module io.github.sskorol.testdatasupplier {
     requires reflections;
     requires org.jooq.joor;
     requires org.aspectj.runtime;
-    requires gson;
+    requires com.google.gson;
     requires com.fasterxml.jackson.dataformat.yaml;
     requires com.fasterxml.jackson.databind;
     requires commons.csv;

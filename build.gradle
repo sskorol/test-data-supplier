@@ -4,12 +4,12 @@ plugins {
     id "java-library"
     id "java"
     id "jacoco"
-    id "org.sonarqube" version "2.7.1"
+    id "org.sonarqube" version "2.8"
     id "com.jfrog.bintray" version "1.8.4"
     id "net.researchgate.release" version "2.8.1"
     id "com.ferranpons.twitterplugin" version "1.1.0"
     id "se.bjurr.gitchangelog.git-changelog-gradle-plugin" version "1.64"
-    id "com.github.ben-manes.versions" version "0.22.0"
+    id "com.github.ben-manes.versions" version "0.28.0"
 }
 
 group = 'io.github.sskorol'
@@ -21,9 +21,9 @@ ext {
     projectUrl = "https://github.com/sskorol/test-data-supplier"
     moduleName = 'io.github.sskorol.testdatasupplier'
 
-    aspectjVersion = '1.9.4'
-    jacksonVersion = '2.9.9'
-    lombokVersion = '1.18.8'
+    aspectjVersion = '1.9.5'
+    jacksonVersion = '2.10.2'
+    lombokVersion = '1.18.12'
 }
 
 apply from: "${gradleScriptDir}/bintray.gradle"
@@ -48,20 +48,20 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
     testAnnotationProcessor("org.projectlombok:lombok:${lombokVersion}")
     compile('org.jooq:joor:0.9.12',
-            'org.testng:testng:7.0.0',
-            'one.util:streamex:0.7.0',
+            'org.testng:testng:7.1.1',
+            'one.util:streamex:0.7.2',
             'io.vavr:vavr:1.0.0-alpha-3',
             "org.aspectj:aspectjrt:${aspectjVersion}",
-            'org.reflections:reflections:0.9.11',
-            'org.apache.commons:commons-csv:1.7',
-            'com.google.code.gson:gson:2.8.5',
+            'org.reflections:reflections:0.9.12',
+            'org.apache.commons:commons-csv:1.8',
+            'com.google.code.gson:gson:2.8.6',
             "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${jacksonVersion}",
             "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}",
     )
     testCompile('org.assertj:assertj-core:3.11.1')
 }
 
-jacoco.toolVersion = "0.8.4"
+jacoco.toolVersion = "0.8.5"
 jacocoTestReport {
     reports {
         xml.enabled = true
@@ -168,7 +168,6 @@ test {
                 '--add-modules', 'ALL-MODULE-PATH',
                 '--add-opens', 'io.github.sskorol.testdatasupplier/io.github.sskorol.testcases=org.testng',
                 '--add-opens', 'io.github.sskorol.testdatasupplier/io.github.sskorol.listeners=org.testng',
-                '--add-opens', 'io.github.sskorol.testdatasupplier/io.github.sskorol.listeners=ALL-UNNAMED',
                 '--add-opens', 'io.github.sskorol.testdatasupplier/io.github.sskorol.testcases=org.jooq.joor',
                 '--add-opens', 'io.github.sskorol.testdatasupplier/io.github.sskorol.entities=org.jooq.joor',
                 '--add-opens', 'io.github.sskorol.testdatasupplier/io.github.sskorol.entities=com.fasterxml.jackson.databind',
