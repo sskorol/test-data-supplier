@@ -162,8 +162,8 @@ configurations {
 }
     
 dependencies {
-    agent 'org.aspectj:aspectjweaver:1.9.4'
-    compile 'io.github.sskorol:test-data-supplier:1.9.0'
+    agent 'org.aspectj:aspectjweaver:1.9.5'
+    compile 'io.github.sskorol:test-data-supplier:1.9.1'
 }
     
 compileJava {
@@ -220,8 +220,6 @@ module your.module.name {
         with path.to.interceptor.ImplementationClass;
 }
 ```
-
-Sample project will be added soon. Stay tuned. ;)
 
 ### API
 
@@ -456,7 +454,7 @@ Note that in case if you want to manage **DataProviderTransformer** manually, yo
 
 ```groovy
 dependencies {
-    compile 'io.github.sskorol:test-data-supplier:1.9.0:spi-off'
+    compile 'io.github.sskorol:test-data-supplier:1.9.1:spi-off'
 }
 ```
 
