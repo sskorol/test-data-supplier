@@ -11,8 +11,8 @@ import java.lang.reflect.Method;
  */
 public interface IAnnotationTransformerInterceptor {
 
-    default void transform(final ITestAnnotation annotation, final Class testClass,
-                           final Constructor testConstructor, final Method testMethod) {
+    default <T> void transform(final ITestAnnotation annotation, final Class<T> testClass,
+                               final Constructor<T> testConstructor, final Method testMethod) {
         // not implemented
     }
 
@@ -20,8 +20,8 @@ public interface IAnnotationTransformerInterceptor {
         // not implemented
     }
 
-    default void transform(final IConfigurationAnnotation annotation, final Class testClass,
-                           final Constructor testConstructor, final Method testMethod) {
+    default <T> void transform(final IConfigurationAnnotation annotation, final Class<T> testClass,
+                               final Constructor<T> testConstructor, final Method testMethod) {
         // not implemented
     }
 
@@ -29,7 +29,7 @@ public interface IAnnotationTransformerInterceptor {
         // not implemented
     }
 
-    default void transform(final IListenersAnnotation annotation, final Class testClass) {
+    default <T> void transform(final IListenersAnnotation annotation, final Class<T> testClass) {
         // not implemented
     }
 }
