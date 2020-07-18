@@ -25,6 +25,7 @@ public class DataSupplierMetaData {
     private final boolean transpose;
     private final boolean flatMap;
     private final int[] indices;
+    @Getter
     private final TestNGMethod testNGMethod;
 
     public DataSupplierMetaData(final ITestContext context, final ITestNGMethod testMethod) {
