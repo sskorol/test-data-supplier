@@ -179,14 +179,17 @@ test {
 }
 
 twitterPlugin {
-    def releaseVersion = project.hasProperty('release.releaseVersion') ? project.property('release.releaseVersion') : System.getenv('RELEASE_VERSION')
-    def tweet = "Test Data Supplier ${releaseVersion} has been released: ${project.projectUrl} #testng #testdatasupplier #java"
+    def shouldTweet = project.hasProperty('shouldTweet') ? project.property('shouldTweet') : System.getenv('SHOULD_TWEET')
+    if (shouldTweet && shouldTweet.toBoolean()) {
+        def releaseVersion = project.hasProperty('release.releaseVersion') ? project.property('release.releaseVersion') : System.getenv('RELEASE_VERSION')
+        def tweet = "Test Data Supplier ${releaseVersion} has been released: ${project.projectUrl} #testng #testdatasupplier #java"
 
-    consumerKey = project.hasProperty('consumerKey') ? project.property('consumerKey') : System.getenv('CONSUMER_KEY')
-    consumerSecret = project.hasProperty('consumerSecret') ? project.property('consumerSecret') : System.getenv('CONSUMER_SECRET')
-    accessToken = project.hasProperty('accessToken') ? project.property('accessToken') : System.getenv('ACCESS_TOKEN')
-    accessTokenSecret = project.hasProperty('accessTokenSecret') ? project.property('accessTokenSecret') : System.getenv('ACCESS_TOKEN_SECRET')
-    message = "${tweet}"
+        consumerKey = project.hasProperty('consumerKey') ? project.property('consumerKey') : System.getenv('CONSUMER_KEY')
+        consumerSecret = project.hasProperty('consumerSecret') ? project.property('consumerSecret') : System.getenv('CONSUMER_SECRET')
+        accessToken = project.hasProperty('accessToken') ? project.property('accessToken') : System.getenv('ACCESS_TOKEN')
+        accessTokenSecret = project.hasProperty('accessTokenSecret') ? project.property('accessTokenSecret') : System.getenv('ACCESS_TOKEN_SECRET')
+        message = "${tweet}"
+    }
 }
 
 afterReleaseBuild.dependsOn createTweet
