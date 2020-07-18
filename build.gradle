@@ -1,5 +1,3 @@
-import se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask
-
 plugins {
     id "java-library"
     id "java"
@@ -8,7 +6,6 @@ plugins {
     id "com.jfrog.bintray" version "1.8.5"
     id "net.researchgate.release" version "2.8.1"
     id "com.ferranpons.twitterplugin" version "1.1.0"
-    id "se.bjurr.gitchangelog.git-changelog-gradle-plugin" version "1.64"
     id "com.github.ben-manes.versions" version "0.29.0"
 }
 
@@ -52,7 +49,7 @@ dependencies {
             'one.util:streamex:0.7.2',
             'io.vavr:vavr:1.0.0-alpha-3',
             "org.aspectj:aspectjrt:${aspectjVersion}",
-            'org.reflections:reflections:0.9.12',
+            'org.reflections:reflections:0.9.11',
             'org.apache.commons:commons-csv:1.8',
             'com.google.code.gson:gson:2.8.6',
             "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${jacksonVersion}",
@@ -181,11 +178,6 @@ test {
     }
 }
 
-task gitChangelog(type: GitChangelogTask) {
-    file = new File("CHANGELOG.md")
-    templateContent = file('gradle/changelog.mustache').getText('UTF-8')
-}
-
 twitterPlugin {
     def releaseVersion = project.hasProperty('release.releaseVersion') ? project.property('release.releaseVersion') : System.getenv('RELEASE_VERSION')
     def tweet = "Test Data Supplier ${releaseVersion} has been released: ${project.projectUrl} #testng #testdatasupplier #java"
@@ -197,4 +189,4 @@ twitterPlugin {
     message = "${tweet}"
 }
 
-afterReleaseBuild.dependsOn createTweet, gitChangelog
+afterReleaseBuild.dependsOn createTweet

@@ -1,5 +1,15 @@
 # Test Data Supplier Changelog
 
+## 1.9.1-1.9.2
+**feat(dependencies): micro-release**
+ 
+ * added TestNG 7.2.0 support;
+ * fixed broken tests and Sonar violations;
+ * updated outdated dependencies;
+ * removed abandoned Changelog plugin;
+ * fixed a crash related to Redlections API;
+ * TestNGMethod is now visible outside to make data listener more flexible;
+
 ## 1.9.0
 **feat(dependencies): migrate to TestNG 7.0.0**
 
