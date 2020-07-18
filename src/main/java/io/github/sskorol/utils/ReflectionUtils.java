@@ -37,8 +37,9 @@ import static org.joor.Reflect.onClass;
 @UtilityClass
 public class ReflectionUtils {
 
-    public static Class<?> getDataSupplierClass(final IDataProvidable annotation, final Class testClass,
-                                                final Method testMethod) {
+    @SuppressWarnings("unchecked")
+    public static <T> Class<T> getDataSupplierClass(final IDataProvidable annotation, final Class<T> testClass,
+                                                    final Method testMethod) {
         return ofNullable(annotation.getDataProviderClass())
                 .map(dataProviderClass -> (Class) dataProviderClass)
                 .orElseGet(() -> findParentDataSupplierClass(testMethod, testClass));
@@ -148,8 +149,9 @@ public class ReflectionUtils {
         return Tuple.of(dataProviderClass, dataProviderMethod);
     }
 
-    private static Class<?> findParentDataSupplierClass(final Method testMethod, final Class testClass) {
-        return ofNullable(testMethod)
+    @SuppressWarnings("unchecked")
+    private static <T> Class<T> findParentDataSupplierClass(final Method testMethod, final Class<T> testClass) {
+        return (Class<T>) ofNullable(testMethod)
                 .map(m -> Tuple.of(m, new Reflections(m.getDeclaringClass().getPackage().getName())))
                 .map(findParentDataSupplierClass())
                 .orElse(testClass);

@@ -44,8 +44,8 @@ public class DataProviderTransformer implements IAnnotationTransformer {
     }
 
     @SuppressWarnings("FinalLocalVariable")
-    private void assignCustomDataSupplier(final IDataProvidable annotation, final Method testMethod,
-                                          final Class testClass) {
+    private <T> void assignCustomDataSupplier(final IDataProvidable annotation, final Method testMethod,
+                                              final Class<T> testClass) {
         var dataSupplierClass = getDataSupplierClass(annotation, testClass, testMethod);
         var dataSupplierAnnotation = getDataSupplierAnnotation(dataSupplierClass, annotation.getDataProvider());
 
