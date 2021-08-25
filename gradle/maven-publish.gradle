@@ -1,51 +1,181 @@
-apply plugin: 'maven'
+apply plugin: 'net.researchgate.release'
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
+apply plugin: 'com.ferranpons.twitterplugin'
 
-install {
-    repositories.mavenInstaller {
-        customizePom(pom, project)
+File secretPropsFile = project.rootProject.file('local.properties')
+if (secretPropsFile.exists()) {
+    // Read local.properties file first if it exists
+    Properties p = new Properties()
+    new FileInputStream(secretPropsFile).withCloseable { is -> p.load(is) }
+    p.each { name, value -> ext[name] = value }
+} else {
+    // Use system environment variables
+    ext["ossrhUsername"] = System.getenv('OSSRH_USERNAME')
+    ext["ossrhPassword"] = System.getenv('OSSRH_PASSWORD')
+    ext["sonatypeStagingProfileId"] = System.getenv('SONATYPE_STAGING_PROFILE_ID')
+    ext["signing.keyId"] = System.getenv('SIGNING_KEY_ID')
+    ext["signing.password"] = System.getenv('SIGNING_PASSWORD')
+    ext["signing.key"] = System.getenv('SIGNING_KEY')
+}
+
+release {
+    tagTemplate = '${version}'
+}
+
+jar {
+    inputs.property("moduleName", moduleName)
+    manifest {
+        attributes(
+                "Automatic-Module-Name": moduleName,
+                "Specification-Title": project.name,
+                "Implementation-Title": project.name,
+                "Implementation-Version": project.version
+        )
+    }
+    from sourceSets.main.output
+    from("src/main/services") {
+        into("META-INF/services")
     }
 }
 
-def customizePom(pom, gradleProject) {
-    pom.whenConfigured { generatedPom ->
-        // eliminate testng-scoped dependencies (no need in maven central poms)
-        generatedPom.dependencies.removeAll { dep ->
-            dep.scope == "test"
-        }
+task sourceJar(type: Jar, dependsOn: classes) {
+    inputs.property("moduleName", moduleName)
+    manifest {
+        attributes(
+                "Automatic-Module-Name": moduleName,
+                "Specification-Title": project.name,
+                "Implementation-Title": project.name,
+                "Implementation-Version": project.version
+        )
+    }
+    archiveClassifier.set('sources')
+    from sourceSets.main.output
+    from("src/main/services") {
+        into("META-INF/services")
+    }
+}
 
-        // sort to make pom dependencies order consistent to ease comparison of older poms
-        generatedPom.dependencies = generatedPom.dependencies.sort { dep ->
-            "$dep.scope:$dep.groupId:$dep.artifactId"
-        }
+task spiOffJar(type: Jar, dependsOn: classes) {
+    inputs.property("moduleName", moduleName)
+    manifest {
+        attributes(
+                "Automatic-Module-Name": moduleName,
+                "Specification-Title": project.name,
+                "Implementation-Title": project.name,
+                "Implementation-Version": project.version
+        )
+    }
+    archiveClassifier.set('spi-off')
+    from sourceSets.main.output
+}
 
-        // add all items necessary for maven central publication
-        generatedPom.project {
-            name = gradleProject.description
-            description = gradleProject.description
-            url = "https://github.com/sskorol/test-data-supplier"
-            licenses {
-                license {
-                    name = 'The Apache Software License, Version 2.0'
-                    url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                    distribution = 'repo'
+configurations {
+    spiOff.extendsFrom(compile)
+}
+
+tasks.withType(Javadoc) {
+    inputs.property("moduleName", moduleName)
+    doFirst {
+        options.modulePath = [] + classpath.files
+    }
+    source = sourceSets.main.allJava
+    options.addStringOption('Xdoclint:none', '-quiet')
+    options.addBooleanOption('html5', true)
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    archiveClassifier.set('javadoc')
+    from javadoc.destinationDir
+}
+
+artifacts {
+    spiOff spiOffJar
+    archives sourceJar
+    archives spiOffJar
+    archives javadocJar
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            maven(MavenPublication) {
+                from(components.java)
+                suppressAllPomMetadataWarnings()
+                versionMapping {
+                    allVariants {
+                        fromResolutionResult()
+                    }
+                }
+                pom {
+                    name = project.description
+                    description = project.description
+                    url = "https://github.com/sskorol/test-data-supplier"
+                    licenses {
+                        license {
+                            name = 'The Apache Software License, Version 2.0'
+                            url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                            distribution = 'repo'
+                        }
+                    }
+                    scm {
+                        url = 'https://github.com/sskorol/test-data-supplier'
+                        connection = 'scm:git:git://github.com/sskorol/test-data-supplier'
+                        developerConnection = 'scm:git:git://github.com/sskorol/test-data-supplier'
+                    }
+                    developers {
+                        developer {
+                            id = 'sskorol'
+                            name = 'Sergey Korol'
+                            email = 'serhii.s.korol@gmail.com'
+                        }
+                    }
+                    issueManagement {
+                        system = 'Github Issues'
+                        url = 'https://github.com/sskorol/test-data-supplier/issues'
+                    }
                 }
             }
-            scm {
-                url = 'https://github.com/sskorol/test-data-supplier'
-                connection = 'scm:git:git://github.com/sskorol/test-data-supplier'
-                developerConnection = 'scm:git:git://github.com/sskorol/test-data-supplier'
-            }
-            developers {
-                developer {
-                    id = 'sskorol'
-                    name = 'Sergey Korol'
-                    email = 'serhii.s.korol@gmail.com'
-                }
-            }
-            issueManagement {
-                system = 'Github Issues'
-                url = 'https://github.com/sskorol/test-data-supplier/issues'
-            }
         }
+    }
+}
+
+nexusPublishing {
+    repositories {
+        sonatype {
+            stagingProfileId = sonatypeStagingProfileId
+            username = ossrhUsername
+            password = ossrhPassword
+        }
+    }
+}
+
+signing {
+    required { !project.version.endsWith("-SNAPSHOT") && !project.hasProperty("skipSigning") }
+
+    useInMemoryPgpKeys(
+            project.ext["signing.keyId"],
+            project.ext["signing.key"],
+            project.ext["signing.password"]
+    )
+
+    sign publishing.publications
+}
+
+tasks.withType(GenerateModuleMetadata) {
+    enabled = false
+}
+
+twitterPlugin {
+    def shouldTweet = project.hasProperty('shouldTweet') ? project.property('shouldTweet') : System.getenv('SHOULD_TWEET')
+    if (shouldTweet && shouldTweet.toBoolean()) {
+        def releaseVersion = project.hasProperty('release.releaseVersion') ? project.property('release.releaseVersion') : System.getenv('RELEASE_VERSION')
+        def tweet = "Test Data Supplier ${releaseVersion} has been released: ${project.projectUrl} #testng #testdatasupplier #java"
+
+        consumerKey = project.ext["twitter.consumerKey"]
+        consumerSecret = project.ext["twitter.consumerSecret"]
+        accessToken = project.ext["twitter.accessToken"]
+        accessTokenSecret = project.ext["twitter.accessTokenSecret"]
+        message = "${tweet}"
     }
 }

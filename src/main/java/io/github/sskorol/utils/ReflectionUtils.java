@@ -41,7 +41,7 @@ public class ReflectionUtils {
     public static <T> Class<T> getDataSupplierClass(final IDataProvidable annotation, final Class<T> testClass,
                                                     final Method testMethod) {
         return ofNullable(annotation.getDataProviderClass())
-                .map(dataProviderClass -> (Class) dataProviderClass)
+                .map(Class.class::cast)
                 .orElseGet(() -> findParentDataSupplierClass(testMethod, testClass));
     }
 

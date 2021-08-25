@@ -4,7 +4,6 @@
 [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=io.github.sskorol%3Atest-data-supplier&metric=alert_status)](https://sonarcloud.io/dashboard?id=io.github.sskorol%3Atest-data-supplier)
 [![Code Coverage](https://sonarcloud.io/api/project_badges/measure?project=io.github.sskorol%3Atest-data-supplier&metric=coverage)](https://sonarcloud.io/component_measures?id=io.github.sskorol%3Atest-data-supplier&metric=coverage)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.sskorol/test-data-supplier/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/io.github.sskorol/test-data-supplier)
-[![Bintray](https://api.bintray.com/packages/sskorol/test-data-supplier/test-data-supplier/images/download.svg)](https://bintray.com/sskorol/test-data-supplier/test-data-supplier/_latestVersion)
 [![GitHub license](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://goo.gl/9GLmMZ)
 [![Twitter](https://img.shields.io/twitter/url/https/github.com/sskorol/test-data-supplier.svg?style=social)](https://twitter.com/intent/tweet?text=Check%20new%20Test%20Data%20Supplier%20library:&url=https://github.com/sskorol/test-data-supplier)
 
@@ -137,7 +136,34 @@ Add the following configuration into **pom.xml**:
 
 Check a separate [project](https://github.com/sskorol/test-data-supplier-maven-example) with usage examples.
 
-### Java 11 support
+### Java 11+ w/o modules
+
+```groovy
+plugins {
+    id 'java'
+}
+
+sourceCompatibility = JavaVersion.VERSION_11
+    
+repositories {
+    mavenCentral()
+}
+    
+configurations {
+    agent
+}
+    
+dependencies {
+    agent 'org.aspectj:aspectjweaver:1.9.6'
+    implementation 'io.github.sskorol:test-data-supplier:1.9.3'
+}
+
+test {
+    useTestNG()
+}
+```
+
+### Java 11+ w/ modules
 
 It's a bit tricky in terms of building and testing modular applications:
 
@@ -154,7 +180,7 @@ ext {
 sourceCompatibility = JavaVersion.VERSION_11
     
 repositories {
-    jcenter()
+    mavenCentral()
 }
     
 configurations {
@@ -162,8 +188,8 @@ configurations {
 }
     
 dependencies {
-    agent 'org.aspectj:aspectjweaver:1.9.5'
-    compile 'io.github.sskorol:test-data-supplier:1.9.2'
+    agent 'org.aspectj:aspectjweaver:1.9.6'
+    implementation 'io.github.sskorol:test-data-supplier:1.9.3'
 }
     
 compileJava {
@@ -454,7 +480,7 @@ Note that in case if you want to manage **DataProviderTransformer** manually, yo
 
 ```groovy
 dependencies {
-    compile 'io.github.sskorol:test-data-supplier:1.9.1:spi-off'
+    implementation 'io.github.sskorol:test-data-supplier:1.9.3:spi-off'
 }
 ```
 

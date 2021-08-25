@@ -55,18 +55,18 @@ public class DataSupplierAspect {
         final Object[] args = joinPoint.getArgs();
 
         Match(args[0]).of(
-                Case($(val -> val instanceof ITestAnnotation), arg ->
+                Case($(ITestAnnotation.class::isInstance), arg ->
                         run(() -> callTransformer(at -> at.transform((ITestAnnotation) arg,
                                 (Class) args[1], (Constructor) args[2], (Method) args[3])))),
-                Case($(val -> val instanceof IFactoryAnnotation), arg ->
+                Case($(IFactoryAnnotation.class::isInstance), arg ->
                         run(() -> callTransformer(at -> at.transform((IFactoryAnnotation) arg, (Method) args[1])))),
-                Case($(val -> val instanceof IConfigurationAnnotation), arg ->
+                Case($(IConfigurationAnnotation.class::isInstance), arg ->
                         run(() -> callTransformer(at -> at.transform((IConfigurationAnnotation) arg,
                                 (Class) args[1], (Constructor) args[2], (Method) args[3])))),
-                Case($(val -> val instanceof IDataProviderAnnotation), arg ->
+                Case($(IDataProviderAnnotation.class::isInstance), arg ->
                         run(() -> callTransformer(at -> at.transform((IDataProviderAnnotation) arg,
                                 (Method) args[1])))),
-                Case($(val -> val instanceof IListenersAnnotation), arg ->
+                Case($(IListenersAnnotation.class::isInstance), arg ->
                         run(() -> callTransformer(at -> at.transform((IListenersAnnotation) arg, (Class) args[1]))))
         );
     }
