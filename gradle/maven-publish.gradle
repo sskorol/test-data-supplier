@@ -23,6 +23,12 @@ release {
     tagTemplate = '${version}'
 }
 
+// Required for publishing to Sonatype
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
 jar {
     inputs.property("moduleName", moduleName)
     manifest {
