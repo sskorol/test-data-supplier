@@ -7,7 +7,7 @@
 [![GitHub license](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://goo.gl/9GLmMZ)
 [![Twitter](https://img.shields.io/twitter/url/https/github.com/sskorol/test-data-supplier.svg?style=social)](https://twitter.com/intent/tweet?text=Check%20new%20Test%20Data%20Supplier%20library:&url=https://github.com/sskorol/test-data-supplier)
 
-This repository contains TestNG **DataProvider** wrapper (latest version is based on TestNG 7.0.0) which helps to supply test data in a more flexible way.
+This repository contains TestNG **DataProvider** wrapper (latest version is based on TestNG 7.4.0) which helps to supply test data in a more flexible way.
 
 Common **DataProvider** forces using quite old and ugly syntax which expects one of the following types to be returned from DP method's body:
 
