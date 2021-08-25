@@ -2,35 +2,34 @@ plugins {
     id "java-library"
     id "java"
     id "jacoco"
+    id "maven-publish"
+    id "signing"
+    id "io.github.gradle-nexus.publish-plugin" version "1.1.0"
     id "org.sonarqube" version "3.0"
-    id "com.jfrog.bintray" version "1.8.5"
     id "net.researchgate.release" version "2.8.1"
     id "com.ferranpons.twitterplugin" version "1.1.0"
-    id "com.github.ben-manes.versions" version "0.29.0"
+    id "com.github.ben-manes.versions" version "0.39.0"
 }
 
-group = 'io.github.sskorol'
-version = version
-description = 'Test Data Supplier is an extended version of common TestNG DataProvider.'
+group = "io.github.sskorol"
+version = project['version']
+description = "Test Data Supplier is an extended version of common TestNG DataProvider."
 
 ext {
     gradleScriptDir = "${rootProject.projectDir}/gradle".toString()
     projectUrl = "https://github.com/sskorol/test-data-supplier"
     moduleName = 'io.github.sskorol.testdatasupplier'
 
-    aspectjVersion = '1.9.5'
+    aspectjVersion = '1.9.6'
     jacksonVersion = '2.11.1'
-    lombokVersion = '1.18.12'
+    lombokVersion = '1.18.20'
 }
 
-apply from: "${gradleScriptDir}/bintray.gradle"
-apply from: "${gradleScriptDir}/release.gradle"
-apply from: "${gradleScriptDir}/maven-publish.gradle"
-
 sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
 
 repositories {
-    jcenter()
+    mavenCentral()
     mavenLocal()
 }
 
@@ -39,89 +38,47 @@ configurations {
 }
 
 dependencies {
-    agent "org.aspectj:aspectjweaver:${aspectjVersion}"
+    agent("org.aspectj:aspectjweaver:${aspectjVersion}")
     compileOnly("org.projectlombok:lombok:${lombokVersion}")
     testCompileOnly("org.projectlombok:lombok:${lombokVersion}")
     annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
     testAnnotationProcessor("org.projectlombok:lombok:${lombokVersion}")
-    compile('org.jooq:joor:0.9.13',
-            'org.testng:testng:7.2.0',
-            'one.util:streamex:0.7.2',
-            'io.vavr:vavr:1.0.0-alpha-3',
-            "org.aspectj:aspectjrt:${aspectjVersion}",
-            'org.reflections:reflections:0.9.11',
-            'org.apache.commons:commons-csv:1.8',
-            'com.google.code.gson:gson:2.8.6',
-            "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${jacksonVersion}",
-            "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}",
-    )
-    testCompile('org.assertj:assertj-core:3.11.1')
+    api("org.jooq:joor:0.9.14")
+    api("org.testng:testng:7.4.0")
+    api("one.util:streamex:0.7.3")
+    api("io.vavr:vavr:1.0.0-alpha-3")
+    api("org.aspectj:aspectjrt:${aspectjVersion}")
+    api("org.reflections:reflections:0.9.12")
+    api("org.apache.commons:commons-csv:1.9.0")
+    api("com.google.code.gson:gson:2.8.8")
+    api("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${jacksonVersion}")
+    api("com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}")
+    testImplementation("org.assertj:assertj-core:3.11.1")
 }
 
-jacoco.toolVersion = "0.8.5"
+if (project.hasProperty('release')) {
+    apply from: "${gradleScriptDir}/maven-publish.gradle"
+}
+
+jacoco.toolVersion = "0.8.7"
 jacocoTestReport {
     reports {
-        xml.enabled = true
-        xml.destination = file("${buildDir}/reports/jacoco/jacoco.xml")
-        html.destination = file("${buildDir}/reports/jacoco")
+        xml.required = true
+        xml.outputLocation = file("${buildDir}/reports/jacoco/jacoco.xml")
+        html.outputLocation = file("${buildDir}/reports/jacoco")
+    }
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                    "io/github/sskorol/core/**/*Aspect.class",
+                    "io/github/sskorol/core/**/*Interceptor.class"
+            ])
+        }))
     }
 }
 
-jar {
-    inputs.property("moduleName", moduleName)
-    manifest {
-        attributes('Automatic-Module-Name': moduleName)
-    }
-    from sourceSets.main.output
-    from("src/main/services") {
-        into("META-INF/services")
-    }
-}
-
-task sourceJar(type: Jar, dependsOn: classes) {
-    inputs.property("moduleName", moduleName)
-    manifest {
-        attributes('Automatic-Module-Name': moduleName)
-    }
-    archiveClassifier.set('sources')
-    from sourceSets.main.output
-    from("src/main/services") {
-        into("META-INF/services")
-    }
-}
-
-task spiOffJar(type: Jar, dependsOn: classes) {
-    inputs.property("moduleName", moduleName)
-    manifest {
-        attributes('Automatic-Module-Name': moduleName)
-    }
-    archiveClassifier.set('spi-off')
-    from sourceSets.main.output
-}
-
-configurations {
-    spiOff.extendsFrom(compile)
-}
-
-tasks.withType(Javadoc) {
-    inputs.property("moduleName", moduleName)
-    doFirst {
-        options.addStringOption('-module-path', classpath.asPath)
-    }
-    options.addStringOption('Xdoclint:none', '-quiet')
-    options.addBooleanOption('html5', true)
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    archiveClassifier.set('javadoc')
-    from javadoc.destinationDir
-}
-
-artifacts {
-    spiOff spiOffJar
-    archives sourceJar
-    archives spiOffJar
-    archives javadocJar
+tasks.named('wrapper') {
+    gradleVersion = '7.2'
 }
 
 compileJava {
@@ -172,24 +129,8 @@ test {
                 '--add-opens', 'io.github.sskorol.testdatasupplier/io.github.sskorol.datasuppliers=org.testng',
                 '--add-opens', 'java.base/java.util=one.util.streamex',
                 '--add-opens', 'java.base/java.util.stream=one.util.streamex',
-                '--patch-module', "$moduleName=" + files(sourceSets.test.java.outputDir, sourceSets.test.output.resourcesDir).asPath
+                '--patch-module', "$moduleName=" + files(sourceSets.test.java.classesDirectory, sourceSets.test.output.resourcesDir).asPath
         ]
         classpath = files()
     }
 }
-
-twitterPlugin {
-    def shouldTweet = project.hasProperty('shouldTweet') ? project.property('shouldTweet') : System.getenv('SHOULD_TWEET')
-    if (shouldTweet && shouldTweet.toBoolean()) {
-        def releaseVersion = project.hasProperty('release.releaseVersion') ? project.property('release.releaseVersion') : System.getenv('RELEASE_VERSION')
-        def tweet = "Test Data Supplier ${releaseVersion} has been released: ${project.projectUrl} #testng #testdatasupplier #java"
-
-        consumerKey = project.hasProperty('consumerKey') ? project.property('consumerKey') : System.getenv('CONSUMER_KEY')
-        consumerSecret = project.hasProperty('consumerSecret') ? project.property('consumerSecret') : System.getenv('CONSUMER_SECRET')
-        accessToken = project.hasProperty('accessToken') ? project.property('accessToken') : System.getenv('ACCESS_TOKEN')
-        accessTokenSecret = project.hasProperty('accessTokenSecret') ? project.property('accessTokenSecret') : System.getenv('ACCESS_TOKEN_SECRET')
-        message = "${tweet}"
-    }
-}
-
-afterReleaseBuild.dependsOn createTweet

@@ -3,6 +3,7 @@ package io.github.sskorol.data;
 import io.github.sskorol.utils.ReflectionUtils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.val;
 import one.util.streamex.StreamEx;
 import org.apache.commons.csv.CSVFormat;
 
@@ -27,11 +28,11 @@ public class CsvReader<T> implements DataReader<T> {
 
     @Override
     public StreamEx<T> read() {
-        try (var csvParser = parse(getUrl(), StandardCharsets.UTF_8,
-                CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim())) {
-            var entityFields = StreamEx.of(entityClass.getDeclaredFields()).map(ReflectionUtils::getFieldName).toList();
+        try (val csvParser = parse(getUrl(), StandardCharsets.UTF_8,
+                CSVFormat.Builder.create().setHeader().setSkipHeaderRecord(true).setIgnoreHeaderCase(true).setTrim(true).build())) {
+            val entityFields = StreamEx.of(entityClass.getDeclaredFields()).map(ReflectionUtils::getFieldName).toList();
             return StreamEx.of(csvParser.getRecords())
-                    .map(record -> StreamEx.of(entityFields).map(record::get).toArray())
+                    .map(csvRecord -> StreamEx.of(entityFields).map(csvRecord::get).toArray())
                     .map(args -> onClass(entityClass).create(args).get());
         } catch (IOException ex) {
             throw new IllegalArgumentException(

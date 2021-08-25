@@ -2,9 +2,9 @@ package io.github.sskorol.testcases;
 
 import org.testng.annotations.Test;
 
-public class ExternalFactoryTestTarget {
+public class ExternalFactoryTargetTest {
 
-    public ExternalFactoryTestTarget(final String data) {
+    public ExternalFactoryTargetTest(final String data) {
         // not implemented
     }
 

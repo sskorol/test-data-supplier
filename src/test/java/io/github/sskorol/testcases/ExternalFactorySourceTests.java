@@ -16,6 +16,6 @@ public class ExternalFactorySourceTests {
 
     @Factory(dataProvider = "sourceData", dataProviderClass = ExternalFactorySourceTests.class)
     public Object[] createTestClassInstance(final String data) {
-        return new Object[]{new ExternalFactoryTestTarget(data)};
+        return new Object[]{new ExternalFactoryTargetTest(data)};
     }
 }
