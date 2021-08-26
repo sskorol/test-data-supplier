@@ -48,7 +48,8 @@ dependencies {
     api("one.util:streamex:0.7.3")
     api("io.vavr:vavr:1.0.0-alpha-3")
     api("org.aspectj:aspectjrt:${aspectjVersion}")
-    api("org.reflections:reflections:0.9.12")
+    // Don't update to 0.9.12 due to bugs
+    api("org.reflections:reflections:0.9.11")
     api("org.apache.commons:commons-csv:1.9.0")
     api("com.google.code.gson:gson:2.8.8")
     api("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${jacksonVersion}")

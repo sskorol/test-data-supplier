@@ -23,12 +23,6 @@ release {
     tagTemplate = '${version}'
 }
 
-// Required for publishing to Sonatype
-java {
-    withJavadocJar()
-    withSourcesJar()
-}
-
 jar {
     inputs.property("moduleName", moduleName)
     manifest {
@@ -100,6 +94,12 @@ artifacts {
     archives sourceJar
     archives spiOffJar
     archives javadocJar
+}
+
+// Required for publishing to Sonatype
+java {
+    withJavadocJar()
+    withSourcesJar()
 }
 
 afterEvaluate {
