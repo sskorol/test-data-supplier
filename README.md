@@ -155,7 +155,7 @@ configurations {
     
 dependencies {
     agent 'org.aspectj:aspectjweaver:1.9.6'
-    implementation 'io.github.sskorol:test-data-supplier:1.9.4'
+    implementation 'io.github.sskorol:test-data-supplier:1.9.5'
 }
 
 test {
@@ -189,7 +189,7 @@ configurations {
     
 dependencies {
     agent 'org.aspectj:aspectjweaver:1.9.6'
-    implementation 'io.github.sskorol:test-data-supplier:1.9.4'
+    implementation 'io.github.sskorol:test-data-supplier:1.9.5'
 }
     
 compileJava {
@@ -480,7 +480,7 @@ Note that in case if you want to manage **DataProviderTransformer** manually, yo
 
 ```groovy
 dependencies {
-    implementation 'io.github.sskorol:test-data-supplier:1.9.4:spi-off'
+    implementation 'io.github.sskorol:test-data-supplier:1.9.5:spi-off'
 }
 ```
 
