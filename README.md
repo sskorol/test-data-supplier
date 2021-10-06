@@ -89,17 +89,27 @@ Add the following configuration into **build.gradle**:
 
 ```groovy
 repositories {
-    jcenter()
+    mavenCentral()
+}
+    
+configurations {
+    agent
 }
     
 dependencies {
-    compile('org.testng:testng:6.14.3',
+    agent "org.aspectj:aspectjweaver:1.9.7"
+    implementation(
+            'org.testng:testng:6.14.3',
             'io.github.sskorol:test-data-supplier:1.7.0'
     )
 }
     
 test {
-    useTestNG()
+    useTestNG() {
+        doFirst {
+            jvmArgs("-javaagent:${configurations.agent.singleFile}")
+        }
+    }
 }
 ```
 
@@ -110,6 +120,10 @@ Check a separate [project](https://github.com/sskorol/test-data-supplier-gradle-
 Add the following configuration into **pom.xml**:
 
 ```xml
+<properties>
+    <aspectj.version>1.9.7</aspectj.version>
+</properties>
+    
 <dependencies>
     <dependency>
         <groupId>org.testng</groupId>
@@ -129,6 +143,11 @@ Add the following configuration into **pom.xml**:
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-surefire-plugin</artifactId>
             <version>2.20.1</version>
+            <configuration>
+                <argLine>
+                    -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
+                </argLine>
+            </configuration>
         </plugin>
     </plugins>
 </build>
@@ -142,7 +161,7 @@ Check a separate [project](https://github.com/sskorol/test-data-supplier-maven-e
 plugins {
     id 'java'
 }
-
+    
 sourceCompatibility = JavaVersion.VERSION_11
     
 repositories {
@@ -154,11 +173,15 @@ configurations {
 }
     
 dependencies {
-    agent 'org.aspectj:aspectjweaver:1.9.6'
+    agent 'org.aspectj:aspectjweaver:1.9.7'
     implementation 'io.github.sskorol:test-data-supplier:1.9.5'
 }
-
+    
 test {
+    doFirst {
+        jvmArgs("-javaagent:${configurations.agent.singleFile}")
+    }
+    
     useTestNG()
 }
 ```
@@ -188,7 +211,7 @@ configurations {
 }
     
 dependencies {
-    agent 'org.aspectj:aspectjweaver:1.9.6'
+    agent 'org.aspectj:aspectjweaver:1.9.7'
     implementation 'io.github.sskorol:test-data-supplier:1.9.5'
 }
     
