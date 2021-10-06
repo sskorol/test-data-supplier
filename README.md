@@ -105,11 +105,11 @@ dependencies {
 }
     
 test {
-    useTestNG() {
-        doFirst {
-            jvmArgs("-javaagent:${configurations.agent.singleFile}")
-        }
+    doFirst {
+        jvmArgs("-javaagent:${configurations.agent.singleFile}")
     }
+    
+    useTestNG()
 }
 ```
 
