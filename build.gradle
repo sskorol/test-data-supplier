@@ -20,9 +20,9 @@ ext {
     projectUrl = "https://github.com/sskorol/test-data-supplier"
     moduleName = 'io.github.sskorol.testdatasupplier'
 
-    aspectjVersion = '1.9.6'
-    jacksonVersion = '2.11.1'
-    lombokVersion = '1.18.20'
+    aspectjVersion = '1.9.7'
+    jacksonVersion = '2.13.1'
+    lombokVersion = '1.18.22'
 }
 
 sourceCompatibility = JavaVersion.VERSION_11
@@ -45,8 +45,8 @@ dependencies {
     testAnnotationProcessor("org.projectlombok:lombok:${lombokVersion}")
     api("org.jooq:joor:0.9.14")
     api("org.testng:testng:7.4.0")
-    api("one.util:streamex:0.7.3")
-    api("io.vavr:vavr:1.0.0-alpha-3")
+    api('one.util:streamex:0.8.0')
+    api("io.vavr:vavr:0.10.4")
     api("org.aspectj:aspectjrt:${aspectjVersion}")
     // Don't update to 0.9.12 due to bugs
     api("org.reflections:reflections:0.9.11")
