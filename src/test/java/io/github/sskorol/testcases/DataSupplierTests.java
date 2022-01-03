@@ -359,4 +359,23 @@ public class DataSupplierTests extends TestNGRunner {
                 .hasSize(1)
                 .containsExactly("shouldNotBeExecutedWithMissingYamlResource()");
     }
+
+    @Test
+    public void xlsxDataSupplierTestsShouldWork() {
+        var listener = run(XlsxDataSupplierTests.class);
+        assertThat(listener.getSucceedMethodNames())
+                .hasSize(10)
+                .contains(
+                        "shouldReadLocalExcelSpreadsheetWithoutSheet(PersonWithoutSheet(row=1, firstName=Zikani, lastName=Nyirenda, dateOfBirth=1993-04-03))",
+                        "shouldReadLocalExcelSpreadsheetWithoutSheet(PersonWithoutSheet(row=2, firstName=Andrew, lastName=Mfune, dateOfBirth=1994-05-21))",
+                        "shouldReadLocalExcelSpreadsheetWithoutSheet(PersonWithoutSheet(row=4, firstName=Blessings, lastName=Mwafulirwa, dateOfBirth=1988-02-25))",
+                        "shouldReadLocalExcelSpreadsheetWithoutSheet(PersonWithoutSheet(row=6, firstName=Kondwani , lastName=Chikhula, dateOfBirth=1986-04-05))",
+                        "shouldReadLocalExcelSpreadsheetWithoutSheet(PersonWithoutSheet(row=8, firstName=Moses, lastName=Mpulula, dateOfBirth=1992-01-10))",
+                        "shouldReadLocalExcelSpreadsheetWithSheet(PersonWithSheet(row=1, firstName=Zikani, lastName=Nyirenda, dateOfBirth=1993-04-03))",
+                        "shouldReadLocalExcelSpreadsheetWithSheet(PersonWithSheet(row=2, firstName=Andrew, lastName=Mfune, dateOfBirth=1994-05-21))",
+                        "shouldReadLocalExcelSpreadsheetWithSheet(PersonWithSheet(row=4, firstName=Blessings, lastName=Mwafulirwa, dateOfBirth=1988-02-25))",
+                        "shouldReadLocalExcelSpreadsheetWithSheet(PersonWithSheet(row=6, firstName=Kondwani , lastName=Chikhula, dateOfBirth=1986-04-05))",
+                        "shouldReadLocalExcelSpreadsheetWithSheet(PersonWithSheet(row=8, firstName=Moses, lastName=Mpulula, dateOfBirth=1992-01-10))"
+                );
+    }
 }

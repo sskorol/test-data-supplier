@@ -174,7 +174,7 @@ configurations {
     
 dependencies {
     agent 'org.aspectj:aspectjweaver:1.9.7'
-    implementation 'io.github.sskorol:test-data-supplier:1.9.5'
+    implementation 'io.github.sskorol:test-data-supplier:1.9.7'
 }
     
 test {
@@ -212,7 +212,7 @@ configurations {
     
 dependencies {
     agent 'org.aspectj:aspectjweaver:1.9.7'
-    implementation 'io.github.sskorol:test-data-supplier:1.9.5'
+    implementation 'io.github.sskorol:test-data-supplier:1.9.7'
 }
     
 compileJava {
@@ -301,9 +301,9 @@ public void supplyExternalData(final T data) {
 
 Check **io.github.sskorol.testcases** package for more examples.
 
-### JSON, CSV and YAML processors
+### JSON, CSV, YAML and XLSX processors
 
-Test data supplier supports JSON, CSV and YML data retrieval. Assuming you have the following resources:
+Test data supplier supports JSON, CSV, YML and XLSX data retrieval. Assuming you have the following resources:
 
 ```csv
 username,password
@@ -341,6 +341,13 @@ username,password
  password: '123'
 ```
 
+```csv
+USERNAME  PASSWORD
+admin     admin
+sskorol   password
+guest     123
+```
+
 You can now map Java entities to these data sources using **@Source** annotation, which accepts either local file name 
 or URL:
 
@@ -375,12 +382,28 @@ public class User {
 }
 ```
 
+```java
+@Data
+@NoArgsConstructor
+@Source(path = "users.xlsx")
+public class User {
+    @Column(name = "USERNAME", index = 0)
+    private String username;
+
+    @Column(name = "PASSWORD", index = 1)
+    private String password;
+}
+```
+
 In case if some Java field's name differs from its data source representation, you can assign a valid name via 
 **@FieldName** for CSV, **@SerializedName** for JSON and **@JsonProperty** for YML data type.
 
-Note that local data sources must be located in a classpath.
+Excel support is experimental. [ZeroCell](https://github.com/creditdatamw/zerocell) library based on [Apache POI](https://github.com/apache/poi) is used here to simplify corresponding files processing.
+So feel free to check their API and supported annotations. However, in terms of fields' mapping, you can use **Column**.
 
-Then in **DataSupplier** you can call special **TestDataReader** builder to retrieve data from CSV, JSON or YML data source. 
+Note that local data sources must be located in a classpath. You usually use **resources** folder for that.
+
+Then in **DataSupplier** you can call special **TestDataReader** builder to retrieve data from CSV, JSON, YML or XLSX data source. 
 See javadocs to get more details.
 
 ```java
@@ -401,6 +424,13 @@ public StreamEx<User> getUsers() {
 @DataSupplier
 public StreamEx<User> getUsers() {
     return use(YamlReader.class).withTarget(User.class).read();
+}
+```
+
+```java
+@DataSupplier
+public StreamEx<User> getUsers() {
+    return use(XlsxReader.class).withTarget(User.class).read();
 }
 ```
 
@@ -503,7 +533,7 @@ Note that in case if you want to manage **DataProviderTransformer** manually, yo
 
 ```groovy
 dependencies {
-    implementation 'io.github.sskorol:test-data-supplier:1.9.5:spi-off'
+    implementation 'io.github.sskorol:test-data-supplier:1.9.7:spi-off'
 }
 ```
 
