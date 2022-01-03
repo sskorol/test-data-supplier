@@ -39,7 +39,7 @@ public class JsonReader<T> implements DataReader<T> {
             ));
         } catch (IOException ex) {
             throw new IllegalArgumentException(
-                format("Unable to read CSV data to %s. Check provided path.", entityClass), ex);
+                format("Unable to read JSON data to %s. Check provided path.", entityClass), ex);
         }
     }
 }
