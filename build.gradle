@@ -45,7 +45,7 @@ dependencies {
     testAnnotationProcessor("org.projectlombok:lombok:${lombokVersion}")
     api("org.jooq:joor:0.9.14")
     api("org.testng:testng:7.4.0")
-    api('one.util:streamex:0.8.0')
+    api('one.util:streamex:0.8.1')
     api("io.vavr:vavr:0.10.4")
     api("org.aspectj:aspectjrt:${aspectjVersion}")
     // Don't update to 0.9.12 due to bugs
@@ -54,6 +54,7 @@ dependencies {
     api("com.google.code.gson:gson:2.8.9")
     api("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${jacksonVersion}")
     api("com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}")
+    api("com.creditdatamw.labs:zerocell-core:0.5.1")
     testImplementation("org.assertj:assertj-core:3.11.1")
 }
 
@@ -79,7 +80,7 @@ jacocoTestReport {
 }
 
 tasks.named('wrapper') {
-    gradleVersion = '7.2'
+    gradleVersion = '7.3.3'
 }
 
 compileJava {
@@ -125,6 +126,7 @@ test {
                 '--add-opens', 'io.github.sskorol.testdatasupplier/io.github.sskorol.listeners=org.testng',
                 '--add-opens', 'io.github.sskorol.testdatasupplier/io.github.sskorol.testcases=org.jooq.joor',
                 '--add-opens', 'io.github.sskorol.testdatasupplier/io.github.sskorol.entities=org.jooq.joor',
+                '--add-opens', 'io.github.sskorol.testdatasupplier/io.github.sskorol.entities=zerocell.core',
                 '--add-opens', 'io.github.sskorol.testdatasupplier/io.github.sskorol.entities=com.fasterxml.jackson.databind',
                 '--add-opens', 'io.github.sskorol.testdatasupplier/io.github.sskorol.datasuppliers=org.jooq.joor',
                 '--add-opens', 'io.github.sskorol.testdatasupplier/io.github.sskorol.datasuppliers=org.testng',

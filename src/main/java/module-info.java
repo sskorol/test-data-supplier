@@ -22,5 +22,6 @@ module io.github.sskorol.testdatasupplier {
     requires com.fasterxml.jackson.dataformat.yaml;
     requires com.fasterxml.jackson.databind;
     requires commons.csv;
+    requires zerocell.core;
     requires static lombok;
 }
