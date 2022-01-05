@@ -386,6 +386,7 @@ public class User {
 @Data
 @NoArgsConstructor
 @Source(path = "users.xlsx")
+@Sheet(name = "sheet_1")
 public class User {
     @Column(name = "USERNAME", index = 0)
     private String username;
@@ -398,8 +399,8 @@ public class User {
 In case if some Java field's name differs from its data source representation, you can assign a valid name via 
 **@FieldName** for CSV, **@SerializedName** for JSON and **@JsonProperty** for YML data type.
 
-Excel support is experimental. [ZeroCell](https://github.com/creditdatamw/zerocell) library based on [Apache POI](https://github.com/apache/poi) is used here to simplify corresponding files processing.
-So feel free to check their API and supported annotations. However, in terms of fields' mapping, you can use **Column**.
+Excel support is experimental. [ZeroCell](https://github.com/creditdatamw/zerocell) library based on [Apache POI](https://github.com/apache/poi) is used here to simplify corresponding files processing. So feel free to check their API and supported annotations. However, in terms of fields' mapping, you can use **Column**.
+You should also make sure you provided a sheet name via corresponding `Sheet` annotation. Otherwise, the first one will be used.
 
 Note that local data sources must be located in a classpath. You usually use **resources** folder for that.
 
