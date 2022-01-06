@@ -37,6 +37,6 @@ public class XlsxDataSupplierTests {
 
     @Test(dataProvider = "getDataWithCustomConverters")
     public void shouldReadLocalExcelSpreadsheetWithCustomConverters(final TestData testData){
-        System.out.println(testData);
+        // not implemented
     }
 }

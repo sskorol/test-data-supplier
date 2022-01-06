@@ -364,7 +364,7 @@ public class DataSupplierTests extends TestNGRunner {
     public void xlsxDataSupplierTestsShouldWork() {
         var listener = run(XlsxDataSupplierTests.class);
         assertThat(listener.getSucceedMethodNames())
-                .hasSize(10)
+                .hasSize(14)
                 .contains(
                         "shouldReadLocalExcelSpreadsheetWithoutSheet(PersonWithoutSheet(row=1, firstName=Zikani, lastName=Nyirenda, dateOfBirth=1993-04-03))",
                         "shouldReadLocalExcelSpreadsheetWithoutSheet(PersonWithoutSheet(row=2, firstName=Andrew, lastName=Mfune, dateOfBirth=1994-05-21))",
@@ -375,7 +375,15 @@ public class DataSupplierTests extends TestNGRunner {
                         "shouldReadLocalExcelSpreadsheetWithSheet(PersonWithSheet(row=2, firstName=Andrew, lastName=Mfune, dateOfBirth=1994-05-21))",
                         "shouldReadLocalExcelSpreadsheetWithSheet(PersonWithSheet(row=4, firstName=Blessings, lastName=Mwafulirwa, dateOfBirth=1988-02-25))",
                         "shouldReadLocalExcelSpreadsheetWithSheet(PersonWithSheet(row=6, firstName=Kondwani , lastName=Chikhula, dateOfBirth=1986-04-05))",
-                        "shouldReadLocalExcelSpreadsheetWithSheet(PersonWithSheet(row=8, firstName=Moses, lastName=Mpulula, dateOfBirth=1992-01-10))"
+                        "shouldReadLocalExcelSpreadsheetWithSheet(PersonWithSheet(row=8, firstName=Moses, lastName=Mpulula, dateOfBirth=1992-01-10))",
+                        "shouldReadLocalExcelSpreadsheetWithCustomConverters(TestData(testCase=testcase1, browser=chrome, firstName=abcd, isFTE=true, age=20, phoneNumber=+919876543210, list=[selenium, appium, restassured]))",
+                        "shouldReadLocalExcelSpreadsheetWithCustomConverters(TestData(testCase=testcase1, browser=edge, firstName=dfgdg, isFTE=false, age=23, phoneNumber=+919876543210, list=[docker, k8s, openshift]))",
+                        "shouldReadLocalExcelSpreadsheetWithCustomConverters(TestData(testCase=testcase2, browser=chrome, firstName=efgh, isFTE=true, age=21, phoneNumber=+919876543210, list=[postman, soapui]))",
+                        "shouldReadLocalExcelSpreadsheetWithCustomConverters(TestData(testCase=testcase3, browser=chrome, firstName=ijkl, isFTE=true, age=22, phoneNumber=+919876543210, list=[automation, performance, security]))"
                 );
     }
+
+
+
+
 }
