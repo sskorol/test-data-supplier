@@ -20,6 +20,11 @@ public class XlsxDataSupplierTests {
         return use(XlsxReader.class).withTarget(PersonWithSheet.class).read();
     }
 
+    @DataSupplier
+    public StreamEx<TestData> getDataWithCustomConverters() {
+        return use(XlsxReader.class).withTarget(TestData.class).read();
+    }
+
     @Test(dataProvider = "getPersonsWithoutSheet")
     public void shouldReadLocalExcelSpreadsheetWithoutSheet(final PersonWithoutSheet person) {
         // not implemented
@@ -28,5 +33,10 @@ public class XlsxDataSupplierTests {
     @Test(dataProvider = "getPersonsWithSheet")
     public void shouldReadLocalExcelSpreadsheetWithSheet(final PersonWithSheet person) {
         // not implemented
+    }
+
+    @Test(dataProvider = "getDataWithCustomConverters")
+    public void shouldReadLocalExcelSpreadsheetWithCustomConverters(final TestData testData){
+        System.out.println(testData);
     }
 }
