@@ -16,9 +16,9 @@ import static org.joor.Reflect.onClass;
  * use(JsonReader.class).withTarget(Animal.class).withSource("http://animals.json").read();
  * }</pre>
  * Please note that {@link io.github.sskorol.data.TestDataReader.DataBuilder#withSource(String)} is optional. But if
- * it's skipped, you have to use {@link io.github.sskorol.data.Source} annotation to define source path.
+ * it's skipped, you have to use {@link Source} annotation to define source path.
  *
- * @param <T> {@link io.github.sskorol.data.DataReader} implementation class.
+ * @param <T> {@link DataReader} implementation class.
  */
 @AllArgsConstructor
 public class TestDataReader<T extends DataReader<?>> {

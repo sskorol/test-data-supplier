@@ -26,15 +26,17 @@ public class XlsxReader<T> implements DataReader<T> {
     public StreamEx<T> read() {
         try {
             val builder = Reader.of(entityClass).from(new File(getUrl().getFile()));
-            return StreamEx.of(ofNullable(entityClass.getDeclaredAnnotation(Sheet.class))
+            return StreamEx.of(
+                ofNullable(entityClass.getDeclaredAnnotation(Sheet.class))
                     .map(Sheet::name)
                     .map(builder::sheet)
                     .orElse(builder)
                     .skipEmptyRows(true)
-                    .list());
+                    .list()
+            );
         } catch (Exception ex) {
             throw new IllegalArgumentException(
-                    format("Unable to read XLSX data to %s. Check provided path.", entityClass), ex);
+                format("Unable to read XLSX data to %s. Check provided path.", entityClass), ex);
         }
     }
 }

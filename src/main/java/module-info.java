@@ -15,7 +15,7 @@ module io.github.sskorol.testdatasupplier {
     requires org.testng;
     requires io.vavr;
     requires one.util.streamex;
-    requires reflections;
+    requires org.reflections;
     requires org.jooq.joor;
     requires org.aspectj.runtime;
     requires com.google.gson;
@@ -23,5 +23,6 @@ module io.github.sskorol.testdatasupplier {
     requires com.fasterxml.jackson.databind;
     requires commons.csv;
     requires zerocell.core;
+    requires org.assertj.core;
     requires static lombok;
 }

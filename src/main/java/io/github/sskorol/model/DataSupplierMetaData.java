@@ -42,9 +42,11 @@ public class DataSupplierMetaData {
         var wrappedReturnValue = EntryStream.of(data).filterKeys(indicesList::contains).values();
 
         if (transpose) {
-            return singletonList(flatMap
-                    ? wrappedReturnValue.flatMap(ReflectionUtils::streamOf).toArray()
-                    : wrappedReturnValue.toArray());
+            return singletonList(
+                flatMap
+                ? wrappedReturnValue.flatMap(ReflectionUtils::streamOf).toArray()
+                : wrappedReturnValue.toArray()
+            );
         }
 
         return wrappedReturnValue.map(ob -> flatMap ? streamOf(ob).toArray() : new Object[]{ob}).toList();
@@ -56,10 +58,10 @@ public class DataSupplierMetaData {
 
     private List<Integer> indicesList(final int collectionSize) {
         return ofNullable(indices)
-                .filter(indicesArray -> indicesArray.length > 0)
-                .map(IntStreamEx::of)
-                .orElseGet(() -> IntStreamEx.range(0, collectionSize))
-                .boxed()
-                .toList();
+            .filter(indicesArray -> indicesArray.length > 0)
+            .map(IntStreamEx::of)
+            .orElseGet(() -> IntStreamEx.range(0, collectionSize))
+            .boxed()
+            .toList();
     }
 }

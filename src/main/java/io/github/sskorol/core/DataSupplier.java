@@ -21,4 +21,6 @@ public @interface DataSupplier {
     boolean runInParallel() default false;
 
     int[] indices() default {};
+
+    boolean propagateTestFailure() default false;
 }

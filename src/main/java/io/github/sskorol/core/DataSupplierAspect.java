@@ -27,20 +27,20 @@ import static io.vavr.API.*;
 public class DataSupplierAspect {
 
     private static final List<DataSupplierInterceptor> DATA_SUPPLIERS =
-            load(DataSupplierInterceptor.class, DataSupplierAspect.class.getClassLoader());
+        load(DataSupplierInterceptor.class, DataSupplierAspect.class.getClassLoader());
     private static final List<IAnnotationTransformerInterceptor> ANNOTATION_TRANSFORMERS =
-            load(IAnnotationTransformerInterceptor.class, DataSupplierAspect.class.getClassLoader());
+        load(IAnnotationTransformerInterceptor.class, DataSupplierAspect.class.getClassLoader());
 
     @Before("execution(@org.testng.annotations.DataProvider * io.github.sskorol.core.DataProviderTransformer.*(..))")
     public void beforeDataProviderCall(final JoinPoint joinPoint) {
         DATA_SUPPLIERS.forEach(ds -> ds.beforeDataPreparation((ITestContext) joinPoint.getArgs()[0],
-                (ITestNGMethod) joinPoint.getArgs()[1]));
+                                                              (ITestNGMethod) joinPoint.getArgs()[1]));
     }
 
     @After("execution(@org.testng.annotations.DataProvider * io.github.sskorol.core.DataProviderTransformer.*(..))")
     public void afterDataProviderCall(final JoinPoint joinPoint) {
         DATA_SUPPLIERS.forEach(ds -> ds.afterDataPreparation((ITestContext) joinPoint.getArgs()[0],
-                (ITestNGMethod) joinPoint.getArgs()[1]));
+                                                             (ITestNGMethod) joinPoint.getArgs()[1]));
     }
 
     @Around("execution(* io.github.sskorol.core.DataProviderTransformer.getMetaData(..))")
@@ -50,24 +50,36 @@ public class DataSupplierAspect {
         return metaData;
     }
 
+    @SuppressWarnings("unchecked")
     @Before("execution(* io.github.sskorol.core.DataProviderTransformer.transform(..))")
     public void beforeTransformationCall(final JoinPoint joinPoint) {
         final Object[] args = joinPoint.getArgs();
 
         Match(args[0]).of(
-                Case($(ITestAnnotation.class::isInstance), arg ->
-                        run(() -> callTransformer(at -> at.transform((ITestAnnotation) arg,
-                                (Class) args[1], (Constructor) args[2], (Method) args[3])))),
-                Case($(IFactoryAnnotation.class::isInstance), arg ->
-                        run(() -> callTransformer(at -> at.transform((IFactoryAnnotation) arg, (Method) args[1])))),
-                Case($(IConfigurationAnnotation.class::isInstance), arg ->
-                        run(() -> callTransformer(at -> at.transform((IConfigurationAnnotation) arg,
-                                (Class) args[1], (Constructor) args[2], (Method) args[3])))),
-                Case($(IDataProviderAnnotation.class::isInstance), arg ->
-                        run(() -> callTransformer(at -> at.transform((IDataProviderAnnotation) arg,
-                                (Method) args[1])))),
-                Case($(IListenersAnnotation.class::isInstance), arg ->
-                        run(() -> callTransformer(at -> at.transform((IListenersAnnotation) arg, (Class) args[1]))))
+            Case($(ITestAnnotation.class::isInstance), arg ->
+                run(() -> callTransformer(at -> at.transform(
+                    (ITestAnnotation) arg,
+                    (Class) args[1], (Constructor) args[2],
+                    (Method) args[3]))
+                )
+            ),
+            Case($(IFactoryAnnotation.class::isInstance), arg ->
+                run(() -> callTransformer(at -> at.transform((IFactoryAnnotation) arg, (Method) args[1])))),
+            Case($(IConfigurationAnnotation.class::isInstance), arg ->
+                run(() -> callTransformer(at -> at.transform(
+                    (IConfigurationAnnotation) arg,
+                    (Class) args[1], (Constructor) args[2],
+                    (Method) args[3]))
+                )
+            ),
+            Case($(IDataProviderAnnotation.class::isInstance), arg ->
+                run(() -> callTransformer(at -> at.transform(
+                    (IDataProviderAnnotation) arg,
+                    (Method) args[1]))
+                )
+            ),
+            Case($(IListenersAnnotation.class::isInstance), arg ->
+                run(() -> callTransformer(at -> at.transform((IListenersAnnotation) arg, (Class) args[1]))))
         );
     }
 
