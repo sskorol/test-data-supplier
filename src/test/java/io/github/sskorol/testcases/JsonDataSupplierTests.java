@@ -33,7 +33,7 @@ public class JsonDataSupplierTests {
 
     @DataSupplier
     public StreamEx<MissingClient> getMissingClient() {
-        return use(JsonReader.class).withTarget((MissingClient.class)).read();
+        return use(JsonReader.class).withTarget(MissingClient.class).read();
     }
 
     @Test(dataProvider = "getUsers")

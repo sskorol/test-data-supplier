@@ -1,6 +1,6 @@
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
 <suite name="Common suite">
-    <test name="DataSupplier tests" parallel="classes" thread-count="2">
+    <test name="DataSupplier tests" parallel="classes" thread-count="3">
         <classes>
             <class name="io.github.sskorol.testcases.DataSupplierTests"/>
             <class name="io.github.sskorol.testcases.ReflectionUtilsTests"/>

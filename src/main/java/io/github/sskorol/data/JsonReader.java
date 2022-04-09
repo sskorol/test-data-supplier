@@ -28,15 +28,14 @@ public class JsonReader<T> implements DataReader<T> {
         this(entityClass, "");
     }
 
-    @SuppressWarnings("unchecked")
     public StreamEx<T> read() {
         var gson = new Gson();
         try (var streamReader = new InputStreamReader(getUrl().openStream(), StandardCharsets.UTF_8);
              var jsonReader = new com.google.gson.stream.JsonReader(streamReader)) {
-            return StreamEx.of((T[]) Match(parseReader(jsonReader)).of(
-                Case($(JsonElement::isJsonArray), j -> gson.fromJson(j, castToArray(entityClass))),
-                Case($(), j -> (T[]) new Object[] {gson.fromJson(j, castToObject(entityClass))})
-            ));
+            return Match(parseReader(jsonReader)).of(
+                Case($(JsonElement::isJsonArray), j -> StreamEx.of(gson.fromJson(j, castToArray(entityClass)))),
+                Case($(), j -> StreamEx.of(gson.fromJson(j, castToObject(entityClass))))
+            );
         } catch (IOException ex) {
             throw new IllegalArgumentException(
                 format("Unable to read JSON data to %s. Check provided path.", entityClass), ex);

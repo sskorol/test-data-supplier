@@ -28,9 +28,30 @@ public class DataProviderTransformer implements IAnnotationTransformer {
         return getMetaData(context, testMethod).getTestData().iterator();
     }
 
+    @DataProvider(propagateFailureAsTestFailure = true)
+    public Iterator<Object[]> supplySeqDataWithErrorPropagation(
+        final ITestContext context,
+        final ITestNGMethod testMethod
+    ) {
+        return getMetaData(context, testMethod).getTestData().iterator();
+    }
+
+    @DataProvider(parallel = true, propagateFailureAsTestFailure = true)
+    public Iterator<Object[]> supplyParallelDataWithErrorPropagation(
+        final ITestContext context,
+        final ITestNGMethod testMethod
+    ) {
+        return getMetaData(context, testMethod).getTestData().iterator();
+    }
+
+    @SuppressWarnings("unchecked")
     @Override
-    public void transform(final ITestAnnotation annotation, final Class testClass,
-                          final Constructor testConstructor, final Method testMethod) {
+    public void transform(
+        final ITestAnnotation annotation,
+        final Class testClass,
+        final Constructor testConstructor,
+        final Method testMethod
+    ) {
         assignCustomDataSupplier(annotation, testMethod, testClass);
     }
 
@@ -44,14 +65,20 @@ public class DataProviderTransformer implements IAnnotationTransformer {
     }
 
     @SuppressWarnings("FinalLocalVariable")
-    private <T> void assignCustomDataSupplier(final IDataProvidable annotation, final Method testMethod,
-                                              final Class<T> testClass) {
+    private <T> void assignCustomDataSupplier(
+        final IDataProvidable annotation,
+        final Method testMethod,
+        final Class<T> testClass
+    ) {
         var dataSupplierClass = getDataSupplierClass(annotation, testClass, testMethod);
         var dataSupplierAnnotation = getDataSupplierAnnotation(dataSupplierClass, annotation.getDataProvider());
 
         if (!annotation.getDataProvider().isEmpty() && nonNull(dataSupplierAnnotation)) {
             annotation.setDataProviderClass(getClass());
-            annotation.setDataProvider(dataSupplierAnnotation.runInParallel() ? "supplyParallelData" : "supplySeqData");
+            var propagationSuffix = dataSupplierAnnotation.propagateTestFailure() ? "WithErrorPropagation" : "";
+            var dataProviderName =
+                (dataSupplierAnnotation.runInParallel() ? "supplyParallelData" : "supplySeqData") + propagationSuffix;
+            annotation.setDataProvider(dataProviderName);
         }
     }
 }

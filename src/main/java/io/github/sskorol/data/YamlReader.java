@@ -24,10 +24,12 @@ public class YamlReader<T> implements DataReader<T> {
     public StreamEx<T> read() {
         try {
             var yamlFactory = new YAMLFactory();
-            return StreamEx.of(new ObjectMapper(yamlFactory)
-                .configure(FAIL_ON_UNKNOWN_PROPERTIES, false)
-                .readValues(yamlFactory.createParser(getUrl()), entityClass)
-                .readAll());
+            return StreamEx.of(
+                new ObjectMapper(yamlFactory)
+                    .configure(FAIL_ON_UNKNOWN_PROPERTIES, false)
+                    .readValues(yamlFactory.createParser(getUrl()), entityClass)
+                    .readAll()
+            );
         } catch (Exception ex) {
             throw new IllegalArgumentException(format("Unable to read YAML data to %s.", entityClass), ex);
         }
