@@ -1,3 +1,12 @@
+---
+name: Pull request
+about: Create a pull request with required changes
+title: "[FEATURE/BUGFIX] Added/fixed ..."
+labels: enhancement
+assignees: sskorol
+
+---
+
 [//]: # (
 . Thank you so much for sending us a pull request! 
 .
@@ -13,6 +22,8 @@
 [//]: # (
 . Describe the problem or feature.
 )
+ToDo
 
 #### Checklist
 - [ ] Added unit / integration tests
+- [ ] Added documentation
