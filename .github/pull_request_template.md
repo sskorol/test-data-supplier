@@ -1,12 +1,3 @@
----
-name: Pull request
-about: Create a pull request with required changes
-title: "[FEATURE/BUGFIX] Added/fixed ..."
-labels: enhancement
-assignees: sskorol
-
----
-
 [//]: # (
 . Thank you so much for sending us a pull request! 
 .
@@ -18,12 +9,14 @@ assignees: sskorol
 . - Add an ability to handle external data sources
 )
 
-#### Context
+### Context
 [//]: # (
 . Describe the problem or feature.
 )
 ToDo
 
-#### Checklist
+Closes #
+
+### Checklist
 - [ ] Added unit / integration tests
 - [ ] Added documentation
