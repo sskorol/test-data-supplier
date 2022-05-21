@@ -250,7 +250,12 @@ publishing {
 
 nexusPublishing {
     repositories {
-        sonatype()
+        sonatype {
+            val osshUsername = System.getenv("OSSH_USERNAME") ?: ""
+            val osshPassword = System.getenv("OSSH_PASSWORD") ?: ""
+            username.set(osshUsername)
+            password.set(osshPassword)
+        }
     }
 }
 
