@@ -14,6 +14,27 @@
 [![GitHub license](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://goo.gl/9GLmMZ)
 [![Twitter](https://img.shields.io/twitter/url/https/github.com/sskorol/test-data-supplier.svg?style=social)](https://twitter.com/intent/tweet?text=Check%20new%20Test%20Data%20Supplier%20library:&url=https://github.com/sskorol/test-data-supplier)
 
+## Table of Contents
+
+- [Description](#description)
+- [Supported Return Types](#supported-return-types)
+- [Usage](#usage)
+  - [Gradle - Java < 9](#gradle---java--9)
+  - [Maven - Java < 9](#maven---java--9)
+  - [Gradle - Java 11-16 w/o modules](#gradle---java-11-16-wo-modules)
+  - [Gradle - Java 11-16 w/ modules](#gradle---java-11-16-w-modules)
+  - [Gradle - Java 17+ w/o modules](#gradle---java-17-wo-modules)
+  - [Maven - Java 17+ w/o modules](#maven---java-17-wo-modules)
+  - [API](#api)
+  - [JSON, CSV, YAML and XLSX processors](#json-csv-yaml-and-xlsx-processors)
+  - [DB support](#db-support)
+  - [Factory](#factory)
+  - [Tracking meta-data](#tracking-meta-data)
+  - [IAnnotationTransformer restriction](#iannotationtransformer-restriction)
+- [IntelliJ IDEA support](#intellij-idea-support) 
+
+## Description
+
 This repository contains TestNG **DataProvider** wrapper (the latest version is based on TestNG 7.6.0) which helps to supply test data in a more flexible way.
 
 Common **DataProvider** forces using quite old and ugly syntax which expects one of the following types to be returned from DP method's body:
@@ -73,7 +94,9 @@ public Map<Integer, String> getInternallyExtractedMapData() {
 public void supplyInternallyExtractedMapData(final Integer key, final String value) {
     // not implemented
 }
-```   
+```
+
+[**Go top**](#test-data-supplier) :point_up:
 
 ## Supported return types
 
@@ -88,9 +111,11 @@ public void supplyInternallyExtractedMapData(final Integer key, final String val
  - Tuple
  - A single Object of any common or custom type
 
+[**Go top**](#test-data-supplier) :point_up:
+
 ## Usage
 
-### Gradle (Java < 9)
+### Gradle - Java < 9
 
 Add the following configuration into **build.gradle**:
 
@@ -102,10 +127,19 @@ repositories {
 configurations {
     agent
 }
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+
+ext {
+    aspectjVersion = '1.9.7'
+}
+
+[compileJava, compileTestJava]*.options*.compilerArgs = ['-parameters']
     
 dependencies {
-    agent "org.aspectj:aspectjweaver:1.9.7"
+    agent "org.aspectj:aspectjweaver:${aspectjVersion}"
     implementation(
+            "org.aspectj:aspectjweaver:${aspectjVersion}",
             'org.testng:testng:6.14.3',
             'io.github.sskorol:test-data-supplier:1.7.0'
     )
@@ -122,16 +156,26 @@ test {
 
 Check a separate [project](https://github.com/sskorol/test-data-supplier-gradle-example) with usage examples.
 
-### Maven (Java < 9)
+[**Go top**](#test-data-supplier) :point_up:
+
+### Maven - Java < 9
 
 Add the following configuration into **pom.xml**:
 
 ```xml
 <properties>
     <aspectj.version>1.9.7</aspectj.version>
+    <java.version>1.8</java.version>
+    <compiler.plugin.version>3.8.0</compiler.plugin.version>
+    <surefire.plugin.version>2.20.1</surefire.plugin.version>
 </properties>
     
 <dependencies>
+    <dependency>
+        <groupId>org.aspectj</groupId>
+        <artifactId>aspectjweaver</artifactId>
+        <version>${aspectj.version}</version>
+    </dependency>
     <dependency>
         <groupId>org.testng</groupId>
         <artifactId>testng</artifactId>
@@ -148,8 +192,20 @@ Add the following configuration into **pom.xml**:
     <plugins>
         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>${compiler.plugin.version}</version>
+            <configuration>
+                <source>${java.version}</source>
+                <target>${java.version}</target>
+                <compilerArgs>
+                    <arg>-parameters</arg>
+                </compilerArgs>
+            </configuration>
+        </plugin>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-surefire-plugin</artifactId>
-            <version>2.20.1</version>
+            <version>${surefire.plugin.version}</version>
             <configuration>
                 <argLine>
                     -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
@@ -162,7 +218,9 @@ Add the following configuration into **pom.xml**:
 
 Check a separate [project](https://github.com/sskorol/test-data-supplier-maven-example) with usage examples.
 
-### Java 11-16 w/o modules
+[**Go top**](#test-data-supplier) :point_up:
+
+### Gradle - Java 11-16 w/o modules
 
 ```groovy
 plugins {
@@ -178,10 +236,20 @@ repositories {
 configurations {
     agent
 }
+
+ext {
+    aspectjVersion = '1.9.7'
+}
+
+[compileJava, compileTestJava]*.options*.compilerArgs = ['-parameters']
     
 dependencies {
-    agent 'org.aspectj:aspectjweaver:1.9.7'
-    implementation 'io.github.sskorol:test-data-supplier:1.9.7'
+    agent "org.aspectj:aspectjweaver:${aspetjVersion}"
+    implementation(
+            "org.aspectj:aspectjweaver:${aspectjVersion}",
+            'org.testng:testng:7.4.0',
+            'io.github.sskorol:test-data-supplier:1.9.7'
+    )
 }
     
 test {
@@ -193,7 +261,9 @@ test {
 }
 ```
 
-### Java 11-16 w/ modules
+[**Go top**](#test-data-supplier) :point_up:
+
+### Gradle - Java 11-16 w/ modules
 
 It's a bit tricky in terms of building and testing modular applications:
 
@@ -216,10 +286,18 @@ repositories {
 configurations {
     agent
 }
+
+ext {
+    aspectjVersion = '1.9.7'
+}
     
 dependencies {
-    agent 'org.aspectj:aspectjweaver:1.9.7'
-    implementation 'io.github.sskorol:test-data-supplier:1.9.7'
+    agent "org.aspectj:aspectjweaver:${aspectjVersion}"
+    implementation(
+            "org.aspectj:aspectjweaver:${aspectjVersion}",
+            'org.testng:testng:7.4.0',
+            'io.github.sskorol:test-data-supplier:1.9.7'
+    )
 }
     
 compileJava {
@@ -277,7 +355,9 @@ module your.module.name {
 }
 ```
 
-### Java 17+ w/o modules
+[**Go top**](#test-data-supplier) :point_up:
+
+### Gradle - Java 17+ w/o modules
 
 Note that `test-data-supplier:2.0.0` has been compiled with java 17. It means you must use the same language level in your build file.
 
@@ -295,10 +375,20 @@ repositories {
 configurations {
     agent
 }
+
+ext {
+    aspectjVersion = '1.9.9.1'
+}
+
+[compileJava, compileTestJava]*.options*.compilerArgs = ['-parameters']
     
 dependencies {
-    agent 'org.aspectj:aspectjweaver:1.9.9.1'
-    implementation 'io.github.sskorol:test-data-supplier:2.0.0'
+    agent "org.aspectj:aspectjweaver:${aspectjVersion}"
+    implementation(
+            "org.aspectj:aspectjweaver:${aspectjVersion}",
+            'org.testng:testng:7.6.0',
+            'io.github.sskorol:test-data-supplier:2.0.0'
+    )
 }
     
 test {
@@ -309,6 +399,66 @@ test {
     useTestNG()
 }
 ```
+
+[**Go top**](#test-data-supplier) :point_up:
+
+### Maven - Java 17+ w/o modules
+
+```xml
+<properties>
+    <aspectj.version>1.9.9.1</aspectj.version>
+    <java.version>17</java.version>
+    <compiler.plugin.version>3.10.1</compiler.plugin.version>
+    <surefire.plugin.version>3.0.0-M6</surefire.plugin.version>
+</properties>
+    
+<dependencies>
+    <dependency>
+        <groupId>org.aspectj</groupId>
+        <artifactId>aspectjweaver</artifactId>
+        <version>${aspectj.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>org.testng</groupId>
+        <artifactId>testng</artifactId>
+        <version>7.6.0</version>
+    </dependency>
+    <dependency>
+        <groupId>io.github.sskorol</groupId>
+        <artifactId>test-data-supplier</artifactId>
+        <version>2.0.0</version>
+    </dependency>
+</dependencies>
+    
+<build>
+    <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>${compiler.plugin.version}</version>
+            <configuration>
+                <source>${java.version}</source>
+                <target>${java.version}</target>
+                <compilerArgs>
+                    <arg>-parameters</arg>
+                </compilerArgs>
+            </configuration>
+        </plugin>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>${surefire.plugin.version}</version>
+            <configuration>
+                <argLine>
+                    -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
+                </argLine>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
+```
+
+[**Go top**](#test-data-supplier) :point_up:
 
 ### API
 
@@ -340,6 +490,8 @@ public void supplyExternalData(final T data) {
 ```
 
 Check **io.github.sskorol.testcases** package for more examples.
+
+[**Go top**](#test-data-supplier) :point_up:
 
 ### JSON, CSV, YAML and XLSX processors
 
@@ -483,6 +635,8 @@ Note that in case of a data reading error or any kind of exception thrown in a `
 the corresponding test will be skipped. That's a default TestNG behaviour.
 However, you can set `propagateTestFailure` flag (introduced in TestNG 7.6.0) to mark the test as failed.
 
+[**Go top**](#test-data-supplier) :point_up:
+
 ### DB support
 
 Technically, there's no need to create an additional ORM wrapper to work with databases. But it's worth to show how to perform such integration.
@@ -536,6 +690,8 @@ public List<UserEntity> usersData() {
 }
 ```
 
+[**Go top**](#test-data-supplier) :point_up:
+
 ### Factory
 
 You can specify **DataSupplier** for **Factory** annotation as well as for common test methods.
@@ -566,6 +722,8 @@ public class InternalFactoryTests {
 }
 ```
 
+[**Go top**](#test-data-supplier) :point_up:
+
 ### Tracking meta-data
 
 **DataSupplierInterceptor** interface allows tracking original **DataProvider** method calls for accessing additional meta-data. You can use the following snippet for getting required info:
@@ -595,6 +753,8 @@ public class DataSupplierInterceptorImpl implements DataSupplierInterceptor {
 ```
 
 This class should be then loaded via SPI mechanism. Just create **META-INF/services** folder in **resources** root, and add a new file **io.github.sskorol.core.DataSupplierInterceptor** with a full path to implementation class.
+
+[**Go top**](#test-data-supplier) :point_up:
 
 ### IAnnotationTransformer restriction
 
@@ -634,8 +794,12 @@ dependencies {
 }
 ```
 
+[**Go top**](#test-data-supplier) :point_up:
+
 ## IntelliJ IDEA support
 
 **Test Data Supplier** also has an IntelliJ IDEA plugin. Just install **test-data-supplier-plugin** from the official JetBrains repository.
 
 More information about its features can be found on the related [GitHub](https://github.com/sskorol/test-data-supplier-plugin) page.
+
+[**Go top**](#test-data-supplier) :point_up:
