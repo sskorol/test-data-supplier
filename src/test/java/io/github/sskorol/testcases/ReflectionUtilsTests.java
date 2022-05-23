@@ -4,6 +4,7 @@ import io.github.sskorol.core.DataProviderTransformer;
 import io.github.sskorol.core.DataSupplier;
 import io.github.sskorol.datasuppliers.ExternalDataSuppliers;
 import io.github.sskorol.stubs.IDataProvidableImpl;
+import io.github.sskorol.utils.NumberUtils;
 import io.github.sskorol.utils.ReflectionUtils;
 import io.github.sskorol.utils.ServiceLoaderUtils;
 import io.vavr.Tuple;
@@ -46,6 +47,13 @@ public class ReflectionUtilsTests {
     @Test
     public void shouldThrowAnExceptionOnServiceLoaderUtilsConstructorAccess() {
         assertThatThrownBy(() -> onClass(ServiceLoaderUtils.class).create())
+            .hasStackTraceContaining("java.lang.UnsupportedOperationException: This is a utility class and cannot be " +
+                                     "instantiated");
+    }
+
+    @Test
+    public void shouldThrowAnExceptionOnNumberUtilsConstructorAccess() {
+        assertThatThrownBy(() -> onClass(NumberUtils.class).create())
             .hasStackTraceContaining("java.lang.UnsupportedOperationException: This is a utility class and cannot be " +
                                      "instantiated");
     }

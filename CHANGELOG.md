@@ -1,5 +1,34 @@
 # Test Data Supplier Changelog
 
+## 2.0.0
+**feat(java): migrate to Java 17**
+
+ * GH-113: migrate to Java 17 by @sskorol in #120
+ * GH-113: fix broken test by @sskorol in #121
+ * GH-122: improve README UX by @sskorol in #123
+ * GH-124: improve templates by @sskorol in #125
+ * GH-126: added missing Nexus plugin credentials by @sskorol in #127
+
+## 1.9.7
+**feat(xlsx): add initial excel files processing support**
+
+This update includes an initial experimental Excel files reader based on ZeroCell and Apache POI libraries.
+
+## 1.9.6
+**feat(dependencies): update outdated dependencies**
+
+Just a regular update for outdated dependencies including vulnerabilities' patches.
+
+## 1.9.5
+**feat(dependencies): migrate to Sonatype and fix dependencies**
+
+ * migrated from bintray to sonatype;
+ * updated outdated plugin and common deps;
+ * upgraded gradle;
+ * fixed Sonar violations;
+ * temporary excluded aspect and interfaces from coverage reports until finding the best way of their testing;
+ * fixed broken CSV tests due to public url unavailability.
+
 ## 1.9.1-1.9.2
 **feat(dependencies): micro-release**
  
@@ -7,7 +36,7 @@
  * fixed broken tests and Sonar violations;
  * updated outdated dependencies;
  * removed abandoned Changelog plugin;
- * fixed a crash related to Redlections API;
+ * fixed a crash related to Reflections API;
  * TestNGMethod is now visible outside to make data listener more flexible;
 
 ## 1.9.0

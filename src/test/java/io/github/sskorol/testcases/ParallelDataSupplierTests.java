@@ -11,6 +11,11 @@ public class ParallelDataSupplierTests {
         return Tuple.of("data1", "data2");
     }
 
+    @DataSupplier(runInParallel = true, propagateTestFailure = true)
+    public Tuple getParallelDataWithErrorPropagation() {
+        return Tuple.of("data1", "data2");
+    }
+
     @DataSupplier
     public Tuple getSeqData() {
         return Tuple.of("data1", "data2");
@@ -18,6 +23,11 @@ public class ParallelDataSupplierTests {
 
     @Test(dataProvider = "getParallelData")
     public void supplyParallelData(final String ob) {
+        // not implemented
+    }
+
+    @Test(dataProvider = "getParallelDataWithErrorPropagation")
+    public void supplyParallelDataWithErrorPropagation(final String ob) {
         // not implemented
     }
 

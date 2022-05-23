@@ -220,10 +220,12 @@ public class DataSupplierTests extends TestNGRunner {
         var listener = run(ParallelDataSupplierTests.class);
 
         assertThat(listener.getSucceedMethodNames())
-            .hasSize(4)
+            .hasSize(6)
             .containsExactlyInAnyOrder(
                 "supplyParallelData(data1)",
                 "supplyParallelData(data2)",
+                "supplyParallelDataWithErrorPropagation(data1)",
+                "supplyParallelDataWithErrorPropagation(data2)",
                 "supplySeqData(data1)",
                 "supplySeqData(data2)"
             );
@@ -233,7 +235,7 @@ public class DataSupplierTests extends TestNGRunner {
                        .flatMap(Collection::stream)
                        .distinct()
                        .toList())
-            .hasSize(3);
+            .hasSize(5);
     }
 
     @Test
@@ -380,39 +382,45 @@ public class DataSupplierTests extends TestNGRunner {
     public void xlsxDataSupplierTestsShouldWork() {
         var listener = run(XlsxDataSupplierTests.class);
         assertThat(listener.getSucceedMethodNames())
-            .hasSize(14)
+            .hasSize(15)
             .contains(
-                "shouldReadLocalExcelSpreadsheetWithoutSheet(PersonWithoutSheet(row=1, firstName=Zikani, " +
+                "shouldReadLocalExcelSpreadsheetWithoutSheet(PersonWithoutSheet(firstName=Zikani, " +
                 "lastName=Nyirenda, dateOfBirth=1993-04-03))",
-                "shouldReadLocalExcelSpreadsheetWithoutSheet(PersonWithoutSheet(row=2, firstName=Andrew, " +
+                "shouldReadLocalExcelSpreadsheetWithoutSheet(PersonWithoutSheet(firstName=Andrew, " +
                 "lastName=Mfune, dateOfBirth=1994-05-21))",
-                "shouldReadLocalExcelSpreadsheetWithoutSheet(PersonWithoutSheet(row=4, firstName=Blessings, " +
+                "shouldReadLocalExcelSpreadsheetWithoutSheet(PersonWithoutSheet(firstName=Blessings, " +
                 "lastName=Mwafulirwa, dateOfBirth=1988-02-25))",
-                "shouldReadLocalExcelSpreadsheetWithoutSheet(PersonWithoutSheet(row=6, firstName=Kondwani , " +
+                "shouldReadLocalExcelSpreadsheetWithoutSheet(PersonWithoutSheet(firstName=Kondwani, " +
                 "lastName=Chikhula, dateOfBirth=1986-04-05))",
-                "shouldReadLocalExcelSpreadsheetWithoutSheet(PersonWithoutSheet(row=8, firstName=Moses, " +
+                "shouldReadLocalExcelSpreadsheetWithoutSheet(PersonWithoutSheet(firstName=Moses, " +
                 "lastName=Mpulula, dateOfBirth=1992-01-10))",
-                "shouldReadLocalExcelSpreadsheetWithSheet(PersonWithSheet(row=1, firstName=Zikani, lastName=Nyirenda," +
+                "shouldReadLocalExcelSpreadsheetWithSheet(PersonWithSheet(firstName=Zikani, lastName=Nyirenda," +
                 " dateOfBirth=1993-04-03))",
-                "shouldReadLocalExcelSpreadsheetWithSheet(PersonWithSheet(row=2, firstName=Andrew, lastName=Mfune, " +
+                "shouldReadLocalExcelSpreadsheetWithSheet(PersonWithSheet(firstName=Andrew, lastName=Mfune, " +
                 "dateOfBirth=1994-05-21))",
-                "shouldReadLocalExcelSpreadsheetWithSheet(PersonWithSheet(row=4, firstName=Blessings, " +
+                "shouldReadLocalExcelSpreadsheetWithSheet(PersonWithSheet(firstName=Blessings, " +
                 "lastName=Mwafulirwa, dateOfBirth=1988-02-25))",
-                "shouldReadLocalExcelSpreadsheetWithSheet(PersonWithSheet(row=6, firstName=Kondwani , " +
+                "shouldReadLocalExcelSpreadsheetWithSheet(PersonWithSheet(firstName=Kondwani, " +
                 "lastName=Chikhula, dateOfBirth=1986-04-05))",
-                "shouldReadLocalExcelSpreadsheetWithSheet(PersonWithSheet(row=8, firstName=Moses, lastName=Mpulula, " +
+                "shouldReadLocalExcelSpreadsheetWithSheet(PersonWithSheet(firstName=Moses, lastName=Mpulula, " +
                 "dateOfBirth=1992-01-10))",
-                "shouldReadLocalExcelSpreadsheetWithSheet(PersonWithSheet(row=8, firstName=Moses, lastName=Mpulula, " +
+                "shouldReadLocalExcelSpreadsheetWithSheet(PersonWithSheet(firstName=Moses, lastName=Mpulula, " +
                 "dateOfBirth=1992-01-10))",
-                "shouldReadLocalExcelSpreadsheetWithCustomConverters(XlsxData(testCase=testcase1, browser=chrome, " +
-                "firstName=abcd, isFTE=true, age=20, phoneNumber=+919876543210, list=[selenium, appium, restassured]))",
-                "shouldReadLocalExcelSpreadsheetWithCustomConverters(XlsxData(testCase=testcase1, browser=edge, " +
-                "firstName=dfgdg, isFTE=false, age=23, phoneNumber=+919876543210, list=[docker, k8s, openshift]))",
-                "shouldReadLocalExcelSpreadsheetWithCustomConverters(XlsxData(testCase=testcase2, browser=chrome, " +
-                "firstName=efgh, isFTE=true, age=21, phoneNumber=+919876543210, list=[postman, soapui]))",
-                "shouldReadLocalExcelSpreadsheetWithCustomConverters(XlsxData(testCase=testcase3, browser=chrome, " +
-                "firstName=ijkl, isFTE=true, age=22, phoneNumber=+919876543210, list=[automation, performance, " +
-                "security]))"
+                "shouldReadLocalExcelSpreadsheetWithCustomConverters(XlsxData(testCase=test1, browser=chrome, " +
+                "date=2022-05-19, nextCheck=2022-06-11T10:22:33, price=0.22, shouldRun=true, age=20, " +
+                "phoneNumber=+919876543210, techStack=[selenium, appium, restassured]))",
+                "shouldReadLocalExcelSpreadsheetWithCustomConverters(XlsxData(testCase=test2, browser=edge, " +
+                "date=2022-04-09, nextCheck=2022-05-21T11:02:13, price=3.55, shouldRun=false, age=23, " +
+                "phoneNumber=+919876543210, techStack=[docker, k8s, openshift]))",
+                "shouldReadLocalExcelSpreadsheetWithCustomConverters(XlsxData(testCase=test3, browser=chrome, " +
+                "date=2021-08-12, nextCheck=2023-02-01T00:00, price=0.0, shouldRun=true, age=21, phoneNumber=+919876543210," +
+                " techStack=[postman, soapui]))",
+                "shouldReadLocalExcelSpreadsheetWithCustomConverters(XlsxData(testCase=test4, browser=chrome, " +
+                "date=2023-01-01, nextCheck=2022-12-11T11:32:32, price=-1.24, shouldRun=true, age=22, " +
+                "phoneNumber=+919876543210, techStack=[automation, performance, security]))",
+                "shouldReadLocalExcelSpreadsheetWithCustomConverters(XlsxData(testCase=test5, browser=chromium, " +
+                "date=2022-02-28, nextCheck=2022-04-04T12:22:33, price=1000.0, shouldRun=true, age=101, " +
+                "phoneNumber=+918291239893, techStack=[allure, testng, java, gradle]))"
             );
 
         assertThat(listener.getSkippedBeforeInvocationMethodNames())

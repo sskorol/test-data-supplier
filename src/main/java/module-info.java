@@ -3,6 +3,7 @@ module io.github.sskorol.testdatasupplier {
     exports io.github.sskorol.data;
     exports io.github.sskorol.model;
     exports io.github.sskorol.utils;
+    exports io.github.sskorol.converters;
 
     opens io.github.sskorol.utils to org.jooq.joor;
 
@@ -22,7 +23,7 @@ module io.github.sskorol.testdatasupplier {
     requires com.fasterxml.jackson.dataformat.yaml;
     requires com.fasterxml.jackson.databind;
     requires commons.csv;
-    requires zerocell.core;
+    requires org.apache.poi.poi;
     requires org.assertj.core;
     requires static lombok;
 }
