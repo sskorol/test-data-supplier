@@ -1,7 +1,6 @@
 package io.github.sskorol.entities;
 
-import com.creditdatamw.zerocell.annotation.Column;
-import com.creditdatamw.zerocell.annotation.RowNumber;
+import io.github.sskorol.data.Column;
 import io.github.sskorol.data.Sheet;
 import io.github.sskorol.data.Source;
 import lombok.Data;
@@ -12,15 +11,12 @@ import java.time.LocalDate;
 @Sheet(name = "uploads")
 @Data
 public class PersonWithSheet {
-    @RowNumber
-    private int row;
-
-    @Column(name = "FIRST_NAME", index = 1)
+    @Column(name = "FIRST_NAME")
     private String firstName;
 
-    @Column(name = "LAST_NAME", index = 3)
+    @Column(name = "LAST_NAME")
     private String lastName;
 
-    @Column(name = "DATE_OF_BIRTH", index = 4)
+    @Column(name = "DATE_OF_BIRTH")
     private LocalDate dateOfBirth;
 }

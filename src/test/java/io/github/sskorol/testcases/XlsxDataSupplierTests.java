@@ -15,17 +15,17 @@ public class XlsxDataSupplierTests {
         return use(XlsxReader.class).withTarget(MissingClient.class).read();
     }
 
-    @DataSupplier
+    @DataSupplier(propagateTestFailure = true)
     public StreamEx<PersonWithoutSheet> getPersonsWithoutSheet() {
         return use(XlsxReader.class).withTarget(PersonWithoutSheet.class).read();
     }
 
-    @DataSupplier
+    @DataSupplier(propagateTestFailure = true)
     public StreamEx<PersonWithSheet> getPersonsWithSheet() {
         return use(XlsxReader.class).withTarget(PersonWithSheet.class).read();
     }
 
-    @DataSupplier
+    @DataSupplier(propagateTestFailure = true)
     public StreamEx<XlsxData> getDataWithCustomConverters() {
         return use(XlsxReader.class).withTarget(XlsxData.class).read();
     }

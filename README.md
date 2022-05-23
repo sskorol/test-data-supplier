@@ -1,6 +1,6 @@
 # Test Data Supplier 
 
-[![Build Status](https://travis-ci.org/sskorol/test-data-supplier.svg?branch=master)](https://travis-ci.org/sskorol/test-data-supplier)
+[![Build Status](https://github.com/sskorol/test-data-supplier/actions/workflows/ci.yml/badge.svg?branch=main&event=push)](https://github.com/sskorol/test-data-supplier/actions/workflows/ci.yml)
 [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=io.github.sskorol%3Atest-data-supplier&metric=alert_status)](https://sonarcloud.io/dashboard?id=io.github.sskorol%3Atest-data-supplier)
 [![Code Coverage](https://sonarcloud.io/api/project_badges/measure?project=io.github.sskorol%3Atest-data-supplier&metric=coverage)](https://sonarcloud.io/component_measures?id=io.github.sskorol%3Atest-data-supplier&metric=coverage)
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=io.github.sskorol%3Atest-data-supplier&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=io.github.sskorol%3Atest-data-supplier)
@@ -533,7 +533,7 @@ username,password
  password: '123'
 ```
 
-```csv
+```xlsx
 USERNAME  PASSWORD
 admin     admin
 sskorol   password
@@ -580,10 +580,10 @@ public class User {
 @Source(path = "users.xlsx")
 @Sheet(name = "sheet_1")
 public class User {
-    @Column(name = "USERNAME", index = 0)
+    @Column(name = "USERNAME")
     private String username;
 
-    @Column(name = "PASSWORD", index = 1)
+    @Column(name = "PASSWORD")
     private String password;
 }
 ```
@@ -591,13 +591,46 @@ public class User {
 In case if some Java field's name differs from its data source representation, you can assign a valid name via 
 **@FieldName** for CSV, **@SerializedName** for JSON and **@JsonProperty** for YML data type.
 
-Excel support is experimental. [ZeroCell](https://github.com/creditdatamw/zerocell) library based on [Apache POI](https://github.com/apache/poi) is used here to simplify corresponding files processing.
-So feel free to check their API and supported annotations. However, in terms of fields' mapping, you can use **Column**.
+Excel support is experimental. 2.0.0 version used [ZeroCell](https://github.com/creditdatamw/zerocell) library based on [Apache POI](https://github.com/apache/poi) to simplify corresponding files processing.
+Since 2.1.0, there's a custom implementation with similar approach, but minor improvements, e.g. there's no need to use column index anymore.
+
+In terms of fields' mapping, you can use custom `@Column` annotation (don't confuse with ZeroCell Column).
 You should also make sure you provided a sheet name via corresponding `@Sheet` annotation. Otherwise, the first one will be used.
 
-Note that local data sources must be located in a classpath. You usually use **resources** folder for that.
+Similarly to ZeroCell, you can use either default or custom fields' converters. Here's a list of defaults:
 
-Then in **DataSupplier** you can call a special **TestDataReader** builder to retrieve data from CSV, JSON, YML or XLSX data source. 
+- BooleanConverter
+- DoubleConverter
+- IntegerConverter
+- LocalDateConverter
+- LocalDateTimeConverter
+- StringConverter
+
+To use custom converter, you should specify its class via `@Column` annotation.
+
+```java
+@Column(name = "Tags", converter = StringToListConverter.class)
+private List<String> data;
+```
+
+And the actual implementation may look like the following:
+
+```java
+public class StringToListIConverter extends DefaultConverter<List<String>> {
+    @Override
+    public List<String> convert(final String value) {
+        return asList(value.split(","));
+    }
+}
+```
+
+Custom converters must extend `DefaultConverter` class.
+Also note that by default `test-data-supplier` uses an implicit conversion based on the field type.
+So you don't have to explicitly specify a converter if it's among the defaults.
+
+Local data sources must be located in a classpath. You usually use **resources** folder for that.
+
+Then, within `@DataSupplier` you can call a special **TestDataReader** builder to retrieve data from CSV, JSON, YML or XLSX data source. 
 See javadocs to get more details.
 
 ```java
@@ -633,7 +666,7 @@ method instead.
 
 Note that in case of a data reading error or any kind of exception thrown in a `@DataSupplier` body,
 the corresponding test will be skipped. That's a default TestNG behaviour.
-However, you can set `propagateTestFailure` flag (introduced in TestNG 7.6.0) to mark the test as failed.
+However, you can set `propagateTestFailure` flag (introduced in TestNG 7.6.0) to explicitly mark the test as failed.
 
 [**Go top**](#test-data-supplier) :point_up:
 

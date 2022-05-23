@@ -26,6 +26,7 @@ val moduleName by extra("io.github.sskorol.testdatasupplier")
 val aspectjVersion by extra("1.9.9.1")
 val jacksonVersion by extra("2.13.3")
 val lombokVersion by extra("1.18.24")
+val poiVersion by extra("5.2.2")
 
 val agent: Configuration by configurations.creating
 
@@ -74,10 +75,12 @@ dependencies {
     api("com.google.code.gson:gson:2.9.0")
     api("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${jacksonVersion}")
     api("com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}")
-    api("com.creditdatamw.labs:zerocell-core:0.5.1")
+    api("org.apache.poi:poi:${poiVersion}")
+    api("org.apache.poi:poi-ooxml:${poiVersion}")
     api("org.assertj:assertj-core:3.22.0")
     testImplementation("ch.qos.logback:logback-classic:1.2.11")
     testImplementation("org.apache.logging.log4j:log4j-core:2.17.2")
+    testImplementation("org.mockito:mockito-core:4.5.1")
 }
 
 jacoco.toolVersion = "0.8.8"
@@ -162,17 +165,18 @@ tasks.compileTestJava {
 }
 
 tasks.test {
+    val modulePrefix = "io.github.sskorol.testdatasupplier/io.github.sskorol"
+    val javaUtilModule = "java.base/java.util"
+    val suiteName = System.getenv("TEST_SUITE") ?: "smoke"
+
     testLogging {
         events.addAll(listOf(TestLogEvent.SKIPPED, TestLogEvent.FAILED))
         exceptionFormat = TestExceptionFormat.FULL
     }
 
     useTestNG {
-        suites("src/test/resources/smoke-suite.xml")
+        suites("src/test/resources/${suiteName}-suite.xml")
     }
-
-    val modulePrefix = "io.github.sskorol.testdatasupplier/io.github.sskorol"
-    val javaUtilModule = "java.base/java.util"
 
     inputs.property("moduleName", moduleName)
     doFirst {
@@ -186,9 +190,8 @@ tasks.test {
             "--add-opens", "${modulePrefix}.testcases=org.jooq.joor",
             "--add-opens", "${modulePrefix}.entities=org.jooq.joor",
             "--add-opens", "${modulePrefix}.datasuppliers=org.jooq.joor",
+            "--add-opens", "${modulePrefix}.data=org.jooq.joor",
             "--add-opens", "${modulePrefix}.entities=com.google.gson",
-            "--add-opens", "${modulePrefix}.entities=zerocell.core",
-            "--add-exports", "${modulePrefix}.converters=zerocell.core",
             "--add-opens", "${modulePrefix}.entities=com.fasterxml.jackson.databind",
             "--add-opens", "${javaUtilModule}=one.util.streamex",
             "--add-opens", "${javaUtilModule}.stream=one.util.streamex",
