@@ -24,9 +24,13 @@ jobs:
         with:
           java-version: '17'
           distribution: 'adopt'
-      - name: Build and Test
+      - name: Build and Test on manual PR
+        if: ${{ github.actor != 'dependabot[bot]' }}
         env:
           SONAR_URL: ${{ secrets.SONAR_URL }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         run: ./gradlew clean sonarqube
+      - name: Built and Test on Depenabot PR
+        if: ${{ github.actor == 'dependabot[bot]' }}
+        run: ./gradlew clean test
