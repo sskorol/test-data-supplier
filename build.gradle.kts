@@ -66,7 +66,7 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
     testAnnotationProcessor("org.projectlombok:lombok:${lombokVersion}")
     api("org.jooq:joor:0.9.14")
-    api("org.testng:testng:7.6.0")
+    api("org.testng:testng:7.6.1")
     api("one.util:streamex:0.8.1")
     api("io.vavr:vavr:0.10.4")
     api("org.aspectj:aspectjrt:${aspectjVersion}")
