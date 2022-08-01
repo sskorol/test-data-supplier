@@ -72,7 +72,7 @@ dependencies {
     api("org.aspectj:aspectjrt:${aspectjVersion}")
     api("org.reflections:reflections:0.10.2")
     api("org.apache.commons:commons-csv:1.9.0")
-    api("com.google.code.gson:gson:2.9.0")
+    api("com.google.code.gson:gson:2.9.1")
     api("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${jacksonVersion}")
     api("com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}")
     api("org.apache.poi:poi:${poiVersion}")
