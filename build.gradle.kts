@@ -10,7 +10,7 @@ plugins {
     signing
     id("io.github.gradle-nexus.publish-plugin") version "1.1.0"
     id("org.sonarqube") version "3.4.0.2513"
-    id("net.researchgate.release") version "3.0.1"
+    id("net.researchgate.release") version "3.0.2"
     id("com.ferranpons.twitterplugin") version "1.1.0"
     id("com.github.ben-manes.versions") version "0.42.0"
 }
