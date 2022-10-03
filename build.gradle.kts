@@ -78,7 +78,7 @@ dependencies {
     api("org.apache.poi:poi:${poiVersion}")
     api("org.apache.poi:poi-ooxml:${poiVersion}")
     api("org.assertj:assertj-core:3.23.1")
-    testImplementation("ch.qos.logback:logback-classic:1.4.1")
+    testImplementation("ch.qos.logback:logback-classic:1.4.3")
     testImplementation("org.apache.logging.log4j:log4j-core:2.19.0")
     testImplementation("org.mockito:mockito-core:4.8.0")
 }
