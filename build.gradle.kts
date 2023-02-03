@@ -80,7 +80,7 @@ dependencies {
     api("org.assertj:assertj-core:3.23.1")
     testImplementation("ch.qos.logback:logback-classic:1.4.5")
     testImplementation("org.apache.logging.log4j:log4j-core:2.19.0")
-    testImplementation("org.mockito:mockito-core:4.8.0")
+    testImplementation("org.mockito:mockito-core:5.1.1")
 }
 
 jacoco.toolVersion = "0.8.8"
