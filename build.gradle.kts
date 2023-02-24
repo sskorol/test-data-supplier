@@ -71,7 +71,7 @@ dependencies {
     api("io.vavr:vavr:0.10.4")
     api("org.aspectj:aspectjrt:${aspectjVersion}")
     api("org.reflections:reflections:0.10.2")
-    api("org.apache.commons:commons-csv:1.9.0")
+    api("org.apache.commons:commons-csv:1.10.0")
     api("com.google.code.gson:gson:2.10.1")
     api("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${jacksonVersion}")
     api("com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}")
