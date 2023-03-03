@@ -342,6 +342,10 @@ tasks.withType(Javadoc::class) {
     opt.addBooleanOption("html5", true)
 }
 
+tasks.withType(Sign::class) {
+    dependsOn("sourceJar")
+}
+
 artifacts {
     add("archives", tasks.getByName("sourceJar"))
     add("archives", tasks.getByName("spiOffJar"))
