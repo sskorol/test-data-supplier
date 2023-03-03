@@ -23,6 +23,15 @@ public class ArraysDataSupplierTests {
         return new User[] {new User("username", "password"), null};
     }
 
+    @DataSupplier(transpose = true, flatMap = true)
+    public User[] getCustomTransposedExtractedArrayData() {
+        return new User[] {
+            new User("username1", "password1"),
+            new User("username2", "password2"),
+            null
+        };
+    }
+
     @DataSupplier
     public double[] getPrimitiveDoubleArrayData() {
         final double[] doubles = new double[2];
@@ -69,6 +78,11 @@ public class ArraysDataSupplierTests {
 
     @Test(dataProvider = "getCustomArrayData")
     public void supplyCustomArrayData(final User user) {
+        // not implemented
+    }
+
+    @Test(dataProvider = "getCustomTransposedExtractedArrayData")
+    public void supplyCustomTransposedExtractedArrayData(final User user1, final User user2) {
         // not implemented
     }
 

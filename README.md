@@ -17,6 +17,7 @@
 ## Table of Contents
 
 - [Description](#description)
+- [Supported Flags](#supported-flags)
 - [Supported Return Types](#supported-return-types)
 - [Usage](#usage)
   - [Gradle - Java < 9](#gradle---java--9)
@@ -35,7 +36,7 @@
 
 ## Description
 
-This repository contains TestNG **DataProvider** wrapper (the latest version is based on TestNG 7.6.0) which helps to supply test data in a more flexible way.
+This repository contains TestNG **DataProvider** wrapper (the latest version is based on TestNG 7.7.1) which helps to supply test data in a more flexible way.
 
 Common **DataProvider** forces using quite old and ugly syntax which expects one of the following types to be returned from DP method's body:
 
@@ -49,12 +50,14 @@ Just imagine if you could use the following syntax to supply some filtered and s
 ```java
 @DataSupplier
 public Stream<User> getData() {
-    return Stream.of(
-        new User("Petya", "password2"),
-        new User("Virus Petya", "password3"),
-        new User("Mark", "password1"))
-            .filter(u -> !u.getName().contains("Virus"))
-            .sorted(comparing(User::getPassword));
+    return Stream
+        .of(
+            new User("Max", "password2"),
+            new User("Black Fox", "password3"),
+            new User("Mark", "password1")
+        )
+        .filter(u -> !u.getName().contains("Fox"))
+        .sorted(comparing(User::getPassword));
 }
     
 @Test(dataProvider = "getData")
@@ -65,24 +68,40 @@ public void shouldSupplyStreamData(final User user) {
 
 Much better and flexible than two-dimensional arrays or iterators, isn't it?
 
-And what if we don't want to iterate the same test N times depending on collection size? What if we want to extract its values and inject into test's signature like the following?
+And what if we don't want to iterate the same test N times depending on collection size? What if we want to inject it into test's signature like the following?
 
 ```java
 @DataSupplier(transpose = true)
-public List<User> getExtractedData() {
-    return StreamEx.of(
-        new User("username1", "password1"),
-        new User("username2", "password2"))
-            .toList();
+public List<User> getTransposedData() {
+    return StreamEx
+        .of(
+            new User("username1", "password1"),
+            new User("username2", "password2")
+        )
+        .toList();
 }
         
-@Test(dataProvider = "getExtractedData")
-public void shouldSupplyExtractedListData(final User... users) {
+@Test(dataProvider = "getTransposedData")
+public void shouldSupplyExtractedListData(final List<User> users) {
     // ...
 }
 ```
 
-You can do even more if you want to perform a Java-like **flatMap** operation for each row:
+Or if you want to extract the values of your collection and inject into test's signature, you can combine `transpose` with a `flatMap`:
+
+```java
+@DataSupplier(transpose = true, flatMap = true)
+public Set<User> getExtractedData() {
+    return StreamEx.of("product1", "product2", "product1").toSet();
+}
+        
+@Test(dataProvider = "getExtractedData")
+public void shouldSupplyExtractedListData(final String... products) {
+    // ...
+}
+```
+
+Java-like **flatMap** operation can be applied even to more complicated structures like `Map` to extract values for each row:
 
 ```java
 @DataSupplier(flatMap = true)
@@ -95,6 +114,17 @@ public void supplyInternallyExtractedMapData(final Integer key, final String val
     // not implemented
 }
 ```
+
+[**Go top**](#test-data-supplier) :point_up:
+
+## Supported flags
+
+- **name**: sets a custom name for `DataSupplier` (method name is used by default)
+- **transpose**: translates data column into a single row
+- **flatMap**: behaves pretty much like a native Java Stream operation
+- **runInParallel**: executes each data-driven test in parallel rather than sequentially
+- **indices**: filters the underlying collection by given indices
+- **propagateTestFailure**: fails the test in case of `DataSupplier` failure (skips by default)
 
 [**Go top**](#test-data-supplier) :point_up:
 
@@ -359,7 +389,7 @@ module your.module.name {
 
 ### Gradle - Java 17+ w/o modules
 
-Note that `test-data-supplier:2.0.0` has been compiled with java 17. It means you must use the same language level in your build file.
+Note that `test-data-supplier:2.0.0+` has been compiled with java 17. It means you must use the same language level in your build file.
 
 ```groovy
 plugins {
@@ -377,7 +407,7 @@ configurations {
 }
 
 ext {
-    aspectjVersion = '1.9.9.1'
+    aspectjVersion = '1.9.19'
 }
 
 [compileJava, compileTestJava]*.options*.compilerArgs = ['-parameters']
@@ -386,14 +416,17 @@ dependencies {
     agent "org.aspectj:aspectjweaver:${aspectjVersion}"
     implementation(
             "org.aspectj:aspectjweaver:${aspectjVersion}",
-            'org.testng:testng:7.6.0',
-            'io.github.sskorol:test-data-supplier:2.0.0'
+            'org.testng:testng:7.7.1',
+            'io.github.sskorol:test-data-supplier:2.2.0'
     )
 }
     
 test {
     doFirst {
-        jvmArgs("-javaagent:${configurations.agent.singleFile}")
+        jvmArgs(
+            "-javaagent:${configurations.agent.singleFile}",
+            '--add-opens', 'java.base/java.lang=ALL-UNNAMED'
+        )
     }
     
     useTestNG()
@@ -406,10 +439,10 @@ test {
 
 ```xml
 <properties>
-    <aspectj.version>1.9.9.1</aspectj.version>
+    <aspectj.version>1.9.19</aspectj.version>
     <java.version>17</java.version>
-    <compiler.plugin.version>3.10.1</compiler.plugin.version>
-    <surefire.plugin.version>3.0.0-M6</surefire.plugin.version>
+    <compiler.plugin.version>3.11.0</compiler.plugin.version>
+    <surefire.plugin.version>3.0.0-M9</surefire.plugin.version>
 </properties>
     
 <dependencies>
@@ -421,12 +454,12 @@ test {
     <dependency>
         <groupId>org.testng</groupId>
         <artifactId>testng</artifactId>
-        <version>7.6.0</version>
+        <version>7.7.1</version>
     </dependency>
     <dependency>
         <groupId>io.github.sskorol</groupId>
         <artifactId>test-data-supplier</artifactId>
-        <version>2.0.0</version>
+        <version>2.2.0</version>
     </dependency>
 </dependencies>
     
@@ -823,7 +856,7 @@ Note that in case if you want to manage **DataProviderTransformer** manually, yo
 
 ```groovy
 dependencies {
-    implementation 'io.github.sskorol:test-data-supplier:1.9.7:spi-off'
+    implementation 'io.github.sskorol:test-data-supplier:2.2.0:spi-off'
 }
 ```
 

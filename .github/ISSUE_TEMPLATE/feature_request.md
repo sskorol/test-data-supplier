@@ -30,12 +30,13 @@ ToDo
  
 ### Environment
 
-| Component          | Version         |
-|--------------------|-----------------|
-| Test Data Supplier | 2.0.0           |
-| TestNG             | 7.6.0           |
-| Build tool         | gradle@7.4.2    |
-| IDE                | IntelliJ@2022.1 |
+| Component          | Version           |
+|--------------------|-------------------|
+| Test Data Supplier | 2.2.0             |
+| TestNG             | 7.7.1             |
+| Build tool         | gradle@7.6.0      |
+| IDE                | IntelliJ@2022.2.3 |
+| JDK                | temurin-17.0.6    |
 
 ### Can be reproduced via
 

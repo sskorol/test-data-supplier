@@ -26,7 +26,35 @@ clean build publishToMavenLocal --stacktrace
 ```
 
 Note that you must set `SIGNING_KEY_ID`, `SIGNING_KEY` and `SIGNING_PASSWORD` environment variables to publish artifacts
-to Maven local for external testing. You can get these values when you set up `GPG2`.
+to Maven local for external testing. You can get these values when you set up `GPG2` key:
+
+```shell
+gpg2 --full-generate-key
+```
+
+Use 4096-bit RSA encoding. Ensure that email matches your GitHub profile. The passphrase == `SIGNING_PASSWORD`.
+
+Use the following command to get your private `SIGNING_KEY`:
+
+```shell
+gpg2 --export-secret-keys --armor D028459F448C1F19 | cat
+```
+
+You should copy the main output block between newlines and paste it to your `SIGNING_KEY` env var.
+
+`SIGNING_KEY_ID` can be obtained from the following output:
+
+```shell
+gpg2 --list-secret-keys --keyid-format LONG
+```
+
+You'll see something like:
+
+```shell
+sec   rsa4096/XXXXXXXXXXXXXXXXX 2023-01-01 [SC]
+```
+
+Copy the last 8 characters of the key and paste it to `SIGNING_KEY_ID` env var.
 
 ### Test
 
@@ -48,8 +76,7 @@ that the default listening port should be changed to 5005.
 When you start your [test](#test) configuration, you'll enter a "listening for remote connections" mode after
 compilation.
 Then you have to switch to a previously created `Remote JVM Debug` configuration and run it. It'll connect to a
-specified
-port and let you drill into debug mode.
+specified port and let you drill into debug mode.
 
 ## Process
 
