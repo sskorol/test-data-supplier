@@ -133,7 +133,10 @@ public class ReflectionUtils {
             .filter(dp -> dp != Object.class)
             .orElse((Class) parentClass);
 
-        return Tuple.of(dataSupplierClass, testAnnotation.dataProvider());
+        return Tuple.of(
+            dataSupplierClass,
+            ofNullable(testAnnotation).map(Test::dataProvider).orElse("")
+        );
     }
 
     @SuppressWarnings("unchecked")

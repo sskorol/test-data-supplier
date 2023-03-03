@@ -1,6 +1,5 @@
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
-import org.sonarqube.gradle.SonarQubeTask
 
 plugins {
     java
@@ -8,11 +7,10 @@ plugins {
     jacoco
     `maven-publish`
     signing
-    id("io.github.gradle-nexus.publish-plugin") version "1.1.0"
-    id("org.sonarqube") version "3.4.0.2513"
+    id("io.github.gradle-nexus.publish-plugin") version "1.2.0"
+    id("org.sonarqube") version "4.0.0.2929"
     id("net.researchgate.release") version "3.0.2"
-    id("com.ferranpons.twitterplugin") version "1.1.0"
-    id("com.github.ben-manes.versions") version "0.45.0"
+    id("com.github.ben-manes.versions") version "0.46.0"
 }
 
 group = "io.github.sskorol"
@@ -23,10 +21,10 @@ val gradleScriptDir: String by extra("${rootProject.projectDir}/gradle")
 val projectUrl by extra("https://github.com/sskorol/test-data-supplier")
 val moduleName by extra("io.github.sskorol.testdatasupplier")
 
-val aspectjVersion by extra("1.9.9.1")
-val jacksonVersion by extra("2.13.3")
-val lombokVersion by extra("1.18.24")
-val poiVersion by extra("5.2.2")
+val aspectjVersion by extra("1.9.19")
+val jacksonVersion by extra("2.14.2")
+val lombokVersion by extra("1.18.26")
+val poiVersion by extra("5.2.3")
 
 val agent: Configuration by configurations.creating
 
@@ -71,15 +69,17 @@ dependencies {
     api("io.vavr:vavr:0.10.4")
     api("org.aspectj:aspectjrt:${aspectjVersion}")
     api("org.reflections:reflections:0.10.2")
-    api("org.apache.commons:commons-csv:1.9.0")
+    api("org.apache.commons:commons-csv:1.10.0")
     api("com.google.code.gson:gson:2.10.1")
     api("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${jacksonVersion}")
     api("com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}")
     api("org.apache.poi:poi:${poiVersion}")
     api("org.apache.poi:poi-ooxml:${poiVersion}")
     api("org.assertj:assertj-core:3.24.2")
+    // Transitive dependency: <=1.33 version has vulnerabilities. Remove when updated by top-level packages.
+    api("org.yaml:snakeyaml:2.0")
     testImplementation("ch.qos.logback:logback-classic:1.4.5")
-    testImplementation("org.apache.logging.log4j:log4j-core:2.19.0")
+    testImplementation("org.apache.logging.log4j:log4j-core:2.20.0")
     testImplementation("org.mockito:mockito-core:5.1.1")
 }
 
@@ -103,7 +103,7 @@ tasks.jacocoTestReport {
     )
 }
 
-sonarqube {
+sonar {
     properties {
         properties(
             hashMapOf<String, String>(
@@ -121,16 +121,14 @@ sonarqube {
     }
 }
 
-tasks.withType<SonarQubeTask> {
-    dependsOn("jacocoTestReport")
-}
+project.tasks["sonar"].dependsOn("jacocoTestReport")
 
 tasks.withType<JacocoReport> {
     dependsOn("build")
 }
 
 tasks.withType(Wrapper::class) {
-    gradleVersion = "7.4.2"
+    gradleVersion = "8.0.1"
 }
 
 tasks.compileJava {

@@ -23,14 +23,14 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '17'
-          distribution: 'adopt'
+          distribution: 'temurin'
       - name: Build and Test on manual PR
         if: ${{ github.actor != 'dependabot[bot]' }}
         env:
           SONAR_URL: ${{ secrets.SONAR_URL }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: ./gradlew clean sonarqube
+        run: ./gradlew clean sonar
       - name: Built and Test on Depenabot PR
         if: ${{ github.actor == 'dependabot[bot]' }}
         run: ./gradlew clean test

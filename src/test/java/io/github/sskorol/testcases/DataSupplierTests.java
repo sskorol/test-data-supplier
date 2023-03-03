@@ -18,10 +18,12 @@ public class DataSupplierTests extends TestNGRunner {
         var listener = run(ArraysDataSupplierTests.class);
 
         assertThat(listener.getSucceedMethodNames())
-            .hasSize(13)
+            .hasSize(14)
             .containsExactly(
                 "supplyCustomArrayData(User(name=username, password=password))",
                 "supplyCustomArrayData(null)",
+                "supplyCustomTransposedExtractedArrayData(User(name=username1, password=password1),User" +
+                "(name=username2, password=password2))",
                 "supplyExternalArrayData(User(name=user1, password=password1),User(name=user2, password=password2))",
                 "supplyExtractedArrayData(data1,data2)",
                 "supplyNestedArrayData(data3,data3)",
@@ -41,8 +43,8 @@ public class DataSupplierTests extends TestNGRunner {
         var listener = run(CollectionsDataSupplierTests.class);
 
         assertThat(listener.getSucceedMethodNames())
-            .hasSize(11)
-            .containsExactly(
+            .hasSize(15)
+            .containsExactlyInAnyOrder(
                 "supplyCommonListData(data1)",
                 "supplyCommonListData(data2)",
                 "supplyCommonMapData(0=user1)",
@@ -52,8 +54,12 @@ public class DataSupplierTests extends TestNGRunner {
                 "supplyExternalCollectionData(data2)",
                 "supplyInternallyExtractedMapData(0,user3)",
                 "supplyInternallyExtractedMapData(1,user4)",
-                "supplyTransposedInternallyExtractedMapData(0,user7,1,user8)",
-                "supplyTransposedMapData(0=user5,1=user6)"
+                "supplyInternallyExtractedListData(data1)",
+                "supplyInternallyExtractedListData(data2)",
+                "supplyTransposedInternallyExtractedListData(data2,data1)",
+                "supplyTransposedInternallyExtractedMapData(0=user7,1=user8)",
+                "supplyTransposedListData([data1, data2])",
+                "supplyTransposedMapData({0=user5, 1=user6})"
             );
     }
 

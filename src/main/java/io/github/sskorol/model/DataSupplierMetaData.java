@@ -8,7 +8,10 @@ import one.util.streamex.IntStreamEx;
 import org.testng.ITestContext;
 import org.testng.ITestNGMethod;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 import static io.github.sskorol.utils.ReflectionUtils.invokeDataSupplier;
 import static io.github.sskorol.utils.ReflectionUtils.streamOf;
@@ -37,14 +40,18 @@ public class DataSupplierMetaData {
     }
 
     private List<Object[]> transform() {
-        var data = streamOf(obtainReturnValue()).toList();
+        var returnValue = obtainReturnValue();
+        var data = streamOf(returnValue).toList();
         var indicesList = indicesList(data.size());
         var wrappedReturnValue = EntryStream.of(data).filterKeys(indicesList::contains).values();
 
         if (transpose) {
+            if (returnValue instanceof Collection || returnValue instanceof Map) {
+                return singletonList(flatMap ? wrappedReturnValue.toArray() : new Object[]{returnValue});
+            }
             return singletonList(
                 flatMap
-                ? wrappedReturnValue.flatMap(ReflectionUtils::streamOf).toArray()
+                ? wrappedReturnValue.filter(Objects::nonNull).flatMap(ReflectionUtils::streamOf).toArray()
                 : wrappedReturnValue.toArray()
             );
         }

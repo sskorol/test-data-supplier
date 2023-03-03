@@ -22,7 +22,7 @@ module io.github.sskorol.testdatasupplier {
     requires com.google.gson;
     requires com.fasterxml.jackson.dataformat.yaml;
     requires com.fasterxml.jackson.databind;
-    requires commons.csv;
+    requires org.apache.commons.csv;
     requires org.apache.poi.poi;
     requires org.assertj.core;
     requires static lombok;

@@ -20,6 +20,21 @@ public class CollectionsDataSupplierTests {
         return asList("data1", "data2");
     }
 
+    @DataSupplier(transpose = true)
+    public List<String> getTransposedListData() {
+        return asList("data1", "data2");
+    }
+
+    @DataSupplier(flatMap = true)
+    public List<String> getInternallyExtractedListData() {
+        return asList("data1", "data2");
+    }
+
+    @DataSupplier(transpose = true, flatMap = true)
+    public Set<String> getTransposedInternallyExtractedListData() {
+        return StreamEx.of("data1", "data2", "data1").toSet();
+    }
+
     @DataSupplier
     public Map<Integer, String> getCommonMapData() {
         return EntryStream.of(asList("user1", "user2")).toMap();
@@ -40,13 +55,15 @@ public class CollectionsDataSupplierTests {
         return EntryStream.of(asList("user7", "user8")).toMap();
     }
 
-    @DataSupplier(transpose = true)
-    public Set<User> extractCustomListData() {
-        return StreamEx.of(
-            new User("username", "password"),
-            new User("username", "password"),
-            null,
-            null).toSet();
+    @DataSupplier(transpose = true, flatMap = true)
+    public Set<User> extractTransposedSetData() {
+        return StreamEx
+            .of(
+                new User("username", "password"),
+                new User("username", "password"),
+                null,
+                null)
+            .toSet();
     }
 
     @Test(dataProvider = "getCommonListData")
@@ -54,7 +71,22 @@ public class CollectionsDataSupplierTests {
         // not implemented
     }
 
-    @Test(dataProvider = "extractCustomListData")
+    @Test(dataProvider = "getTransposedListData")
+    public void supplyTransposedListData(final List<String> ob) {
+        // not implemented
+    }
+
+    @Test(dataProvider = "getInternallyExtractedListData")
+    public void supplyInternallyExtractedListData(final String ob) {
+        // not implemented
+    }
+
+    @Test(dataProvider = "getTransposedInternallyExtractedListData")
+    public void supplyTransposedInternallyExtractedListData(final String ob1, final String ob2) {
+        // not implemented
+    }
+
+    @Test(dataProvider = "extractTransposedSetData")
     public void supplyCustomListData(final User... users) {
         // not implemented
     }
@@ -75,13 +107,15 @@ public class CollectionsDataSupplierTests {
     }
 
     @Test(dataProvider = "getTransposedMapData")
-    public void supplyTransposedMapData(final Map.Entry<Integer, String> ob1, final Map.Entry<Integer, String> ob2) {
+    public void supplyTransposedMapData(final Map<Integer, String> ob) {
         // not implemented
     }
 
     @Test(dataProvider = "getTransposedInternallyExtractedMapData")
-    public void supplyTransposedInternallyExtractedMapData(final Integer index1, final String ob1,
-                                                           final Integer index2, final String ob2) {
+    public void supplyTransposedInternallyExtractedMapData(
+        final Map.Entry<Integer, String> ob1,
+        final Map.Entry<Integer, String> ob2
+    ) {
         // not implemented
     }
 }

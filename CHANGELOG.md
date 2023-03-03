@@ -1,5 +1,19 @@
 # Test Data Supplier Changelog
 
+## 2.2.0
+
+**feat(collections): Supply collections in raw format**
+
+ * GH-175: made it possible to supply collections w/o auto flat-mapping by @sskorol
+ * Updated outdated deps and templates by @sskorol
+
+## 2.1.0
+
+**feat(excel): Implement custom excel files processor**
+
+* GH-130: replaced ZeroCell with custom implementation by @sskorol in #132
+* Automated dependency checks with dependabot by @sskorol
+
 ## 2.0.0
 **feat(java): migrate to Java 17**
 
