@@ -78,7 +78,7 @@ dependencies {
     api("org.assertj:assertj-core:3.24.2")
     // Transitive dependency: <=1.33 version has vulnerabilities. Remove when updated by top-level packages.
     api("org.yaml:snakeyaml:2.0")
-    testImplementation("ch.qos.logback:logback-classic:1.4.5")
+    testImplementation("ch.qos.logback:logback-classic:1.4.6")
     testImplementation("org.apache.logging.log4j:log4j-core:2.20.0")
     testImplementation("org.mockito:mockito-core:5.2.0")
 }
