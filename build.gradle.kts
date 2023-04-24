@@ -80,7 +80,7 @@ dependencies {
     api("org.yaml:snakeyaml:2.0")
     testImplementation("ch.qos.logback:logback-classic:1.4.7")
     testImplementation("org.apache.logging.log4j:log4j-core:2.20.0")
-    testImplementation("org.mockito:mockito-core:5.3.0")
+    testImplementation("org.mockito:mockito-core:5.3.1")
 }
 
 jacoco.toolVersion = "0.8.8"
