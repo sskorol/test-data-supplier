@@ -1,14 +1,17 @@
 package io.github.sskorol.data;
 
 import io.github.sskorol.converters.*;
+import io.vavr.Tuple;
 import lombok.Getter;
+import one.util.streamex.IntStreamEx;
 import one.util.streamex.StreamEx;
 import org.apache.poi.ss.usermodel.*;
 
 import java.util.*;
+import java.util.function.Function;
 
 import static java.lang.String.format;
-import static java.util.Optional.ofNullable;
+import static org.apache.poi.ss.usermodel.CellType.BLANK;
 import static org.joor.Reflect.onClass;
 
 public class XlsxReader<T> implements DataReader<T> {
@@ -18,11 +21,13 @@ public class XlsxReader<T> implements DataReader<T> {
     @Getter
     private final String path;
     private final List<IConverter<T>> defaultIConverters;
+    private final List<String> sheetNames;
 
     public XlsxReader(final Class<T> entityClass, final String path) {
         this.entityClass = entityClass;
         this.path = path;
         this.defaultIConverters = defaultConverters();
+        this.sheetNames = new ArrayList<>();
     }
 
     public XlsxReader(final Class<T> entityClass) {
@@ -31,7 +36,8 @@ public class XlsxReader<T> implements DataReader<T> {
 
     @SuppressWarnings("unchecked")
     public static <T> List<IConverter<T>> defaultConverters() {
-        return StreamEx.of(
+        return StreamEx
+            .of(
                 BooleanConverter.class,
                 StringConverter.class,
                 IntegerConverter.class,
@@ -49,21 +55,23 @@ public class XlsxReader<T> implements DataReader<T> {
             var startIndex = 0;
             var skip = 1;
 
-            var sheet = ofNullable(entityClass.getDeclaredAnnotation(Sheet.class))
-                .map(annotation -> workbook.getSheet(annotation.name()))
-                .orElse(workbook.getSheetAt(startIndex));
+            var sheets = getSheetNames()
+                .map(workbook::getSheet)
+                .toMutableList();
 
-            var headers = StreamEx.of(sheet.getRow(startIndex).cellIterator())
-                .toMap(cell -> formatter.formatCellValue(cell).trim(), Cell::getColumnIndex);
+            if (sheets.isEmpty()) {
+                sheets.add(workbook.getSheetAt(startIndex));
+            }
 
-            var cellMappers = StreamEx.of(entityClass.getDeclaredFields())
-                .map(field -> new XlsxCellMapper<>(field, headers, defaultIConverters))
-                .toList();
-
-            return StreamEx.of(sheet.iterator())
-                .skip(skip)
-                .map(row -> StreamEx.of(cellMappers).map(cellMapper -> cellMapper.parse(row)).toList())
-                .map(this::initEntity);
+            return StreamEx
+                .of(sheets)
+                .flatMap(sheet -> StreamEx
+                    .of(sheet.iterator())
+                    .skip(skip)
+                    .filter(row -> !isRowEmpty(row))
+                    .map(mappersOf(sheet, startIndex, formatter))
+                    .map(this::initEntity)
+                );
         } catch (Exception ex) {
             throw new IllegalArgumentException(format("Unable to read XLSX data to %s.", entityClass), ex);
         }
@@ -71,8 +79,10 @@ public class XlsxReader<T> implements DataReader<T> {
 
     @SuppressWarnings("unchecked")
     public T initEntity(final List<XlsxCellMapper<T>> mappers) {
-        var hasDefaultConstructor = StreamEx.of(entityClass.getDeclaredConstructors())
+        var hasDefaultConstructor = StreamEx
+            .of(entityClass.getDeclaredConstructors())
             .anyMatch(constructor -> constructor.getParameterCount() == 0);
+
         if (!hasDefaultConstructor) {
             throw new IllegalStateException(format("%s must have default constructor.", entityClass.getSimpleName()));
         }
@@ -81,5 +91,44 @@ public class XlsxReader<T> implements DataReader<T> {
         StreamEx.of(mappers).forEach(mapper -> mapper.assignValue(entity));
 
         return entity;
+    }
+
+    @Override
+    public XlsxReader<T> additionalSources(final List<String> names) {
+        this.sheetNames.addAll(names);
+        return this;
+    }
+
+    private Function<Row, List<XlsxCellMapper<T>>> mappersOf(
+        final org.apache.poi.ss.usermodel.Sheet sheet,
+        final int startIndex,
+        final DataFormatter formatter
+    ) {
+        var headers = StreamEx
+            .of(sheet.getRow(startIndex).cellIterator())
+            .map(cell -> Tuple.of(cell, formatter.formatCellValue(cell).trim()))
+            .filter(cell -> !cell._2.isEmpty())
+            .toMap(cell -> cell._2, pair -> pair._1.getColumnIndex());
+
+        return row -> StreamEx
+            .of(entityClass.getDeclaredFields())
+            .map(field -> new XlsxCellMapper<>(field, headers, defaultIConverters))
+            .map(cellMapper -> cellMapper.parse(row))
+            .toList();
+    }
+
+    private boolean isRowEmpty(final Row row) {
+        return row == null || row.getLastCellNum() <= 0 ||
+               IntStreamEx
+                   .range(row.getFirstCellNum(), row.getLastCellNum())
+                   .mapToObj(row::getCell)
+                   .filter(Objects::nonNull)
+                   .noneMatch(cell -> cell.getCellType() != BLANK && !cell.toString().isEmpty());
+    }
+
+    private StreamEx<String> getSheetNames() {
+        return !sheetNames.isEmpty() ?
+               StreamEx.of(sheetNames) :
+               StreamEx.of(entityClass.getAnnotationsByType(Sheet.class)).map(Sheet::name);
     }
 }

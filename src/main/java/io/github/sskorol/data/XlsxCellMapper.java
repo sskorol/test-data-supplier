@@ -73,10 +73,12 @@ public class XlsxCellMapper<T> {
             .map(Column::converter)
             .map(converterClass -> (IConverter<T>) onClass(converterClass).create().get())
             .filter(converterInstance -> converterInstance.getType().equals(getFieldType()))
-            .orElseGet(() -> StreamEx.of(defaultIConverters)
+            .orElseGet(() -> StreamEx
+                .of(defaultIConverters)
                 .findFirst(converterInstance -> converterInstance.getType().equals(getFieldType()))
                 .orElseThrow(() -> new IllegalStateException(format(
-                    "There's no matching converter found for %s field of type %s", getFieldName(), getFieldType()))
+                    "There's no matching converter found for %s field of type %s",
+                    getFieldName(), getFieldType()))
                 )
             );
     }

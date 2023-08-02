@@ -3,6 +3,8 @@ package io.github.sskorol.data;
 import lombok.AllArgsConstructor;
 import one.util.streamex.StreamEx;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import static org.joor.Reflect.onClass;
@@ -37,11 +39,13 @@ public class TestDataReader<T extends DataReader<?>> {
 
         private final Class<T> dataReaderClass;
         private final Class<E> entityClass;
+        private final List<String> additionalSources;
         private String path;
 
         public DataBuilder(final Class<T> dataReaderClass, final Class<E> entityClass) {
             this.dataReaderClass = dataReaderClass;
             this.entityClass = entityClass;
+            this.additionalSources = new ArrayList<>();
         }
 
         public DataBuilder<T, E> withSource(final String path) {
@@ -49,9 +53,18 @@ public class TestDataReader<T extends DataReader<?>> {
             return this;
         }
 
+        public DataBuilder<T, E> withAdditionalSources(final String... names) {
+            this.additionalSources.addAll(List.of(names));
+            return this;
+        }
+
         public StreamEx<E> read() {
             var args = StreamEx.of(entityClass, path).filter(Objects::nonNull).toArray();
-            return onClass(dataReaderClass).create(args).call("read").get();
+            return onClass(dataReaderClass)
+                .create(args)
+                .call("additionalSources", additionalSources)
+                .call("read")
+                .get();
         }
     }
 }

@@ -388,8 +388,8 @@ public class DataSupplierTests extends TestNGRunner {
     public void xlsxDataSupplierTestsShouldWork() {
         var listener = run(XlsxDataSupplierTests.class);
         assertThat(listener.getSucceedMethodNames())
-            .hasSize(15)
-            .contains(
+            .hasSize(27)
+            .containsExactlyInAnyOrder(
                 "shouldReadLocalExcelSpreadsheetWithoutSheet(PersonWithoutSheet(firstName=Zikani, " +
                 "lastName=Nyirenda, dateOfBirth=1993-04-03))",
                 "shouldReadLocalExcelSpreadsheetWithoutSheet(PersonWithoutSheet(firstName=Andrew, " +
@@ -410,8 +410,6 @@ public class DataSupplierTests extends TestNGRunner {
                 "lastName=Chikhula, dateOfBirth=1986-04-05))",
                 "shouldReadLocalExcelSpreadsheetWithSheet(PersonWithSheet(firstName=Moses, lastName=Mpulula, " +
                 "dateOfBirth=1992-01-10))",
-                "shouldReadLocalExcelSpreadsheetWithSheet(PersonWithSheet(firstName=Moses, lastName=Mpulula, " +
-                "dateOfBirth=1992-01-10))",
                 "shouldReadLocalExcelSpreadsheetWithCustomConverters(XlsxData(testCase=test1, browser=chrome, " +
                 "date=2022-05-19, nextCheck=2022-06-11T10:22:33, price=0.22, shouldRun=true, age=20, " +
                 "phoneNumber=+919876543210, techStack=[selenium, appium, restassured]))",
@@ -426,7 +424,43 @@ public class DataSupplierTests extends TestNGRunner {
                 "phoneNumber=+919876543210, techStack=[automation, performance, security]))",
                 "shouldReadLocalExcelSpreadsheetWithCustomConverters(XlsxData(testCase=test5, browser=chromium, " +
                 "date=2022-02-28, nextCheck=2022-04-04T12:22:33, price=1000.0, shouldRun=true, age=101, " +
-                "phoneNumber=+918291239893, techStack=[allure, testng, java, gradle]))"
+                "phoneNumber=+918291239893, techStack=[allure, testng, java, gradle]))",
+                "shouldReadLocalExcelSpreadsheetWithCustomConverters(XlsxData(testCase=test6, browser=firefox, " +
+                "date=2022-05-19, nextCheck=2022-06-11T10:22:33, price=0.22, shouldRun=true, age=20, " +
+                "phoneNumber=+919876543210, techStack=[selenium, appium, restassured]))",
+                "shouldReadLocalExcelSpreadsheetWithCustomConverters(XlsxData(testCase=test7, browser=chrome, " +
+                "date=2022-04-09, nextCheck=2022-05-21T11:02:13, price=3.55, shouldRun=false, age=23, " +
+                "phoneNumber=+919876543210, techStack=[docker, k8s, openshift]))",
+                "shouldReadLocalExcelSpreadsheetWithCustomConverters(XlsxData(testCase=test8, browser=firefox, " +
+                "date=2021-08-12, nextCheck=2023-02-01T00:00, price=0.0, shouldRun=true, age=21, " +
+                "phoneNumber=+919876543210, techStack=[postman, soapui]))",
+                "shouldReadLocalExcelSpreadsheetWithCustomConverters(XlsxData(testCase=test9, browser=edge, " +
+                "date=2023-01-01, nextCheck=2022-12-11T11:32:32, price=-1.24, shouldRun=true, age=22, " +
+                "phoneNumber=+919876543210, techStack=[automation, performance, security]))",
+                "shouldReadLocalExcelSpreadsheetWithCustomConverters(XlsxData(testCase=test10, browser=firefox, " +
+                "date=2022-02-28, nextCheck=2022-04-04T12:22:33, price=1000.0, shouldRun=true, age=101, " +
+                "phoneNumber=+918291239893, techStack=[allure, testng, java, gradle]))",
+                "shouldReadLocalExcelSpreadsheetWithCustomSheets(XlsxData(testCase=test6, browser=firefox, " +
+                "date=2022-05-19, nextCheck=2022-06-11T10:22:33, price=0.22, shouldRun=true, age=20, " +
+                "phoneNumber=+919876543210, techStack=[selenium, appium, restassured]))",
+                "shouldReadLocalExcelSpreadsheetWithCustomSheets(XlsxData(testCase=test7, browser=chrome, " +
+                "date=2022-04-09, nextCheck=2022-05-21T11:02:13, price=3.55, shouldRun=false, age=23, " +
+                "phoneNumber=+919876543210, techStack=[docker, k8s, openshift]))",
+                "shouldReadLocalExcelSpreadsheetWithCustomSheets(XlsxData(testCase=test8, browser=firefox, " +
+                "date=2021-08-12, nextCheck=2023-02-01T00:00, price=0.0, shouldRun=true, age=21, " +
+                "phoneNumber=+919876543210, techStack=[postman, soapui]))",
+                "shouldReadLocalExcelSpreadsheetWithCustomSheets(XlsxData(testCase=test9, browser=edge, " +
+                "date=2023-01-01, nextCheck=2022-12-11T11:32:32, price=-1.24, shouldRun=true, age=22, " +
+                "phoneNumber=+919876543210, techStack=[automation, performance, security]))",
+                "shouldReadLocalExcelSpreadsheetWithCustomSheets(XlsxData(testCase=test10, browser=firefox, " +
+                "date=2022-02-28, nextCheck=2022-04-04T12:22:33, price=1000.0, shouldRun=true, age=101, " +
+                "phoneNumber=+918291239893, techStack=[allure, testng, java, gradle]))",
+                "shouldReadLocalExcelSpreadsheetWithCustomSheets(XlsxData(testCase=test11, browser=edge, " +
+                "date=2022-05-19, nextCheck=2022-06-11T10:22:33, price=0.24, shouldRun=true, age=20, " +
+                "phoneNumber=+919876543210, techStack=[selenium, appium, restassured]))",
+                "shouldReadLocalExcelSpreadsheetWithCustomSheets(XlsxData(testCase=test12, browser=firefox, " +
+                "date=2022-04-09, nextCheck=2022-05-21T11:02:13, price=2.12, shouldRun=false, age=23, " +
+                "phoneNumber=+919876543210, techStack=[docker, k8s, openshift]))"
             );
 
         assertThat(listener.getSkippedBeforeInvocationMethodNames())
