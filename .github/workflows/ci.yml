@@ -31,6 +31,6 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         run: ./gradlew clean sonar
-      - name: Built and Test on Depenabot PR
+      - name: Built and Test on Dependabot PR
         if: ${{ github.actor == 'dependabot[bot]' }}
         run: ./gradlew clean test

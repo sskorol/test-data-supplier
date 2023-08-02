@@ -18,8 +18,8 @@ public class ExternalDataSuppliers {
     @DataSupplier(transpose = true)
     public User[] getExternalArrayData() {
         return new User[]{
-                new User("user1", "password1"),
-                new User("user2", "password2")
+            new User("user1", "password1"),
+            new User("user2", "password2")
         };
     }
 
@@ -30,9 +30,10 @@ public class ExternalDataSuppliers {
 
     @DataSupplier
     public Stream<Long> getExternalStreamData() {
-        return LongStream.range(0, 10)
-                         .filter(i -> i % 2 != 0)
-                         .boxed();
+        return LongStream
+            .range(0, 10)
+            .filter(i -> i % 2 != 0)
+            .boxed();
     }
 
     @DataSupplier

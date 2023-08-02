@@ -4,6 +4,7 @@ import io.github.sskorol.converters.PhoneNumberProcessor;
 import io.github.sskorol.converters.StringToListIConverter;
 import io.github.sskorol.data.Column;
 import io.github.sskorol.data.Sheet;
+import io.github.sskorol.data.Sheets;
 import io.github.sskorol.data.Source;
 import lombok.Data;
 
@@ -13,7 +14,10 @@ import java.util.List;
 
 @Data
 @Source(path = "random.xlsx")
-@Sheet(name = "Sheet1")
+@Sheets(value = {
+    @Sheet(name = "Sheet1"),
+    @Sheet(name = "Sheet2")
+})
 public class XlsxData {
 
     @Column(name = "TC")

@@ -30,20 +30,19 @@ ToDo
  
 ### Environment
 
-| Component          | Version           |
-|--------------------|-------------------|
-| Test Data Supplier | 2.2.0             |
-| TestNG             | 7.7.1             |
-| Build tool         | gradle@7.6.0      |
-| IDE                | IntelliJ@2022.2.3 |
-| JDK                | temurin-17.0.6    |
+| Component          | Version         |
+|--------------------|-----------------|
+| Test Data Supplier | 2.2.0           |
+| TestNG             | 7.8.0           |
+| Build tool         | gradle@8.2.1    |
+| IDE                | IntelliJ@2023.2 |
+| JDK                | temurin-17.0.8  |
 
 ### Can be reproduced via
 
 - [ ] Bash
 - [ ] Maven
 - [ ] Gradle
-- [ ] Eclipse
 - [ ] IntelliJ
 
 ### Expected behavior

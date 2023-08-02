@@ -1,13 +1,11 @@
 package io.github.sskorol.data;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
  * Use this annotation to provide Excel sheet name. If none is specified hte first one is used.
  */
+@Repeatable(Sheets.class)
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Sheet {

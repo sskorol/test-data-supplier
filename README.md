@@ -416,8 +416,8 @@ dependencies {
     agent "org.aspectj:aspectjweaver:${aspectjVersion}"
     implementation(
             "org.aspectj:aspectjweaver:${aspectjVersion}",
-            'org.testng:testng:7.7.1',
-            'io.github.sskorol:test-data-supplier:2.2.0'
+            'org.testng:testng:7.8.0',
+            'io.github.sskorol:test-data-supplier:2.3.0'
     )
 }
     
@@ -454,12 +454,12 @@ test {
     <dependency>
         <groupId>org.testng</groupId>
         <artifactId>testng</artifactId>
-        <version>7.7.1</version>
+        <version>7.8.0</version>
     </dependency>
     <dependency>
         <groupId>io.github.sskorol</groupId>
         <artifactId>test-data-supplier</artifactId>
-        <version>2.2.0</version>
+        <version>2.3.0</version>
     </dependency>
 </dependencies>
     
@@ -629,6 +629,8 @@ Since 2.1.0, there's a custom implementation with similar approach, but minor im
 
 In terms of fields' mapping, you can use custom `@Column` annotation (don't confuse with ZeroCell Column).
 You should also make sure you provided a sheet name via corresponding `@Sheet` annotation. Otherwise, the first one will be used.
+In case if you have a similar structure on multiple sheets, you can use a repeatable `@Sheets` annotation.
+Dynamic sheets' specification is also possible via `withAdditionalSources` builder method (see examples below).
 
 Similarly to ZeroCell, you can use either default or custom fields' converters. Here's a list of defaults:
 
@@ -694,8 +696,16 @@ public StreamEx<User> getUsers() {
 }
 ```
 
+```java
+@DataSupplier
+public StreamEx<User> getUsers() {
+    return use(XlsxReader.class).withTarget(User.class).withAdditionalSources("Sheet1", "Sheet2").read();
+}
+```
+
 If you want to specify a custom source in runtime, you can remove **@Source** annotation and use **withSource** builder 
 method instead.
+`withAdditionalSources` builder method is experimental and implemented for `XlsxReader` as a dynamic sheets provider.
 
 Note that in case of a data reading error or any kind of exception thrown in a `@DataSupplier` body,
 the corresponding test will be skipped. That's a default TestNG behaviour.
@@ -856,7 +866,7 @@ Note that in case if you want to manage **DataProviderTransformer** manually, yo
 
 ```groovy
 dependencies {
-    implementation 'io.github.sskorol:test-data-supplier:2.2.0:spi-off'
+    implementation 'io.github.sskorol:test-data-supplier:2.3.0:spi-off'
 }
 ```
 

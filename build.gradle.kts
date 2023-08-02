@@ -7,7 +7,7 @@ plugins {
     jacoco
     `maven-publish`
     signing
-    id("io.github.gradle-nexus.publish-plugin") version "1.3.0"
+    id("io.github.gradle-nexus.publish-plugin") version "2.0.0-rc-1"
     id("org.sonarqube") version "4.3.0.3225"
     id("net.researchgate.release") version "3.0.2"
     id("com.github.ben-manes.versions") version "0.47.0"
@@ -22,9 +22,21 @@ val projectUrl by extra("https://github.com/sskorol/test-data-supplier")
 val moduleName by extra("io.github.sskorol.testdatasupplier")
 
 val aspectjVersion by extra("1.9.19")
-val jacksonVersion by extra("2.14.2")
-val lombokVersion by extra("1.18.26")
+val jacksonVersion by extra("2.15.2")
+val lombokVersion by extra("1.18.28")
 val poiVersion by extra("5.2.3")
+val joorVersion by extra ("0.9.14")
+val testngVersion by extra("7.8.0")
+val streamexVersion by extra("0.8.1")
+// Don't update to the latest, as it's outdated
+val vavrVersion by extra("0.10.4")
+val reflectionsVersion by extra("0.10.2")
+val commonsCsvVersion by extra("1.10.0")
+val gsonVersion by extra("2.10.1")
+val assertjVersion by extra("3.24.2")
+val logbackVersion by extra("1.4.8")
+val log4jVersion by extra("2.20.0")
+val mockitoVersion by extra("5.4.0")
 
 val agent: Configuration by configurations.creating
 
@@ -63,24 +75,24 @@ dependencies {
     testCompileOnly("org.projectlombok:lombok:${lombokVersion}")
     annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
     testAnnotationProcessor("org.projectlombok:lombok:${lombokVersion}")
-    api("org.jooq:joor:0.9.14")
-    api("org.testng:testng:7.8.0")
-    api("one.util:streamex:0.8.1")
-    api("io.vavr:vavr:0.10.4")
+    api("org.jooq:joor:${joorVersion}")
+    api("org.testng:testng:${testngVersion}")
+    api("one.util:streamex:${streamexVersion}")
+    api("io.vavr:vavr:${vavrVersion}")
     api("org.aspectj:aspectjrt:${aspectjVersion}")
-    api("org.reflections:reflections:0.10.2")
-    api("org.apache.commons:commons-csv:1.10.0")
-    api("com.google.code.gson:gson:2.10.1")
+    api("org.reflections:reflections:${reflectionsVersion}")
+    api("org.apache.commons:commons-csv:${commonsCsvVersion}")
+    api("com.google.code.gson:gson:${gsonVersion}")
     api("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${jacksonVersion}")
     api("com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}")
     api("org.apache.poi:poi:${poiVersion}")
     api("org.apache.poi:poi-ooxml:${poiVersion}")
-    api("org.assertj:assertj-core:3.24.2")
+    api("org.assertj:assertj-core:${assertjVersion}")
     // Transitive dependency: <=1.33 version has vulnerabilities. Remove when updated by top-level packages.
     api("org.yaml:snakeyaml:2.0")
-    testImplementation("ch.qos.logback:logback-classic:1.4.8")
-    testImplementation("org.apache.logging.log4j:log4j-core:2.20.0")
-    testImplementation("org.mockito:mockito-core:5.4.0")
+    testImplementation("ch.qos.logback:logback-classic:${logbackVersion}")
+    testImplementation("org.apache.logging.log4j:log4j-core:${log4jVersion}")
+    testImplementation("org.mockito:mockito-core:${mockitoVersion}")
 }
 
 jacoco.toolVersion = "0.8.8"
@@ -128,7 +140,7 @@ tasks.withType<JacocoReport> {
 }
 
 tasks.withType(Wrapper::class) {
-    gradleVersion = "8.0.1"
+    gradleVersion = "8.2.1"
 }
 
 tasks.compileJava {
@@ -231,7 +243,7 @@ publishing {
                 developers {
                     developer {
                         id.set("sskorol")
-                        name.set("Sergey Korol")
+                        name.set("Serhii Korol")
                         email.set("serhii.s.korol@gmail.com")
                     }
                 }
@@ -250,7 +262,7 @@ publishing {
 }
 
 nexusPublishing {
-    repositories {
+    this.repositories {
         sonatype {
             val osshUsername = System.getenv("OSSH_USERNAME") ?: ""
             val osshPassword = System.getenv("OSSH_PASSWORD") ?: ""
@@ -295,6 +307,8 @@ tasks.jar {
 }
 
 tasks.register<Jar>("sourceJar") {
+    group = "sourceJar"
+    description = "Build a jar from sources"
     dependsOn(tasks.classes)
     inputs.property("moduleName", moduleName)
     manifest {
@@ -315,6 +329,8 @@ tasks.register<Jar>("sourceJar") {
 }
 
 tasks.register<Jar>("spiOffJar") {
+    group = "spiOffJar"
+    description = "Build a jar from sources excluding SPI"
     dependsOn(tasks.classes)
     inputs.property("moduleName", moduleName)
     manifest {
