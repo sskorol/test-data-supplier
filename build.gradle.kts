@@ -89,7 +89,7 @@ dependencies {
     api("org.apache.poi:poi-ooxml:${poiVersion}")
     api("org.assertj:assertj-core:${assertjVersion}")
     // Transitive dependency: <=1.33 version has vulnerabilities. Remove when updated by top-level packages.
-    api("org.yaml:snakeyaml:2.0")
+    api("org.yaml:snakeyaml:2.1")
     testImplementation("ch.qos.logback:logback-classic:${logbackVersion}")
     testImplementation("org.apache.logging.log4j:log4j-core:${log4jVersion}")
     testImplementation("org.mockito:mockito-core:${mockitoVersion}")
