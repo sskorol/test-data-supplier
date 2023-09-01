@@ -8,7 +8,7 @@ plugins {
     `maven-publish`
     signing
     id("io.github.gradle-nexus.publish-plugin") version "2.0.0-rc-1"
-    id("org.sonarqube") version "4.3.0.3225"
+    id("org.sonarqube") version "4.3.1.3277"
     id("net.researchgate.release") version "3.0.2"
     id("com.github.ben-manes.versions") version "0.47.0"
 }
