@@ -36,6 +36,8 @@
 
 ## Description
 
+<div><video src="https://github.com/sskorol/sskorol/assets/6638780/8a11ad45-10a8-4e60-8d79-dbb723137762"/></div>
+
 This repository contains TestNG **DataProvider** wrapper (the latest version is based on TestNG 7.7.1) which helps to supply test data in a more flexible way.
 
 Common **DataProvider** forces using quite old and ugly syntax which expects one of the following types to be returned from DP method's body:
