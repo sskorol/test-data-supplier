@@ -10,7 +10,7 @@ plugins {
     id("io.github.gradle-nexus.publish-plugin") version "2.0.0-rc-1"
     id("org.sonarqube") version "4.4.1.3373"
     id("net.researchgate.release") version "3.0.2"
-    id("com.github.ben-manes.versions") version "0.48.0"
+    id("com.github.ben-manes.versions") version "0.49.0"
 }
 
 group = "io.github.sskorol"
