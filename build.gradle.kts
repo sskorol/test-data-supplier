@@ -7,7 +7,7 @@ plugins {
     jacoco
     `maven-publish`
     signing
-    id("io.github.gradle-nexus.publish-plugin") version "2.0.0-rc-1"
+    id("io.github.gradle-nexus.publish-plugin") version "2.0.0-rc-2"
     id("org.sonarqube") version "4.4.1.3373"
     id("net.researchgate.release") version "3.0.2"
     id("com.github.ben-manes.versions") version "0.50.0"
